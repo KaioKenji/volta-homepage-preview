@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Volta First Home Arrival</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --white:#fff;
+  --canvas:#f0f7f9;
+  --surface:#fff;
+  --surface-2:#e2edf0;
+  --surface-3:#d0dfe5;
+  --ink:#091d36;
+  --ink-2:#3a4f65;
+  --ink-3:#697d8e;
+  --line:#d0dfe5;
+  --line-strong:#a3b4bf;
+  --accent:#59cdc6;
+  --accent-strong:#0a7975;
+  --accent-soft:#e3f8f7;
+  --green:#18775d;
+  --green-soft:#e9f6f1;
+  --amber:#93621a;
+  --amber-soft:#fff6e5;
+  --red:#b33f46;
+  --red-soft:#fff0f1;
+  --blue:#356d91;
+  --blue-soft:#edf5fa;
+  --radius:6px;
+  --control-radius:4px;
+  --font:Manrope,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --mono:"DM Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{background:var(--canvas)}
+body{margin:0;color:var(--ink);background:var(--canvas);font:14px/1.5 var(--font);font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+button,a{font:inherit}
+button{color:inherit}
+a{color:inherit}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.skip-link{position:fixed;left:16px;top:-60px;z-index:50;background:var(--ink);color:var(--white);padding:10px 14px;border-radius:var(--control-radius)}
+.skip-link:focus{top:16px}
+.app{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100dvh}
+.sidebar{position:sticky;top:0;height:100dvh;display:flex;flex-direction:column;padding:24px 16px 18px;background:var(--white);border-right:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px 22px}
+.brand-mark{display:grid;width:34px;height:34px;place-items:center;border-radius:var(--radius);background:transparent;color:inherit}
+.brand-mark img{display:block;width:34px;height:34px}.brand strong,.brand span{display:block}
+.brand strong{font-size:15px;font-weight:600}
+.brand span{color:var(--ink-3);font-size:11px}
+.search{display:flex;width:100%;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;padding:9px 10px;border:1px solid var(--line);border-radius:var(--control-radius);background:var(--white);color:var(--ink-2);cursor:pointer}
+.search kbd{border:1px solid var(--line);border-radius:3px;background:var(--surface-2);padding:1px 5px;color:var(--ink-3);font:400 10px/1.4 var(--mono)}
+.nav-label{margin:0 10px 6px;color:var(--ink-3);font-size:11px;font-weight:500}
+.nav{display:grid;gap:2px}
+.nav a{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;padding:9px 10px;border-radius:var(--control-radius);text-decoration:none;color:var(--ink-2)}
+.nav a:hover{background:var(--surface-2);color:var(--ink)}
+.nav a[aria-current="page"]{background:var(--accent-soft);color:var(--ink)}
+.nav-copy strong,.nav-copy span{display:block}
+.nav-copy strong{font-size:13px;font-weight:500}
+.nav-copy span{margin-top:1px;color:var(--ink-3);font-size:10px}
+.nav-count{min-width:20px;border-radius:999px;background:var(--surface-2);padding:2px 6px;text-align:center;font:500 10px/1.4 var(--mono)}
+.nav a[aria-current="page"] .nav-count{background:var(--accent);color:var(--ink)}
+.sidebar-bottom{display:grid;gap:14px;margin-top:auto}
+.settle-stat{padding:14px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.settle-stat span,.settle-stat strong{display:block}
+.settle-stat span{color:var(--ink-3);font-size:11px}
+.settle-stat strong{margin:4px 0;font:500 28px/1.1 var(--mono)}
+.settle-stat small{color:var(--ink-2)}
+.profile{display:flex;align-items:center;gap:9px;padding:0 8px}
+.avatar{display:grid;width:30px;height:30px;place-items:center;border-radius:var(--control-radius);background:var(--surface-2);font:500 10px/1 var(--mono)}
+.profile strong,.profile span{display:block}
+.profile strong{font-size:12px;font-weight:500}
+.profile span{color:var(--ink-3);font-size:10px}
+.main{min-width:0;background:var(--white)}
+.topbar{height:64px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 clamp(24px,4vw,56px);border-bottom:1px solid var(--line);background:var(--white)}
+.crumb{color:var(--ink-3);font-size:12px}
+.topbar-actions{display:flex;align-items:center;gap:12px}
+.live{display:inline-flex;align-items:center;gap:7px;color:var(--ink-2);font-size:11px}
+.live::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green)}
+.btn{display:inline-flex;min-height:36px;align-items:center;justify-content:center;border:1px solid var(--line-strong);border-radius:var(--control-radius);background:var(--white);padding:8px 12px;text-decoration:none;font-weight:500;cursor:pointer;transition:background .16s,border-color .16s,transform .16s}
+.btn:hover{border-color:var(--ink-2);background:var(--surface-2)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{border-color:var(--accent-strong);background:var(--accent-strong);color:var(--white)}
+.btn.primary:hover{background:#075f5c}
+.btn:disabled,.btn[aria-disabled="true"]{cursor:not-allowed;opacity:.5}
+.content{max-width:1360px;margin:0 auto;padding:36px clamp(24px,4vw,56px) 72px}
+.page-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:start;margin-bottom:30px}
+.eyeline{margin:0 0 6px;color:var(--ink-3);font-size:12px}
+h1,h2,h3,p{margin-top:0}
+h1{margin-bottom:8px;font-size:32px;line-height:1.15;font-weight:500;letter-spacing:0}
+h2{margin-bottom:4px;font-size:17px;line-height:1.3;font-weight:600;letter-spacing:0}
+h3{margin-bottom:4px;font-size:13px;font-weight:600}
+.lede{max-width:68ch;margin-bottom:0;color:var(--ink-2)}
+.page-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.status{display:inline-flex;width:max-content;border-radius:999px;padding:3px 7px;font-size:10px;font-weight:500}
+.status.good{background:var(--green-soft);color:var(--green)}
+.status.warn{background:var(--amber-soft);color:var(--amber)}
+.status.review{background:var(--red-soft);color:var(--red)}
+.status.info{background:var(--blue-soft);color:var(--blue)}
+.arrival-band{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);gap:24px;margin-bottom:34px;padding:22px 0;border-top:1px solid var(--line-strong);border-bottom:1px solid var(--line-strong)}
+.progress-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}
+.progress-step{min-width:0;padding:16px;border-right:1px solid var(--line)}
+.progress-step:last-child{border-right:0}
+.progress-step span,.progress-step strong,.progress-step small{display:block}
+.progress-step span{color:var(--ink-3);font-size:10px}
+.progress-step strong{margin:5px 0 4px;font-size:13px;font-weight:600}
+.progress-step small{color:var(--ink-2);font-size:11px}
+.progress-step[data-state="blocked"]{background:var(--amber-soft)}
+.setup-panel{display:grid;gap:12px;padding:16px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}
+.setup-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.setup-row:last-of-type{padding-bottom:0;border-bottom:0}
+.setup-row strong,.setup-row span{display:block}
+.setup-row strong{font-size:13px;font-weight:600}
+.setup-row span{margin-top:2px;color:var(--ink-2);font-size:11px}
+.section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:16px}
+.section-head p{margin:2px 0 0;color:var(--ink-2);font-size:12px}
+.report{margin-bottom:36px}
+.report-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.report-col{min-width:0;padding:18px 20px;border-right:1px solid var(--line)}
+.report-col:last-child{border-right:0}
+.report-col h3{margin-bottom:12px}
+.report-list{display:grid;gap:12px;margin:0;padding:0;list-style:none}
+.report-list li{display:grid;gap:2px}
+.report-list strong{font:500 15px/1.25 var(--mono)}
+.report-list span{color:var(--ink-2);font-size:12px}
+.work-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,.85fr);gap:24px;align-items:start;margin-bottom:36px}
+.queue,.approval,.activity{border-top:1px solid var(--line-strong)}
+.queue-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;padding:18px 0 14px}
+.segments{display:flex;gap:4px;flex-wrap:wrap}
+.segment{border:0;border-radius:999px;background:transparent;padding:5px 9px;color:var(--ink-2);font-size:11px;cursor:pointer}
+.segment[aria-pressed="true"]{background:var(--accent-soft);color:var(--ink)}
+.queue-item{display:grid;grid-template-columns:8px minmax(0,1fr) 116px auto;gap:14px;align-items:center;min-height:88px;padding:14px 0;border-top:1px solid var(--line)}
+.queue-marker{width:8px;height:40px;border-radius:999px;background:var(--amber)}
+.queue-item[data-owner="hotel"] .queue-marker{background:var(--red)}
+.queue-item[data-owner="system"] .queue-marker{background:var(--blue)}
+.item-title{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.item-title strong{font-weight:600}
+.item-copy p{margin:4px 0 0;color:var(--ink-2);font-size:12px}
+.item-ref{font-family:var(--mono);font-size:11px}
+.owner span,.owner strong{display:block;font-size:11px}
+.owner span{color:var(--ink-3)}
+.owner strong{margin-top:3px;font-weight:500}
+.approval{padding-top:18px}
+.approval-total{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:18px 0;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.approval-total span,.approval-total strong{display:block}
+.approval-total span{color:var(--ink-3);font-size:11px}
+.approval-total strong{margin-top:4px;font:500 26px/1.1 var(--mono)}
+.approval-list{display:grid;gap:0}
+.approval-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+.approval-item:last-child{border-bottom:0}
+.approval-item strong{font-size:12px;font-weight:500}
+.approval-item span{font:500 12px/1.4 var(--mono)}
+.approval-item small{display:block;margin-top:2px;color:var(--ink-3);font-size:10px}
+.notice{margin-top:16px;padding:12px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface-2);color:var(--ink-2);font-size:12px}
+.notice strong{color:var(--ink);font-weight:600}
+.approval .btn{width:100%;margin-top:16px}
+.activity{padding-top:18px}
+.activity-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line)}
+.activity-item{min-width:0;padding:14px 16px 14px 0;border-right:1px solid var(--line)}
+.activity-item:not(:first-child){padding-left:16px}
+.activity-item:last-child{border-right:0}
+.activity-item time{display:block;margin-bottom:8px;color:var(--ink-3);font:400 10px/1.3 var(--mono)}
+.activity-item strong{display:block;font-size:12px;font-weight:500}
+.activity-item p{margin:4px 0 8px;color:var(--ink-2);font-size:11px}
+.activity-amount{font:500 12px/1.3 var(--mono)}
+.command-menu{width:min(520px,calc(100vw - 32px));border:1px solid var(--line-strong);border-radius:var(--radius);padding:0;background:var(--white);color:var(--ink);box-shadow:0 8px 18px rgb(23 34 55 / .14)}
+.command-menu::backdrop{background:rgb(23 34 55 / .28)}
+.command-head{display:flex;align-items:center;gap:10px;padding:12px;border-bottom:1px solid var(--line)}
+.command-head input{min-width:0;flex:1;border:0;outline:0;padding:8px;background:transparent;font:inherit}
+.command-list{display:grid;padding:8px}
+.command-list a{display:flex;justify-content:space-between;gap:16px;border-radius:var(--control-radius);padding:10px;text-decoration:none}
+.command-list a:hover{background:var(--surface-2)}
+.command-list span{color:var(--ink-3);font-size:11px}
+[hidden]{display:none!important}
+@media(max-width:1120px){
+  .app{grid-template-columns:204px minmax(0,1fr)}
+  .arrival-band,.work-grid{grid-template-columns:1fr}
+  .progress-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .progress-step:nth-child(2){border-right:0}
+  .progress-step:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .report-grid{grid-template-columns:1fr}
+  .report-col{border-right:0;border-bottom:1px solid var(--line)}
+  .report-col:last-child{border-bottom:0}
+  .activity-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .activity-item:nth-child(2){border-right:0}
+  .activity-item:nth-child(-n+2){border-bottom:1px solid var(--line)}
+}
+@media(max-width:780px){
+  .app{display:block}
+  .sidebar{position:static;width:100%;height:auto;padding:14px 16px;border-right:0;border-bottom:1px solid var(--line)}
+  .brand{padding:0}
+  .search,.nav-label,.sidebar-bottom{display:none}
+  .nav{display:flex;gap:4px;margin-top:12px;overflow-x:auto;padding-bottom:2px}
+  .nav a{flex:0 0 auto}
+  .nav-copy span{display:none}
+  .topbar{height:52px;padding:0 16px}
+  .crumb{display:none}
+  .content{padding:24px 16px 48px}
+  .page-head{grid-template-columns:1fr}
+  .page-actions{justify-content:flex-start}
+  .queue-item{grid-template-columns:8px minmax(0,1fr)}
+  .queue-item .owner,.queue-item .btn{grid-column:2}
+  .queue-item .btn{width:max-content}
+}
+@media(max-width:520px){
+  h1{font-size:28px}
+  .progress-list{grid-template-columns:1fr}
+  .progress-step{border-right:0;border-bottom:1px solid var(--line)}
+  .progress-step:last-child{border-bottom:0}
+  .queue-head,.section-head{display:grid}
+  .segments{margin-top:4px}
+  .activity-list{grid-template-columns:1fr}
+  .activity-item{padding:14px 0!important;border-right:0;border-bottom:1px solid var(--line)}
+  .activity-item:last-child{border-bottom:0}
+  .topbar-actions .live{display:none}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#dashboard">Skip to dashboard</a>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark"><img src="codex-20260707-volta-icon-navy-turquoise.svg" alt=""></div><div><strong>Volta</strong><span>Hotel de Toiras</span></div></div>
+    <button class="search" type="button" aria-haspopup="dialog" aria-controls="command-menu"><span>Search</span><kbd>Ctrl K</kbd></button>
+    <p class="nav-label">Workspace</p>
+    <nav class="nav" aria-label="Primary navigation">
+      <a href="#dashboard" aria-current="page"><span class="nav-copy"><strong>Home</strong><span>First operating day</span></span></a>
+      <a href="TSP_Commission_Detail_v1.html"><span class="nav-copy"><strong>Commissions</strong><span>Ledger and records</span></span><span class="nav-count">11</span></a>
+      <a href="TSP_Agents_v1.html"><span class="nav-copy"><strong>Agencies</strong><span>Readiness and invites</span></span><span class="nav-count">1</span></a>
+      <a href="#next-surfaces"><span class="nav-copy"><strong>Workflows</strong><span>Reminders and reports</span></span></a>
+      <a href="#settings"><span class="nav-copy"><strong>Settings</strong><span>Team and setup</span></span><span class="nav-count">2</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="settle-stat"><span>First-cycle value staged</span><strong>EUR 28.6k</strong><small>147 ledger records after import</small></div>
+      <div class="profile"><div class="avatar">KJ</div><div><strong>Kenji</strong><span>Operator</span></div></div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar"><div class="crumb">Hotel operations / First Home Arrival</div><div class="topbar-actions"><span class="live">Onboarding just completed</span><button class="btn" type="button">Export report</button></div></header>
+    <main class="content" id="dashboard" tabindex="-1">
+      <header class="page-head">
+        <div><p class="eyeline">Tuesday, July 7, 2026</p><h1>Your first ledger is live.</h1><p class="lede">Host Agency Test A has been invited. Home now shows what changed during setup, what still blocks payment approval, and the safest next action for the hotel team.</p></div>
+        <div class="page-actions"><a class="btn" href="codex-20260707-onboarding-demo-flow.html?screen=success">Back to onboarding</a><a class="btn primary" href="TSP_Commission_Detail_v1.html">Review carried issue</a></div>
+      </header>
+
+      <section class="arrival-band" aria-labelledby="arrival-title">
+        <div>
+          <header class="section-head"><div><h2 id="arrival-title">Onboarding progress</h2><p>Keep this visible until critical setup and first agency confirmation are complete.</p></div><span class="status warn">2 blockers</span></header>
+          <div class="progress-list">
+            <div class="progress-step" data-state="done"><span>Complete</span><strong>Import confirmed</strong><small>147 commissions entered the operating ledger.</small></div>
+            <div class="progress-step" data-state="done"><span>Complete</span><strong>Team controls set</strong><small>Admin, Operator, Viewer, and Payment Approver are assigned.</small></div>
+            <div class="progress-step" data-state="done"><span>Complete</span><strong>First agency invited</strong><small>Host Agency Test A received the onboarding request.</small></div>
+            <div class="progress-step" data-state="blocked"><span>Deferred</span><strong>Payment setup</strong><small>Stripe/KYC remains with Finance Admin.</small></div>
+          </div>
+        </div>
+        <aside class="setup-panel" id="settings" aria-labelledby="setup-title">
+          <div><h2 id="setup-title">Setup blockers</h2><p class="lede">Daily work can continue, but approval remains unavailable until these are resolved.</p></div>
+          <div class="setup-row"><div><strong>Stripe payment setup and KYC</strong><span>Owner: Finance Admin</span></div><span class="status warn">Deferred</span></div>
+          <div class="setup-row"><div><strong>Oracle/OHIP production credentials</strong><span>Pilot can continue with the imported sample.</span></div><span class="status info">External</span></div>
+          <button class="btn primary" type="button">Assign setup owner</button>
+        </aside>
+      </section>
+
+      <section class="report" aria-labelledby="report-title">
+        <header class="section-head"><div><h2 id="report-title">Daily report</h2><p>Structured handover from onboarding. No generated prose.</p></div><a href="TSP_Commission_Detail_v1.html">Open filtered ledger</a></header>
+        <div class="report-grid">
+          <div class="report-col"><h3>Yesterday</h3><ul class="report-list"><li><strong>147</strong><span>commissions confirmed into the ledger</span></li><li><strong>4</strong><span>exact duplicates excluded with source rows retained</span></li><li><strong>1</strong><span>agency invitation sent to Host Agency Test A</span></li></ul></div>
+          <div class="report-col"><h3>Today</h3><ul class="report-list"><li><strong>2</strong><span>high-risk review items need hotel decisions</span></li><li><strong>14</strong><span>commissions wait on the invited agency</span></li><li><strong>EUR 655</strong><span>ready-for-approval value held until payment setup is complete</span></li></ul></div>
+          <div class="report-col"><h3>Outstanding</h3><ul class="report-list"><li><strong>Payment setup</strong><span>Finance Admin must complete Stripe/KYC before approvals unlock</span></li><li><strong>4</strong><span>lower-risk import issues carried into System issues</span></li><li><strong>OHIP</strong><span>production credentials remain an external dependency</span></li></ul></div>
+        </div>
+      </section>
+
+      <div class="work-grid">
+        <section class="queue" aria-labelledby="queue-title">
+          <header class="queue-head"><div><h2 id="queue-title">Needs attention</h2><p class="lede">Grouped by the party responsible, ordered by financial risk.</p></div><div class="segments" aria-label="Filter work queue"><button class="segment" type="button" aria-pressed="true" data-filter="all">All 5</button><button class="segment" type="button" aria-pressed="false" data-filter="hotel">Hotel</button><button class="segment" type="button" aria-pressed="false" data-filter="agency">Agency</button><button class="segment" type="button" aria-pressed="false" data-filter="system">System</button></div></header>
+          <article class="queue-item" data-owner="hotel"><span class="queue-marker" aria-hidden="true"></span><div class="item-copy"><div class="item-title"><strong>Resolve carried rate conflict</strong><span class="status review">Needs Review</span></div><p><span class="item-ref">RES-10491</span> - Host Agency Test A - EUR 288 candidate value</p></div><div class="owner"><span>Hotel action</span><strong>Due today</strong></div><a class="btn primary" href="TSP_Commission_Detail_v1.html">Review</a></article>
+          <article class="queue-item" data-owner="hotel"><span class="queue-marker" aria-hidden="true"></span><div class="item-copy"><div class="item-title"><strong>Confirm fuzzy duplicate handling</strong><span class="status review">Needs Review</span></div><p><span class="item-ref">RES-10482</span> - adjacent booking reference from import</p></div><div class="owner"><span>Hotel action</span><strong>Due today</strong></div><a class="btn" href="TSP_Commission_Detail_v1.html">Open</a></article>
+          <article class="queue-item" data-owner="agency"><span class="queue-marker" aria-hidden="true"></span><div class="item-copy"><div class="item-title"><strong>Agency invoice and profile confirmation</strong><span class="status warn">Waiting on Agency</span></div><p><span class="item-ref">HOST-A-001</span> - 14 matched commissions</p></div><div class="owner"><span>Agency action</span><strong>Invite sent</strong></div><a class="btn" href="TSP_Agents_v1.html">View agency</a></article>
+          <article class="queue-item" data-owner="system"><span class="queue-marker" aria-hidden="true"></span><div class="item-copy"><div class="item-title"><strong>Resolve missing agency identifier</strong><span class="status info">System issue</span></div><p><span class="item-ref">IMPORT-2026-071</span> - four staged records need owner confirmation</p></div><div class="owner"><span>System issue</span><strong>Owner assigned</strong></div><button class="btn" type="button">Open batch</button></article>
+          <article class="queue-item" data-owner="system"><span class="queue-marker" aria-hidden="true"></span><div class="item-copy"><div class="item-title"><strong>Connect production OHIP source</strong><span class="status info">External</span></div><p><span class="item-ref">OHIP-SETUP</span> - sample import remains usable for pilot validation</p></div><div class="owner"><span>External dependency</span><strong>Fraz / Oracle</strong></div><button class="btn" type="button">Copy status</button></article>
+        </section>
+
+        <aside class="approval" aria-labelledby="approval-title">
+          <header><h2 id="approval-title">Ready for approval</h2><p class="lede">Prepared items are visible, but approval is disabled until payment setup is complete.</p></header>
+          <div class="approval-total"><div><span>Prepared value</span><strong>EUR 655</strong></div><span class="status warn">Blocked</span></div>
+          <div class="approval-list">
+            <div class="approval-item"><div><strong>Elite Voyages Paris</strong><small>OPERA-2026-00187</small></div><span>EUR 195</span></div>
+            <div class="approval-item"><div><strong>Luxury Travel Partners</strong><small>MANUAL-2026-00003</small></div><span>EUR 150</span></div>
+            <div class="approval-item"><div><strong>Elite Voyages Paris</strong><small>OPERA-2026-00215</small></div><span>EUR 310</span></div>
+          </div>
+          <button class="btn primary" type="button" disabled>Approve unavailable</button>
+          <p class="notice"><strong>Boundary:</strong> Volta records readiness, approval, and status. Stripe owns KYC/KYB and fund movement. A fresh explicit approval is required before any payment instruction.</p>
+        </aside>
+      </div>
+
+      <section class="activity" aria-labelledby="activity-title">
+        <header class="section-head"><div><h2 id="activity-title">Recent activity</h2><p>Significant onboarding and ledger events only. Full history remains in Commissions.</p></div><a href="TSP_Commission_Detail_v1.html">View history</a></header>
+        <div class="activity-list">
+          <article class="activity-item"><time>Today - invite sent</time><strong>Agency invitation sent</strong><p>Host Agency Test A - Agency Admin alex@host-a.test</p><span class="activity-amount">14 records</span></article>
+          <article class="activity-item"><time>Today - review saved</time><strong>Financial conflict resolved</strong><p>RES-10482 - selected value and reason stored</p><span class="activity-amount">EUR 288</span></article>
+          <article class="activity-item"><time>Today - import closed</time><strong>Import confirmed</strong><p>147 ledger records created - source values retained</p><span class="activity-amount">EUR 28.6k</span></article>
+          <article class="activity-item"><time>Today - controls set</time><strong>Team controls assigned</strong><p>Admin, Operator, Viewer, and Payment Approver set</p><span class="activity-amount">3 roles</span></article>
+        </div>
+      </section>
+
+      <section class="activity" id="next-surfaces" aria-labelledby="next-title">
+        <header class="section-head"><div><h2 id="next-title">Next surfaces</h2><p>These stay contextual until the underlying workflows are rendered.</p></div><span class="status info">Planned</span></header>
+        <div class="activity-list">
+          <article class="activity-item"><time>Next render</time><strong>Commission Detail</strong><p>Includes the contextual Resolution queue and audit evidence.</p><span class="activity-amount">P0</span></article>
+          <article class="activity-item"><time>Later</time><strong>Agencies</strong><p>Tracks invite status, Agency Admin, and host-agency relationships.</p><span class="activity-amount">P1</span></article>
+          <article class="activity-item"><time>Later</time><strong>Settlement History</strong><p>Merges batch review, status filters, and Stripe-owned movement status.</p><span class="activity-amount">P1</span></article>
+          <article class="activity-item"><time>Later</time><strong>Workflows</strong><p>Fixed reminder, invoice, and report cards after core actions are proven.</p><span class="activity-amount">P2</span></article>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+<dialog class="command-menu" id="command-menu" aria-labelledby="command-title">
+  <div class="command-head"><input id="command-title" type="search" placeholder="Search commissions, agencies, or references" aria-label="Search workspace"><button class="btn" type="button" data-close-command>Close</button></div>
+  <nav class="command-list" aria-label="Quick navigation"><a href="TSP_Commission_Detail_v1.html"><strong>Open carried review item</strong><span>Commissions</span></a><a href="TSP_Agents_v1.html"><strong>Open Host Agency Test A</strong><span>Agencies</span></a><a href="#settings"><strong>Assign payment setup owner</strong><span>Settings</span></a></nav>
+</dialog>
+<script>
+const segments=[...document.querySelectorAll('.segment')];
+const queueItems=[...document.querySelectorAll('.queue-item')];
+const commandMenu=document.getElementById('command-menu');
+document.querySelector('.search').addEventListener('click',()=>commandMenu.showModal());
+document.querySelector('[data-close-command]').addEventListener('click',()=>commandMenu.close());
+document.addEventListener('keydown',event=>{
+  if((event.metaKey||event.ctrlKey)&&event.key.toLowerCase()==='k'){
+    event.preventDefault();
+    if(!commandMenu.open) commandMenu.showModal();
+  }
+});
+segments.forEach(segment=>segment.addEventListener('click',()=>{
+  const filter=segment.dataset.filter;
+  segments.forEach(item=>item.setAttribute('aria-pressed',String(item===segment)));
+  queueItems.forEach(item=>item.hidden=filter!=='all'&&item.dataset.owner!==filter);
+}));
+</script>
+</body>
+</html>
+

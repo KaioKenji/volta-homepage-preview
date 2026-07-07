@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Volta Onboarding Demo Flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="icon" href="codex-20260707-volta-icon-navy-turquoise.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="codex-20260626-onboarding-home-product-wireframes.css">
+</head>
+<body>
+<header class="prototype-bar">
+  <strong>Onboarding demo flow</strong>
+  <nav class="screen-tabs" aria-label="Wireframe screens">
+    <button class="screen-tab" aria-selected="true" data-screen="import">1 Import</button>
+    <button class="screen-tab" aria-selected="false" data-screen="review">2 Review</button>
+    <button class="screen-tab" aria-selected="false" data-screen="resolve">3 Resolve</button>
+    <button class="screen-tab" aria-selected="false" data-screen="confirm">4 Confirm</button>
+    <button class="screen-tab" aria-selected="false" data-screen="setup">5 Setup</button>
+    <button class="screen-tab" aria-selected="false" data-screen="invite">6 Invite</button>
+    <button class="screen-tab" aria-selected="false" data-screen="success">7 Success</button>
+  </nav>
+</header>
+
+<main>
+<section class="screen active" id="screen-import">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark"><img src="codex-20260707-volta-icon-navy-turquoise.svg" alt=""></div><div><strong>Volta</strong><span>Hotel setup</span></div></div>
+      <div class="side-panel"><h2>Goal</h2><p>Get recent commission records into a reviewable ledger. Nothing becomes payable during import.</p></div>
+      <div class="step-list" aria-label="Onboarding steps">
+        <div class="side-step" aria-current="step"><div class="step-dot">1</div><div><strong>Import</strong><span>Choose source</span></div></div>
+        <div class="side-step"><div class="step-dot">2</div><div><strong>Review</strong><span>Resolve exceptions</span></div></div>
+        <div class="side-step"><div class="step-dot">3</div><div><strong>Set up</strong><span>Hotel and agency</span></div></div>
+      </div>
+      <div class="sidebar-footer">Product boundary: Volta records workflow and explicit approvals. Stripe owns fund movement.</div>
+    </aside>
+    <div class="main">
+      <div class="content-grid">
+        <header class="page-head">
+          <div><p class="kicker">Step 1 of 3 - Import commissions</p><h1>Start with the last 30 days of commissions.</h1><p class="lede">Pick the source you trust most for the first pass. Volta will stage records, show conflicts, and preserve every original source value before anything enters daily operations.</p></div>
+          <div class="top-actions"><button class="btn ghost">Skip for now</button><button class="btn primary" data-go="review">Continue</button></div>
+        </header>
+        <section class="panel span-12">
+          <div class="panel-head"><div><h2>Choose import source</h2><p>Recommended: import a bounded sample first, then expand after the flow is clean.</p></div><span class="tag info">No payable records yet</span></div>
+          <div class="panel-body">
+            <div class="choice-grid">
+              <button class="choice-card selected" data-go="review"><div class="choice-top"><span class="choice-icon">OH</span><span class="tag info">Recommended</span></div><h3>Oracle / OHIP</h3><p>Pull checkout, agency, booking value, rate, and commission metadata from the hotel source system.</p><span class="fine">Default range: last 30 days</span></button>
+              <button class="choice-card" data-go="review"><div class="choice-top"><span class="choice-icon">CSV</span></div><h3>Upload CSV</h3><p>Use this when OHIP credentials are not ready or finance already has a verified export.</p><span class="fine">Column mapping required</span></button>
+              <button class="choice-card" data-go="review"><div class="choice-top"><span class="choice-icon">+</span></div><h3>Add manually</h3><p>Create a small number of records for pilot validation without committing to integration setup.</p><span class="fine">Best for 1-5 records</span></button>
+            </div>
+          </div>
+        </section>
+        <section class="card span-7"><h2>Import settings</h2><div class="field-grid"><div class="field"><label for="import-range">Import range</label><select id="import-range"><option>Last 30 days</option><option>Last 14 days</option></select></div><div class="field"><label for="hotel">Property</label><select id="hotel"><option>Hotel de Toiras</option></select></div><div class="field"><label for="currency">Default currency</label><select id="currency"><option>EUR</option></select></div><div class="field"><label for="owner">Review owner</label><select id="owner"><option>Kenji - Operator</option><option>Finance Admin</option></select></div></div></section>
+        <aside class="card span-5"><h2>What happens next</h2><div class="checklist"><div class="check-item complete"><span class="check-icon">1</span><div><strong>Source rows are logged</strong><div class="fine">Immutable import log for audit and reconciliation.</div></div></div><div class="check-item"><span class="check-icon">2</span><div><strong>Valid records are staged</strong><div class="fine">They are visible but not payable.</div></div></div><div class="check-item blocked"><span class="check-icon">3</span><div><strong>Conflicts require human review</strong><div class="fine">Reason, user, timestamp, and originals are stored.</div></div></div></div></aside>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="screen" id="screen-review">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark"><img src="codex-20260707-volta-icon-navy-turquoise.svg" alt=""></div><div><strong>Volta</strong><span>Import review</span></div></div>
+      <div class="side-panel"><h2>Review rule</h2><p>Exact duplicates can be applied in bulk after examples. Fuzzy duplicates and field conflicts stay manual.</p></div>
+      <div class="step-list"><div class="side-step done"><div class="step-dot">OK</div><div><strong>Import</strong><span>Source selected</span></div></div><div class="side-step" aria-current="step"><div class="step-dot">2</div><div><strong>Review</strong><span>Validate results</span></div></div><div class="side-step"><div class="step-dot">3</div><div><strong>Set up</strong><span>Hotel and agency</span></div></div></div>
+      <div class="sidebar-footer">A clean import creates the first meaningful Home queue.</div>
+    </aside>
+    <div class="main">
+      <div class="content-grid">
+        <header class="page-head"><div><p class="kicker">Import results</p><h1>162 records found. 11 need attention before the ledger is confirmed.</h1><p class="lede">Review the high-risk issues now. Lower-risk setup items can continue into Home with a clear owner and status.</p></div><div class="top-actions"><button class="btn" data-go="import">Back</button><button class="btn primary" data-go="resolve">Review issues</button></div></header>
+        <div class="span-12 metric-strip"><div class="metric"><strong>162</strong><span>source rows imported</span></div><div class="metric"><strong>147</strong><span>valid staged records</span></div><div class="metric"><strong>4</strong><span>exact duplicates excluded</span></div><div class="metric"><strong>7</strong><span>field conflicts</span></div><div class="metric"><strong>EUR 28,640</strong><span>staged commission value</span></div></div>
+        <section class="panel span-8">
+          <div class="panel-head"><div><h2>Issues caught during import</h2><p>Representative issues are reviewed first. Remaining unresolved items can continue to Home.</p></div><span class="tag warn">11 open</span></div>
+          <div class="row-list">
+            <div class="row"><div><strong class="mono">RES-10482</strong><span>12-15 Jun</span></div><div><strong>Rate conflict</strong><span>Oracle says 10%; CSV says 12%</span></div><div><span class="tag bad">Manual decision</span></div><button class="btn" data-go="resolve">Resolve</button></div>
+            <div class="row"><div><strong class="mono">RES-10491</strong><span>14-17 Jun</span></div><div><strong>Fuzzy duplicate</strong><span>Same guest, adjacent booking reference</span></div><div><span class="tag bad">Manual decision</span></div><button class="btn" data-go="resolve">Resolve</button></div>
+            <div class="row"><div><strong class="mono">RES-10372</strong><span>4-7 Jun</span></div><div><strong>Exact duplicate</strong><span>Same source ID already imported</span></div><div><span class="tag good">Rule available</span></div><button class="btn">Apply rule</button></div>
+            <div class="row"><div><strong class="mono">AGY-077</strong><span>Agency</span></div><div><strong>Missing agency identifier</strong><span>Agency name exists; IATA field blank</span></div><div><span class="tag warn">Can review later</span></div><button class="btn">Assign owner</button></div>
+          </div>
+        </section>
+        <aside class="card span-4"><h2>Recommended path</h2><p class="muted">Resolve the two high-risk financial examples now. Then confirm the staged ledger and let lower-risk setup issues appear on Home.</p><div class="checklist"><div class="check-item complete"><span class="check-icon">OK</span><div><strong>Exact duplicate examples</strong><div class="fine">4 excluded from the staged ledger.</div></div></div><div class="check-item blocked"><span class="check-icon">!</span><div><strong>Financial conflicts</strong><div class="fine">Must capture selected value and reason.</div></div></div><div class="check-item"><span class="check-icon">Next</span><div><strong>Home impact</strong><div class="fine">Unresolved setup issues become System issues.</div></div></div></div></aside>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="screen" id="screen-resolve">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark"><img src="codex-20260707-volta-icon-navy-turquoise.svg" alt=""></div><div><strong>Volta</strong><span>Conflict resolution</span></div></div>
+      <div class="side-panel"><h2>Required evidence</h2><p>Selected values, reason, authenticated user, timestamp, and original values.</p></div>
+      <div class="step-list"><div class="side-step done"><div class="step-dot">OK</div><div><strong>Import</strong><span>Source selected</span></div></div><div class="side-step" aria-current="step"><div class="step-dot">2</div><div><strong>Review</strong><span>Resolve conflict</span></div></div><div class="side-step"><div class="step-dot">3</div><div><strong>Set up</strong><span>Hotel and agency</span></div></div></div>
+    </aside>
+    <div class="main">
+      <div class="content-grid">
+        <header class="page-head"><div><p class="kicker">Conflict - RES-10482</p><h1>Choose the commission value that should enter the ledger.</h1><p class="lede">Volta highlights the disagreement. It does not assume Oracle, CSV, or the newest record is correct.</p></div><div class="top-actions"><button class="btn" data-go="review">Back to issues</button><button class="btn primary" data-go="confirm">Save resolution</button></div></header>
+        <section class="panel span-12"><div class="panel-head"><div><h2>Side-by-side source comparison</h2><p>Only the selected value becomes the working ledger value. Originals remain available in audit history.</p></div><span class="tag bad">Financial conflict</span></div>
+          <div class="compare">
+            <div class="compare-head"><div>Field</div><div>Oracle / OHIP</div><div>CSV upload</div><div>Selected value</div></div>
+            <div class="compare-row"><div>Booking reference</div><div class="mono">RES-10482</div><div class="mono">RES-10482</div><div class="selected-value mono">RES-10482</div></div>
+            <div class="compare-row"><div>Agency</div><div>Host Agency Test A</div><div>Host Agency Test A</div><div class="selected-value">Host Agency Test A</div></div>
+            <div class="compare-row"><div>Booking value</div><div class="mono">EUR 2,400</div><div class="mono">EUR 2,400</div><div class="selected-value mono">EUR 2,400</div></div>
+            <div class="compare-row"><div>Commission rate</div><div class="conflict-value mono">10%</div><div class="selected-value mono">12%</div><div class="selected-value mono">12%</div></div>
+            <div class="compare-row"><div>Commission amount</div><div class="conflict-value mono">EUR 240</div><div class="selected-value mono">EUR 288</div><div class="selected-value mono">EUR 288</div></div>
+          </div>
+        </section>
+        <section class="card span-7"><h2>Resolution note</h2><div class="field"><label for="reason">Reason required</label><textarea id="reason">Preferred-rate agreement confirmed by finance. CSV export includes the correct 12% agency rate for this stay.</textarea></div><div class="field-grid"><div class="field"><label for="resolver">Resolve as</label><select id="resolver"><option>Kenji - Operator</option></select></div><div class="field"><label for="audit">Audit timestamp</label><input id="audit" value="26 Jun 2026 - 10:42 SGT"></div></div></section>
+        <aside class="card span-5"><h2>Home consequence</h2><p class="muted">After this save, RES-10482 can proceed to invoice and agency readiness checks. It still cannot be paid until every requirement is complete and an approver explicitly approves the item.</p><div class="notice warn"><strong>Still blocked:</strong> Agency invoice and payout setup are incomplete.</div></aside>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="screen" id="screen-confirm">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark"><img src="codex-20260707-volta-icon-navy-turquoise.svg" alt=""></div><div><strong>Volta</strong><span>Confirm ledger</span></div></div>
+      <div class="side-panel"><h2>Ledger rule</h2><p>Confirming import creates operational records, not payment instructions.</p></div>
+      <div class="step-list"><div class="side-step done"><div class="step-dot">OK</div><div><strong>Import</strong><span>Source selected</span></div></div><div class="side-step done"><div class="step-dot">OK</div><div><strong>Review</strong><span>High-risk issues handled</span></div></div><div class="side-step" aria-current="step"><div class="step-dot">3</div><div><strong>Confirm</strong><span>Create work queue</span></div></div></div>
+    </aside>
+    <div class="main">
+      <div class="content-grid">
+        <header class="page-head"><div><p class="kicker">Confirm import</p><h1>147 commissions are ready to enter the operating ledger.</h1><p class="lede">Confirming the import creates the first working queue for finance, agency follow-up, and system setup. It does not create payment instructions.</p></div><div class="top-actions"><button class="btn" data-go="resolve">Back</button><button class="btn primary" data-go="setup">Confirm import</button></div></header>
+        <section class="panel span-8"><div class="panel-head"><div><h2>Import summary</h2><p>Records are separated by what can proceed, what was excluded, and what needs an owner.</p></div><span class="tag info">Batch OHIP-2026-06-26-01</span></div><div class="row-list"><div class="row"><div><strong>Created</strong><span>Ledger records</span></div><div><strong>147 staged commissions</strong><span>Available in Commissions after confirm</span></div><div><span class="tag good">Ready</span></div><button class="btn">View sample</button></div><div class="row"><div><strong>Excluded</strong><span>Duplicates</span></div><div><strong>4 exact duplicates</strong><span>Original retained with exclusion reason</span></div><div><span class="tag good">Logged</span></div><button class="btn">View log</button></div><div class="row"><div><strong>Carry forward</strong><span>System issues</span></div><div><strong>4 lower-risk issues</strong><span>Assigned to Home after onboarding</span></div><div><span class="tag warn">Open</span></div><button class="btn">Assign</button></div></div></section>
+        <aside class="card span-4"><h2>Before you confirm</h2><div class="checklist"><div class="check-item complete"><span class="check-icon">OK</span><div><strong>Source rows stored</strong><div class="fine">Import log cannot be edited.</div></div></div><div class="check-item complete"><span class="check-icon">OK</span><div><strong>Financial conflict resolved</strong><div class="fine">Reason and selected values captured.</div></div></div><div class="check-item blocked"><span class="check-icon">!</span><div><strong>Payment setup incomplete</strong><div class="fine">Ledger can continue; payments stay disabled.</div></div></div></div></aside>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="screen" id="screen-setup">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark"><img src="codex-20260707-volta-icon-navy-turquoise.svg" alt=""></div><div><strong>Volta</strong><span>Hotel setup</span></div></div>
+      <div class="side-panel"><h2>Simplification</h2><p>Three roles. Payment approver is an Admin permission, not a fourth role.</p></div>
+      <div class="step-list"><div class="side-step done"><div class="step-dot">OK</div><div><strong>Import</strong><span>Ledger staged</span></div></div><div class="side-step" aria-current="step"><div class="step-dot">2</div><div><strong>Hotel setup</strong><span>Users and payment owner</span></div></div><div class="side-step"><div class="step-dot">3</div><div><strong>Invite agency</strong><span>First external step</span></div></div></div>
+    </aside>
+    <div class="main">
+      <div class="content-grid">
+        <header class="page-head"><div><p class="kicker">Step 2 of 3 - Hotel setup</p><h1>Set the minimum controls needed for daily work.</h1><p class="lede">Operators can import, review, prepare invoices, and request missing details. Payment approval stays gated until setup and explicit approver action are complete.</p></div><div class="top-actions"><button class="btn" data-go="confirm">Back</button><button class="btn primary" data-go="invite">Continue</button></div></header>
+        <section class="panel span-7"><div class="panel-head"><div><h2>Team access</h2><p>Three roles cover the pilot without hiding payment authority.</p></div><button class="btn">Invite teammate</button></div><div class="row-list"><div class="row"><div><strong>Kenji</strong><span>kenji@example.test</span></div><div><strong>Operator</strong><span>Imports, reviews, invoices, agencies, workflows</span></div><div><span class="tag info">Cannot approve payment</span></div><button class="btn">Edit</button></div><div class="row"><div><strong>Finance Admin</strong><span>finance@example.test</span></div><div><strong>Admin</strong><span>Hotel profile, users, payment setup</span></div><div><span class="tag good">Payment approver</span></div><button class="btn">Edit</button></div><div class="row"><div><strong>Group Viewer</strong><span>viewer@example.test</span></div><div><strong>Viewer</strong><span>Reporting and history only</span></div><div><span class="tag">Read only</span></div><button class="btn">Edit</button></div></div></section>
+        <aside class="card span-5"><h2>Payment setup handoff</h2><div class="notice warn"><strong>Deferred setup:</strong> Stripe/KYC is not complete. Imports, review, agency invitations, invoices, and reminders can continue. Payment approval remains unavailable.</div><div class="action-group"><button class="btn primary">Assign to Finance Admin</button><button class="btn">Copy setup link</button></div></aside>
+        <section class="panel span-12"><div class="panel-head"><div><h2>Setup checklist</h2><p>This becomes the persistent Home onboarding card until completed.</p></div><span class="tag warn">2 incomplete</span></div><div class="panel-body"><div class="checklist"><div class="check-item complete"><span class="check-icon">OK</span><div><strong>Hotel profile confirmed</strong><div class="fine">Hotel de Toiras - EUR - Europe/Paris</div></div><span class="tag good">Complete</span></div><div class="check-item complete"><span class="check-icon">OK</span><div><strong>Users and roles assigned</strong><div class="fine">Admin, Operator, Viewer only</div></div><span class="tag good">Complete</span></div><div class="check-item blocked"><span class="check-icon">!</span><div><strong>Stripe payment setup and KYC</strong><div class="fine">Owner: Finance Admin</div></div><span class="tag warn">Deferred</span></div><div class="check-item blocked"><span class="check-icon">!</span><div><strong>Oracle/OHIP production credentials</strong><div class="fine">Pilot can continue with current import sample</div></div><span class="tag warn">External dependency</span></div></div></div></section>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="screen" id="screen-invite">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark"><img src="codex-20260707-volta-icon-navy-turquoise.svg" alt=""></div><div><strong>Volta</strong><span>Agency invite</span></div></div>
+      <div class="side-panel"><h2>Cold-start rule</h2><p>Invite one agency first. Do not push mass rollout before the first agency completes onboarding.</p></div>
+      <div class="step-list"><div class="side-step done"><div class="step-dot">OK</div><div><strong>Import</strong><span>Ledger staged</span></div></div><div class="side-step done"><div class="step-dot">OK</div><div><strong>Hotel setup</strong><span>Minimum controls set</span></div></div><div class="side-step" aria-current="step"><div class="step-dot">3</div><div><strong>Invite agency</strong><span>First external step</span></div></div></div>
+    </aside>
+    <div class="main">
+      <div class="content-grid">
+        <header class="page-head"><div><p class="kicker">Step 3 of 3 - First agency</p><h1>Invite one agency administrator to complete their side.</h1><p class="lede">Volta communicates with the agency organization through a designated Agency Admin. Individual agents remain attribution metadata unless they are the recipient organization.</p></div><div class="top-actions"><button class="btn" data-go="setup">Back</button><button class="btn primary" data-go="success">Send invitation</button></div></header>
+        <section class="card span-7"><h2>Agency invitation</h2><div class="field-grid"><div class="field"><label for="agency-name">Agency organization</label><input id="agency-name" value="Host Agency Test A"></div><div class="field"><label for="relationship">Relationship type</label><select id="relationship"><option>Host agency</option><option>Independent agency</option></select></div><div class="field"><label for="agency-id">Agency identifier</label><input id="agency-id" value="TEST-IATA-A001"></div><div class="field"><label for="admin-email">Agency Admin email</label><input id="admin-email" value="alex@host-a.test"></div></div><div class="notice" style="margin-top:14px"><strong>Payment recipient:</strong> Host Agency Test A. Hosted agents do not receive payment directly through this relationship.</div></section>
+        <aside class="card span-5"><h2>What the agency sees</h2><div class="checklist"><div class="check-item"><span class="check-icon">1</span><div><strong>Confirm organization identity</strong><div class="fine">Name, identifier, admin contact.</div></div></div><div class="check-item"><span class="check-icon">2</span><div><strong>Review proposed agent relationships</strong><div class="fine">Mass-approve if they are correct.</div></div></div><div class="check-item"><span class="check-icon">3</span><div><strong>Provide missing requirements</strong><div class="fine">Invoice, payout fixture, or profile confirmation.</div></div></div></div></aside>
+        <section class="panel span-12"><div class="panel-head"><div><h2>Matched commissions</h2><p>These records will wait on this agency after the invite is sent.</p></div><span class="tag warn">14 open commissions</span></div><div class="row-list"><div class="row"><div><strong class="mono">RES-10482</strong><span>12-15 Jun</span></div><div><strong>Invoice required</strong><span>Commission verified after conflict resolution</span></div><div><span class="tag warn">Waiting on Agency</span></div><button class="btn">Preview</button></div><div class="row"><div><strong class="mono">RES-10417</strong><span>19-23 Jun</span></div><div><strong>Profile confirmation</strong><span>Agency identifier matched from import</span></div><div><span class="tag warn">Waiting on Agency</span></div><button class="btn">Preview</button></div></div></section>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="screen" id="screen-success">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark"><img src="codex-20260707-volta-icon-navy-turquoise.svg" alt=""></div><div><strong>Volta</strong><span>Onboarding complete</span></div></div>
+      <div class="side-panel"><h2>Next screen</h2><p>Home should now explain exactly what changed and what still needs action.</p></div>
+      <div class="step-list"><div class="side-step done"><div class="step-dot">OK</div><div><strong>Import</strong><span>Ledger staged</span></div></div><div class="side-step done"><div class="step-dot">OK</div><div><strong>Hotel setup</strong><span>Controls assigned</span></div></div><div class="side-step done" aria-current="step"><div class="step-dot">OK</div><div><strong>Invite agency</strong><span>First invite sent</span></div></div></div>
+    </aside>
+    <div class="main">
+      <div class="content-grid">
+        <section class="card span-7"><div class="success-mark">OK</div><p class="kicker">First setup complete</p><h1>Host Agency Test A has been invited.</h1><p class="lede">Your first working ledger is ready. Home will show unresolved import issues, agency follow-up, payment setup handoff, and the few records that are ready for the next human decision.</p><div class="actions"><span class="fine">Invitation sent 26 Jun 2026 - 10:58 SGT</span><div class="action-group"><button class="btn" data-go="invite">Invite another later</button><a class="btn primary" href="codex-20260707-first-home-arrival.html">Open first Home</a></div></div></section>
+        <aside class="card span-5"><h2>Home will include</h2><div class="checklist"><div class="check-item complete"><span class="check-icon">OK</span><div><strong>Onboarding progress</strong><div class="fine">Still visible because payment setup is deferred.</div></div></div><div class="check-item complete"><span class="check-icon">OK</span><div><strong>Daily report</strong><div class="fine">Structured metrics, not generated prose.</div></div></div><div class="check-item blocked"><span class="check-icon">!</span><div><strong>Needs attention</strong><div class="fine">Grouped by Hotel, Agency, and System owner.</div></div></div><div class="check-item"><span class="check-icon">Next</span><div><strong>Ready for approval</strong><div class="fine">Payment actions remain disabled until setup is complete.</div></div></div></div></aside>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+const screens=[...document.querySelectorAll('.screen')];
+const tabs=[...document.querySelectorAll('.screen-tab')];
+function showScreen(name){
+  screens.forEach(screen=>screen.classList.toggle('active',screen.id===`screen-${name}`));
+  tabs.forEach(tab=>tab.setAttribute('aria-selected',String(tab.dataset.screen===name)));
+  const params=new URLSearchParams(location.search);
+  params.set('screen',name);
+  history.replaceState(null,'',`${location.pathname}?${params}${location.hash}`);
+  window.scrollTo({top:0,behavior:'instant'});
+}
+tabs.forEach(tab=>tab.addEventListener('click',()=>showScreen(tab.dataset.screen)));
+document.querySelectorAll('[data-go]').forEach(control=>control.addEventListener('click',event=>{event.preventDefault();showScreen(control.dataset.go)}));
+const initialParams=new URLSearchParams(location.search);
+showScreen(initialParams.get('screen')||'import');
+</script>
+</body>
+</html>
