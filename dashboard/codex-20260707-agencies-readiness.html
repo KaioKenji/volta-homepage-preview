@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Volta Agencies Readiness</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="icon" href="codex-20260707-volta-icon-navy-turquoise.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --white:#fff;--canvas:#f0f7f9;--surface:#fff;--surface-2:#e2edf0;--surface-3:#d0dfe5;
+  --ink:#091d36;--ink-2:#3a4f65;--ink-3:#697d8e;--line:#d0dfe5;--line-strong:#a3b4bf;
+  --accent:#59cdc6;--accent-strong:#0a7975;--accent-soft:#e3f8f7;
+  --green:#18775d;--green-soft:#e9f6f1;--amber:#93621a;--amber-soft:#fff6e5;
+  --red:#b33f46;--red-soft:#fff0f1;--blue:#356d91;--blue-soft:#edf5fa;
+  --radius:6px;--control-radius:4px;--font:Manrope,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --mono:"DM Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{background:var(--canvas)}
+body{margin:0;color:var(--ink);background:var(--canvas);font:14px/1.5 var(--font);font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+button,a,input,textarea{font:inherit}
+button{color:inherit}
+a{color:inherit}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.skip-link{position:fixed;left:16px;top:-60px;z-index:50;background:var(--ink);color:var(--white);padding:10px 14px;border-radius:var(--control-radius)}
+.skip-link:focus{top:16px}
+.app{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100dvh}
+.sidebar{position:sticky;top:0;height:100dvh;display:flex;flex-direction:column;padding:24px 16px 18px;background:var(--white);border-right:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px 22px}
+.brand-mark img{display:block;width:34px;height:34px}
+.brand strong,.brand span{display:block}
+.brand strong{font-size:15px;font-weight:600}
+.brand span{color:var(--ink-3);font-size:11px}
+.search{display:flex;width:100%;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;padding:9px 10px;border:1px solid var(--line);border-radius:var(--control-radius);background:var(--white);color:var(--ink-2);cursor:pointer}
+.search kbd{border:1px solid var(--line);border-radius:3px;background:var(--surface-2);padding:1px 5px;color:var(--ink-3);font:400 10px/1.4 var(--mono)}
+.nav-label{margin:0 10px 6px;color:var(--ink-3);font-size:11px;font-weight:500}
+.nav{display:grid;gap:2px}
+.nav a{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;padding:9px 10px;border-radius:var(--control-radius);text-decoration:none;color:var(--ink-2)}
+.nav a:hover{background:var(--surface-2);color:var(--ink)}
+.nav a[aria-current="page"]{background:var(--accent-soft);color:var(--ink)}
+.nav-copy strong,.nav-copy span{display:block}
+.nav-copy strong{font-size:13px;font-weight:500}
+.nav-copy span{margin-top:1px;color:var(--ink-3);font-size:10px}
+.nav-count{min-width:20px;border-radius:999px;background:var(--surface-2);padding:2px 6px;text-align:center;font:500 10px/1.4 var(--mono)}
+.nav a[aria-current="page"] .nav-count{background:var(--accent);color:var(--ink)}
+.sidebar-bottom{display:grid;gap:14px;margin-top:auto}
+.settle-stat{padding:14px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.settle-stat span,.settle-stat strong{display:block}
+.settle-stat span{color:var(--ink-3);font-size:11px}
+.settle-stat strong{margin:4px 0;font:500 28px/1.1 var(--mono)}
+.settle-stat small{color:var(--ink-2)}
+.profile{display:flex;align-items:center;gap:9px;padding:0 8px}
+.avatar{display:grid;width:30px;height:30px;place-items:center;border-radius:var(--control-radius);background:var(--surface-2);font:500 10px/1 var(--mono)}
+.profile strong,.profile span{display:block}
+.profile strong{font-size:12px;font-weight:500}
+.profile span{color:var(--ink-3);font-size:10px}
+.main{min-width:0;background:var(--white)}
+.topbar{height:64px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 clamp(24px,4vw,56px);border-bottom:1px solid var(--line);background:var(--white)}
+.crumb{color:var(--ink-3);font-size:12px}
+.topbar-actions{display:flex;align-items:center;gap:12px}
+.live{display:inline-flex;align-items:center;gap:7px;color:var(--ink-2);font-size:11px}
+.live::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green)}
+.btn{display:inline-flex;min-height:36px;align-items:center;justify-content:center;border:1px solid var(--line-strong);border-radius:var(--control-radius);background:var(--white);padding:8px 12px;text-decoration:none;font-weight:500;cursor:pointer;transition:background .16s,border-color .16s,transform .16s}
+.btn:hover{border-color:var(--ink-2);background:var(--surface-2)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{border-color:var(--accent-strong);background:var(--accent-strong);color:var(--white)}
+.btn.primary:hover{background:#075f5c}
+.btn:disabled{cursor:not-allowed;opacity:.5}
+.content{max-width:1440px;margin:0 auto;padding:34px clamp(24px,4vw,56px) 72px}
+.page-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:start;margin-bottom:28px}
+.eyeline{margin:0 0 6px;color:var(--ink-3);font-size:12px}
+h1,h2,h3,p{margin-top:0}
+h1{margin-bottom:8px;font-size:32px;line-height:1.15;font-weight:500;letter-spacing:0}
+h2{margin-bottom:4px;font-size:17px;line-height:1.3;font-weight:600;letter-spacing:0}
+h3{margin-bottom:4px;font-size:13px;font-weight:600}
+.lede{max-width:68ch;margin-bottom:0;color:var(--ink-2)}
+.page-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.status{display:inline-flex;width:max-content;border-radius:999px;padding:3px 7px;font-size:10px;font-weight:500}
+.status.good{background:var(--green-soft);color:var(--green)}
+.status.warn{background:var(--amber-soft);color:var(--amber)}
+.status.review{background:var(--red-soft);color:var(--red)}
+.status.info{background:var(--blue-soft);color:var(--blue)}
+.agency-grid{display:grid;grid-template-columns:minmax(360px,.82fr) minmax(0,1.18fr) 320px;gap:24px;align-items:start}
+.directory,.profile-panel,.request-panel,.relationship,.commissions,.invites{border-top:1px solid var(--line-strong)}
+.section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:18px 0 14px}
+.section-head p{margin:2px 0 0;color:var(--ink-2);font-size:12px}
+.toolbar{display:grid;gap:10px;margin-bottom:14px}
+.input{width:100%;border:1px solid var(--line-strong);border-radius:var(--control-radius);background:var(--white);padding:10px 11px;color:var(--ink)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{border:1px solid var(--line);border-radius:999px;background:var(--white);padding:7px 10px;color:var(--ink-2);font-size:12px;cursor:pointer}
+.tab[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--ink)}
+.agency-list{display:grid;border-top:1px solid var(--line)}
+.agency-row{display:grid;gap:8px;width:100%;border:0;border-bottom:1px solid var(--line);background:transparent;padding:14px 0;text-align:left;cursor:pointer}
+.agency-row:hover{background:var(--canvas)}
+.agency-row[aria-pressed="true"]{margin:8px 0;padding:12px 10px;border:1px solid var(--accent);border-radius:var(--radius);background:var(--accent-soft)}
+.agency-main{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.agency-main strong{font-size:13px;font-weight:600}
+.agency-main span{font:500 12px/1.35 var(--mono)}
+.agency-meta{display:flex;gap:7px;flex-wrap:wrap;color:var(--ink-2);font-size:11px}
+.agency-meta span{padding-right:7px;border-right:1px solid var(--line)}
+.agency-meta span:last-child{border-right:0}
+.summary-band{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:24px}
+.summary-cell{min-width:0;padding:16px;border-right:1px solid var(--line)}
+.summary-cell:last-child{border-right:0}
+.summary-cell span,.summary-cell strong{display:block}
+.summary-cell span{color:var(--ink-3);font-size:11px}
+.summary-cell strong{margin-top:5px;font:500 20px/1.15 var(--mono)}
+.profile-title{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px}
+.profile-title strong{display:block;font-size:18px;font-weight:600}
+.profile-title span{display:block;margin-top:2px;color:var(--ink-2);font-size:12px}
+.relationship-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;border-top:1px solid var(--line);padding-top:16px}
+.fact{display:grid;gap:4px}
+.fact span{color:var(--ink-3);font-size:11px}
+.fact strong{font-size:13px;font-weight:600}
+.fact p{margin:0;color:var(--ink-2);font-size:12px}
+.timeline{display:grid;border-top:1px solid var(--line)}
+.step{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.step strong,.step span{display:block}
+.step strong{font-size:12px}
+.step span{margin-top:2px;color:var(--ink-2);font-size:11px}
+.request-panel{padding-top:18px}
+.request-list{display:grid;gap:10px;margin-bottom:14px}
+.checkline{display:flex;align-items:flex-start;gap:9px;color:var(--ink-2);font-size:12px}
+.checkline input{margin-top:3px;accent-color:var(--accent-strong)}
+textarea{width:100%;min-height:92px;border:1px solid var(--line-strong);border-radius:var(--control-radius);background:var(--white);padding:10px 11px;color:var(--ink);resize:vertical}
+.notice{padding:12px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface-2);color:var(--ink-2);font-size:12px}
+.notice strong{color:var(--ink);font-weight:600}
+.commission-table{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--surface)}
+.commission-row{display:grid;grid-template-columns:120px minmax(0,1fr) 110px 120px}
+.commission-row>*{min-width:0;padding:12px 14px;border-right:1px solid var(--line);border-top:1px solid var(--line);font-size:12px}
+.commission-row>*:last-child{border-right:0}
+.commission-row:first-child>*{border-top:0;background:var(--surface-2);color:var(--ink-3);font:500 10px/1.25 var(--mono)}
+.mono{font-family:var(--mono)}
+.empty{padding:18px 0;border-top:1px solid var(--line);color:var(--ink-2);font-size:12px}
+.rail{display:grid;gap:22px}
+.rail .btn{width:100%}
+.command-menu{width:min(520px,calc(100vw - 32px));border:1px solid var(--line-strong);border-radius:var(--radius);padding:0;background:var(--white);color:var(--ink);box-shadow:0 16px 40px rgb(9 29 54 / .16)}
+.command-menu::backdrop{background:rgb(9 29 54 / .28)}
+.command-head{display:flex;align-items:center;gap:10px;padding:12px;border-bottom:1px solid var(--line)}
+.command-head input{min-width:0;flex:1;border:0;outline:0;padding:8px;background:transparent;font:inherit}
+.command-list{display:grid;padding:8px}
+.command-list a{display:flex;justify-content:space-between;gap:16px;border-radius:var(--control-radius);padding:10px;text-decoration:none}
+.command-list a:hover{background:var(--surface-2)}
+.command-list span{color:var(--ink-3);font-size:11px}
+[hidden]{display:none!important}
+@media(max-width:1220px){
+  .agency-grid{grid-template-columns:320px minmax(0,1fr)}
+  .rail{grid-column:1 / -1;grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:900px){
+  .app{display:block}
+  .sidebar{position:static;width:100%;height:auto;padding:14px 16px;border-right:0;border-bottom:1px solid var(--line)}
+  .brand{padding:0}
+  .search,.nav-label,.sidebar-bottom{display:none}
+  .nav{display:flex;gap:4px;margin-top:12px;overflow-x:auto;padding-bottom:2px}
+  .nav a{flex:0 0 auto}
+  .nav-copy span{display:none}
+  .topbar{height:52px;padding:0 16px}
+  .crumb{display:none}
+  .content{padding:24px 16px 48px}
+  .page-head,.agency-grid,.rail,.relationship-grid{grid-template-columns:1fr}
+  .page-actions{justify-content:flex-start}
+  .summary-band,.commission-row{grid-template-columns:1fr}
+  .summary-cell,.commission-row>*{border-right:0}
+  .summary-cell{border-bottom:1px solid var(--line)}
+  .summary-cell:last-child{border-bottom:0}
+}
+@media(max-width:520px){
+  h1{font-size:28px}
+  .section-head,.profile-title,.step{display:grid}
+  .agency-row[aria-pressed="true"]{margin:6px 0}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#agencies">Skip to agencies</a>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark"><img src="codex-20260707-volta-icon-navy-turquoise.svg" alt=""></div><div><strong>Volta</strong><span>Hotel de Toiras</span></div></div>
+    <button class="search" type="button" aria-haspopup="dialog" aria-controls="command-menu"><span>Search</span><kbd>Ctrl K</kbd></button>
+    <p class="nav-label">Workspace</p>
+    <nav class="nav" aria-label="Primary navigation">
+      <a href="index.html"><span class="nav-copy"><strong>Home</strong><span>Triage and overview</span></span></a>
+      <a href="codex-20260707-commission-detail-resolution.html"><span class="nav-copy"><strong>Commissions</strong><span>Detail and resolution</span></span><span class="nav-count">11</span></a>
+      <a href="#agencies" aria-current="page"><span class="nav-copy"><strong>Agencies</strong><span>Readiness and invites</span></span><span class="nav-count">4</span></a>
+      <a href="#request"><span class="nav-copy"><strong>Workflows</strong><span>Requests and reminders</span></span></a>
+      <a href="#setup"><span class="nav-copy"><strong>Settings</strong><span>Payment setup blocker</span></span><span class="nav-count">2</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="settle-stat"><span>Waiting agencies</span><strong>2</strong><small>Profile or invoice path needed</small></div>
+      <div class="profile"><div class="avatar">KJ</div><div><strong>Kenji</strong><span>Operator</span></div></div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar"><div class="crumb">Agencies / Readiness</div><div class="topbar-actions"><span class="live" data-live>Host agency selected</span><button class="btn" type="button">Export directory</button></div></header>
+    <main class="content" id="agencies" tabindex="-1">
+      <header class="page-head">
+        <div><p class="eyeline">Agency readiness</p><h1>Track who can move commissions forward.</h1><p class="lede">Agencies are grouped by relationship and readiness, so the hotel can tell whether the next action belongs to an Agency Admin, an individual agent, the hotel, or payment setup.</p></div>
+        <div class="page-actions"><a class="btn" href="index.html">Back to Home</a><button class="btn primary" type="button" data-request-missing>Request missing details</button></div>
+      </header>
+
+      <div class="agency-grid">
+        <section class="directory" aria-labelledby="directory-title">
+          <header class="section-head"><div><h2 id="directory-title">Directory</h2><p>Four state families, one selected profile.</p></div><span class="status warn" data-visible-count>4 visible</span></header>
+          <div class="toolbar">
+            <label><span class="eyeline">Search agencies or identifiers</span><input class="input" id="agency-search" type="search" placeholder="Search Host Agency, IATA, admin, or agent"></label>
+            <div class="tabs" role="group" aria-label="Agency state filter">
+              <button class="tab" type="button" data-filter="all" aria-pressed="true">All</button>
+              <button class="tab" type="button" data-filter="onboarded" aria-pressed="false">Onboarded</button>
+              <button class="tab" type="button" data-filter="invited" aria-pressed="false">Invited</button>
+              <button class="tab" type="button" data-filter="waiting" aria-pressed="false">Waiting</button>
+              <button class="tab" type="button" data-filter="blocked" aria-pressed="false">Blocked</button>
+            </div>
+          </div>
+          <div class="agency-list" data-agency-list>
+            <button class="agency-row" type="button" data-agency="host-a" data-state="invited" aria-pressed="true"><div class="agency-main"><strong>Host Agency Test A</strong><span>EUR 4,032</span></div><div class="agency-meta"><span>Host agency</span><span>Agency Admin invited</span><span>IATA pending</span></div><span class="status warn">Waiting on Agency</span></button>
+            <button class="agency-row" type="button" data-agency="luxury" data-state="onboarded" aria-pressed="false"><div class="agency-main"><strong>Luxury Voyages SAS</strong><span>EUR 5,820</span></div><div class="agency-meta"><span>Host agency</span><span>Agency Admin active</span><span>IATA 23561820</span></div><span class="status good">Onboarded</span></button>
+            <button class="agency-row" type="button" data-agency="mira" data-state="waiting" aria-pressed="false"><div class="agency-main"><strong>Mira Laurent</strong><span>EUR 940</span></div><div class="agency-meta"><span>Independent agent</span><span>Invoice path missing</span><span>No host agency</span></div><span class="status info">Ready to Issue Invoice</span></button>
+            <button class="agency-row" type="button" data-agency="original" data-state="blocked" aria-pressed="false"><div class="agency-main"><strong>Original Travel</strong><span>EUR 420</span></div><div class="agency-meta"><span>Host agency candidate</span><span>No admin contact</span><span>IATA 90234518</span></div><span class="status review">Needs Review</span></button>
+          </div>
+          <div class="empty" data-empty hidden>No agency matches the current filter.</div>
+        </section>
+
+        <section class="profile-panel" aria-labelledby="profile-title">
+          <header class="section-head"><div><h2 id="profile-title">Selected profile</h2><p>Relationship, admin control, and blockers stay visible together.</p></div><span class="status warn" data-profile-state>Waiting on Agency</span></header>
+          <div class="summary-band">
+            <div class="summary-cell"><span>Open commissions</span><strong data-open-count>14</strong></div>
+            <div class="summary-cell"><span>Matched value</span><strong data-open-value>EUR 4,032</strong></div>
+            <div class="summary-cell"><span>Next owner</span><strong data-next-owner>Agency</strong></div>
+            <div class="summary-cell"><span>Risk</span><strong data-risk>Medium</strong></div>
+          </div>
+
+          <div class="profile-title"><div><strong data-profile-name>Host Agency Test A</strong><span data-profile-sub>Host agency - Agency Admin invited</span></div><a class="btn" data-commission-link href="codex-20260707-commission-detail-resolution.html">Open commissions</a></div>
+
+          <section class="relationship" aria-labelledby="relationship-title">
+            <header class="section-head"><div><h2 id="relationship-title">Relationship model</h2><p>Host agency and independent agent paths are not interchangeable.</p></div></header>
+            <div class="relationship-grid">
+              <div class="fact"><span>Entity type</span><strong data-entity-type>Host agency</strong><p data-entity-copy>Agency Admin manages profile, invoice preference, and agent attribution.</p></div>
+              <div class="fact"><span>Primary admin</span><strong data-admin>Alex Marchand</strong><p data-admin-copy>Invited from onboarding success. Confirmation is still pending.</p></div>
+              <div class="fact"><span>Invoice path</span><strong data-invoice-path>Pending acceptance</strong><p data-invoice-copy>Invoice request can be prepared, but agency confirmation gates send.</p></div>
+              <div class="fact"><span>Payment readiness</span><strong data-payment-copy>Blocked by setup</strong><p>Finance Admin still owns payment setup.</p></div>
+            </div>
+          </section>
+
+          <section class="commissions" aria-labelledby="commissions-title">
+            <header class="section-head"><div><h2 id="commissions-title">Related commissions</h2><p>Links carry the user back into Commission Detail or the future Commissions view.</p></div></header>
+            <div class="commission-table" data-commission-table>
+              <div class="commission-row"><div>Reference</div><div>Requirement</div><div>Amount</div><div>Status</div></div>
+              <div class="commission-row"><div class="mono">RES-10491</div><div>Rate conflict resolved; invoice path pending</div><div class="mono">EUR 288</div><div><span class="status warn">Waiting</span></div>
+              <div class="commission-row"><div class="mono">HOST-A-001</div><div>Agency Admin confirmation required</div><div class="mono">EUR 3,744</div><div><span class="status warn">Waiting</span></div></div>
+            </div>
+          </section>
+        </section>
+
+        <aside class="rail">
+          <section class="request-panel" id="request" aria-labelledby="request-title">
+            <header><h2 id="request-title">Request missing details</h2><p class="lede">One request, scoped to the selected relationship type.</p></header>
+            <div class="request-list">
+              <label class="checkline"><input type="checkbox" checked data-request-option="profile">Confirm agency profile and admin authority</label>
+              <label class="checkline"><input type="checkbox" checked data-request-option="invoice">Choose assisted or external invoice path</label>
+              <label class="checkline"><input type="checkbox" data-request-option="relationship">Confirm independent agent attribution</label>
+              <label class="checkline"><input type="checkbox" data-request-option="payment">Complete payment setup</label>
+            </div>
+            <textarea data-request-note>Hi Alex, please confirm Host Agency Test A's profile and invoice preference so Hotel de Toiras can move the matched commissions into the invoice workflow.</textarea>
+            <div style="height:12px"></div>
+            <button class="btn primary" type="button" data-send-request>Send request</button>
+          </section>
+
+          <section class="invites" aria-labelledby="invites-title">
+            <header class="section-head"><div><h2 id="invites-title">Invite history</h2><p>Agency waiting state without another primary page.</p></div></header>
+            <div class="timeline" data-invite-history>
+              <div class="step"><div><strong>Agency Admin invited</strong><span>alex@host-a.test from onboarding</span></div><span class="status warn">Waiting</span></div>
+              <div class="step"><div><strong>14 commissions matched</strong><span>Held until profile and invoice path are clear</span></div><span class="status info">Prepared</span></div>
+              <div class="step" id="setup"><div><strong>Payment setup</strong><span>Finance Admin and Stripe setup remain separate</span></div><span class="status review">Blocked</span></div>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </main>
+  </div>
+</div>
+<dialog class="command-menu" id="command-menu" aria-labelledby="command-title">
+  <div class="command-head"><input id="command-title" type="search" placeholder="Search agencies, admins, or references" aria-label="Search workspace"><button class="btn" type="button" data-close-command>Close</button></div>
+  <nav class="command-list" aria-label="Quick navigation"><a href="index.html"><strong>Back to Home</strong><span>Home</span></a><a href="codex-20260707-commission-detail-resolution.html"><strong>Resolve rate issue</strong><span>Commissions</span></a><a href="#request"><strong>Request missing details</strong><span>Agencies</span></a></nav>
+</dialog>
+<script>
+const agencies={
+  'host-a':{name:'Host Agency Test A',state:'Waiting on Agency',stateClass:'status warn',sub:'Host agency - Agency Admin invited',open:'14',value:'EUR 4,032',owner:'Agency',risk:'Medium',entity:'Host agency',entityCopy:'Agency Admin manages profile, invoice preference, and agent attribution.',admin:'Alex Marchand',adminCopy:'Invited from onboarding success. Confirmation is still pending.',invoice:'Pending acceptance',invoiceCopy:'Invoice request can be prepared, but agency confirmation gates send.',payment:'Blocked by setup',note:'Hi Alex, please confirm the Host Agency Test A profile and invoice preference so Hotel de Toiras can move the matched commissions into the invoice workflow.',rows:[['RES-10491','Rate conflict resolved; invoice path pending','EUR 288','Waiting','warn'],['HOST-A-001','Agency Admin confirmation required','EUR 3,744','Waiting','warn']]},
+  luxury:{name:'Luxury Voyages SAS',state:'Onboarded',stateClass:'status good',sub:'Host agency - Agency Admin active',open:'8',value:'EUR 5,820',owner:'Hotel',risk:'Low',entity:'Host agency',entityCopy:'Agency Admin has confirmed the agency profile and invoice path.',admin:'Sophie Marchand',adminCopy:'Active Agency Admin with confirmed operational contact.',invoice:'External invoice accepted',invoiceCopy:'Hotel can request invoices against confirmed bookings.',payment:'Ready after approval',note:'Hi Sophie, please send the invoice packet for the open Hotel de Toiras commissions when ready.',rows:[['COM-1147','Invoice requested from agency','EUR 534','Ready to Issue Invoice','info'],['COM-1131','Approval can proceed after invoice upload','EUR 440','Ready for Approval','good']]},
+  mira:{name:'Mira Laurent',state:'Ready to Issue Invoice',stateClass:'status info',sub:'Independent agent - no host agency',open:'3',value:'EUR 940',owner:'Hotel',risk:'Medium',entity:'Independent agent',entityCopy:'This agent is paid through an individual invoice path, not a host-agency admin.',admin:'Mira Laurent',adminCopy:'Direct operational contact. No Agency Admin delegation.',invoice:'Assisted invoice needed',invoiceCopy:'Hotel should issue the request using the individual-agent template.',payment:'Blocked by invoice',note:'Hi Mira, please confirm the assisted invoice details for your open Hotel de Toiras commissions.',rows:[['IND-2041','Assisted invoice can be issued','EUR 360','Ready to Issue Invoice','info'],['IND-2034','Agent attribution confirmed','EUR 280','Prepared','info']]},
+  original:{name:'Original Travel',state:'Needs Review',stateClass:'status review',sub:'Host agency candidate - admin missing',open:'1',value:'EUR 420',owner:'Hotel',risk:'High',entity:'Host agency candidate',entityCopy:'The hotel has a relationship signal but no confirmed Agency Admin.',admin:'Unknown',adminCopy:'Find an authorized contact before sending a claim link.',invoice:'Not ready',invoiceCopy:'Invoice request should not be sent until admin authority is known.',payment:'Blocked by identity',note:'Please identify the correct Agency Admin contact for Original Travel before any invoice request is sent.',rows:[['ORG-9023','Admin contact required before invite','EUR 420','Needs Review','review']]}
+};
+const commandMenu=document.getElementById('command-menu');
+const searchButton=document.querySelector('.search');
+const closeCommand=document.querySelector('[data-close-command]');
+const rows=[...document.querySelectorAll('.agency-row')];
+const tabs=[...document.querySelectorAll('.tab')];
+const agencySearch=document.getElementById('agency-search');
+const empty=document.querySelector('[data-empty]');
+const live=document.querySelector('[data-live]');
+const visibleCount=document.querySelector('[data-visible-count]');
+function statusClass(kind){return kind==='good'?'status good':kind==='review'?'status review':kind==='info'?'status info':'status warn'}
+function renderCommissions(items){
+  const table=document.querySelector('[data-commission-table]');
+  table.innerHTML='<div class="commission-row"><div>Reference</div><div>Requirement</div><div>Amount</div><div>Status</div></div>'+items.map(item=>'<div class="commission-row"><div class="mono">'+item[0]+'</div><div>'+item[1]+'</div><div class="mono">'+item[2]+'</div><div><span class="'+statusClass(item[4])+'">'+item[3]+'</span></div></div>').join('');
+}
+function activateAgency(id){
+  const agency=agencies[id];
+  if(!agency) return;
+  rows.forEach(row=>row.setAttribute('aria-pressed',String(row.dataset.agency===id)));
+  document.querySelector('[data-profile-name]').textContent=agency.name;
+  document.querySelector('[data-profile-sub]').textContent=agency.sub;
+  const state=document.querySelector('[data-profile-state]');
+  state.className=agency.stateClass;
+  state.textContent=agency.state;
+  document.querySelector('[data-open-count]').textContent=agency.open;
+  document.querySelector('[data-open-value]').textContent=agency.value;
+  document.querySelector('[data-next-owner]').textContent=agency.owner;
+  document.querySelector('[data-risk]').textContent=agency.risk;
+  document.querySelector('[data-entity-type]').textContent=agency.entity;
+  document.querySelector('[data-entity-copy]').textContent=agency.entityCopy;
+  document.querySelector('[data-admin]').textContent=agency.admin;
+  document.querySelector('[data-admin-copy]').textContent=agency.adminCopy;
+  document.querySelector('[data-invoice-path]').textContent=agency.invoice;
+  document.querySelector('[data-invoice-copy]').textContent=agency.invoiceCopy;
+  document.querySelector('[data-payment-copy]').textContent=agency.payment;
+  document.querySelector('[data-request-note]').value=agency.note;
+  renderCommissions(agency.rows);
+  live.textContent=agency.name+' selected';
+}
+function activeFilter(){return tabs.find(tab=>tab.getAttribute('aria-pressed')==='true')?.dataset.filter||'all'}
+function applyFilters(){
+  const filter=activeFilter();
+  const query=agencySearch.value.trim().toLowerCase();
+  const visible=[];
+  rows.forEach(row=>{
+    const matchesFilter=filter==='all'||row.dataset.state===filter;
+    const matchesQuery=row.textContent.toLowerCase().includes(query);
+    const show=matchesFilter&&matchesQuery;
+    row.hidden=!show;
+    if(show) visible.push(row);
+  });
+  empty.hidden=visible.length>0;
+  visibleCount.textContent=visible.length+' visible';
+  const current=rows.find(row=>row.getAttribute('aria-pressed')==='true'&&!row.hidden);
+  if(!current&&visible.length) activateAgency(visible[0].dataset.agency);
+}
+tabs.forEach(tab=>tab.addEventListener('click',()=>{
+  tabs.forEach(node=>node.setAttribute('aria-pressed',String(node===tab)));
+  applyFilters();
+}));
+rows.forEach(row=>row.addEventListener('click',()=>activateAgency(row.dataset.agency)));
+agencySearch.addEventListener('input',applyFilters);
+document.querySelectorAll('[data-request-missing],[data-send-request]').forEach(button=>button.addEventListener('click',()=>{
+  const selected=rows.find(row=>row.getAttribute('aria-pressed')==='true');
+  const name=selected?agencies[selected.dataset.agency].name:'Selected agency';
+  const entry=document.createElement('div');
+  entry.className='step';
+  entry.innerHTML='<div><strong>Request sent</strong><span>'+name+' received the selected missing-detail request.</span></div><span class="status info">Just now</span>';
+  document.querySelector('[data-invite-history]').prepend(entry);
+  live.textContent='Request sent to '+name+'.';
+}));
+searchButton.addEventListener('click',()=>commandMenu.showModal());
+closeCommand.addEventListener('click',()=>commandMenu.close());
+document.addEventListener('keydown',event=>{
+  if((event.metaKey||event.ctrlKey)&&event.key.toLowerCase()==='k'){
+    event.preventDefault();
+    if(!commandMenu.open) commandMenu.showModal();
+  }
+});
+activateAgency('host-a');
+</script>
+</body>
+</html>

@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Volta Commission Detail Resolution</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="icon" href="codex-20260707-volta-icon-navy-turquoise.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --white:#fff;
+  --canvas:#f0f7f9;
+  --surface:#fff;
+  --surface-2:#e2edf0;
+  --surface-3:#d0dfe5;
+  --ink:#091d36;
+  --ink-2:#3a4f65;
+  --ink-3:#697d8e;
+  --line:#d0dfe5;
+  --line-strong:#a3b4bf;
+  --accent:#59cdc6;
+  --accent-strong:#0a7975;
+  --accent-soft:#e3f8f7;
+  --green:#18775d;
+  --green-soft:#e9f6f1;
+  --amber:#93621a;
+  --amber-soft:#fff6e5;
+  --red:#b33f46;
+  --red-soft:#fff0f1;
+  --blue:#356d91;
+  --blue-soft:#edf5fa;
+  --radius:6px;
+  --control-radius:4px;
+  --font:Manrope,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --mono:"DM Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{background:var(--canvas)}
+body{margin:0;color:var(--ink);background:var(--canvas);font:14px/1.5 var(--font);font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+button,a,input,textarea{font:inherit}
+button{color:inherit}
+a{color:inherit}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.skip-link{position:fixed;left:16px;top:-60px;z-index:50;background:var(--ink);color:var(--white);padding:10px 14px;border-radius:var(--control-radius)}
+.skip-link:focus{top:16px}
+.app{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100dvh}
+.sidebar{position:sticky;top:0;height:100dvh;display:flex;flex-direction:column;padding:24px 16px 18px;background:var(--white);border-right:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px 22px}
+.brand-mark{display:grid;width:34px;height:34px;place-items:center;border-radius:var(--radius);background:transparent}
+.brand-mark img{display:block;width:34px;height:34px}
+.brand strong,.brand span{display:block}
+.brand strong{font-size:15px;font-weight:600}
+.brand span{color:var(--ink-3);font-size:11px}
+.search{display:flex;width:100%;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;padding:9px 10px;border:1px solid var(--line);border-radius:var(--control-radius);background:var(--white);color:var(--ink-2);cursor:pointer}
+.search kbd{border:1px solid var(--line);border-radius:3px;background:var(--surface-2);padding:1px 5px;color:var(--ink-3);font:400 10px/1.4 var(--mono)}
+.nav-label{margin:0 10px 6px;color:var(--ink-3);font-size:11px;font-weight:500}
+.nav{display:grid;gap:2px}
+.nav a{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;padding:9px 10px;border-radius:var(--control-radius);text-decoration:none;color:var(--ink-2)}
+.nav a:hover{background:var(--surface-2);color:var(--ink)}
+.nav a[aria-current="page"]{background:var(--accent-soft);color:var(--ink)}
+.nav-copy strong,.nav-copy span{display:block}
+.nav-copy strong{font-size:13px;font-weight:500}
+.nav-copy span{margin-top:1px;color:var(--ink-3);font-size:10px}
+.nav-count{min-width:20px;border-radius:999px;background:var(--surface-2);padding:2px 6px;text-align:center;font:500 10px/1.4 var(--mono)}
+.nav a[aria-current="page"] .nav-count{background:var(--accent);color:var(--ink)}
+.sidebar-bottom{display:grid;gap:14px;margin-top:auto}
+.settle-stat{padding:14px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.settle-stat span,.settle-stat strong{display:block}
+.settle-stat span{color:var(--ink-3);font-size:11px}
+.settle-stat strong{margin:4px 0;font:500 28px/1.1 var(--mono)}
+.settle-stat small{color:var(--ink-2)}
+.profile{display:flex;align-items:center;gap:9px;padding:0 8px}
+.avatar{display:grid;width:30px;height:30px;place-items:center;border-radius:var(--control-radius);background:var(--surface-2);font:500 10px/1 var(--mono)}
+.profile strong,.profile span{display:block}
+.profile strong{font-size:12px;font-weight:500}
+.profile span{color:var(--ink-3);font-size:10px}
+.main{min-width:0;background:var(--white)}
+.topbar{height:64px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 clamp(24px,4vw,56px);border-bottom:1px solid var(--line);background:var(--white)}
+.crumb{color:var(--ink-3);font-size:12px}
+.topbar-actions{display:flex;align-items:center;gap:12px}
+.live{display:inline-flex;align-items:center;gap:7px;color:var(--ink-2);font-size:11px}
+.live::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green)}
+.btn{display:inline-flex;min-height:36px;align-items:center;justify-content:center;border:1px solid var(--line-strong);border-radius:var(--control-radius);background:var(--white);padding:8px 12px;text-decoration:none;font-weight:500;cursor:pointer;transition:background .16s,border-color .16s,transform .16s}
+.btn:hover{border-color:var(--ink-2);background:var(--surface-2)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{border-color:var(--accent-strong);background:var(--accent-strong);color:var(--white)}
+.btn.primary:hover{background:#075f5c}
+.btn.danger{border-color:var(--red);background:var(--red-soft);color:var(--red)}
+.btn:disabled{cursor:not-allowed;opacity:.5}
+.content{max-width:1440px;margin:0 auto;padding:34px clamp(24px,4vw,56px) 72px}
+.page-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:start;margin-bottom:28px}
+.eyeline{margin:0 0 6px;color:var(--ink-3);font-size:12px}
+h1,h2,h3,p{margin-top:0}
+h1{margin-bottom:8px;font-size:32px;line-height:1.15;font-weight:500;letter-spacing:0}
+h2{margin-bottom:4px;font-size:17px;line-height:1.3;font-weight:600;letter-spacing:0}
+h3{margin-bottom:4px;font-size:13px;font-weight:600}
+.lede{max-width:68ch;margin-bottom:0;color:var(--ink-2)}
+.page-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.status{display:inline-flex;width:max-content;border-radius:999px;padding:3px 7px;font-size:10px;font-weight:500}
+.status.good{background:var(--green-soft);color:var(--green)}
+.status.warn{background:var(--amber-soft);color:var(--amber)}
+.status.review{background:var(--red-soft);color:var(--red)}
+.status.info{background:var(--blue-soft);color:var(--blue)}
+.detail-grid{display:grid;grid-template-columns:300px minmax(0,1fr) 340px;gap:24px;align-items:start}
+.queue,.record,.readiness,.audit,.decision,.compare,.requirements{border-top:1px solid var(--line-strong)}
+.section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:18px 0 14px}
+.section-head p{margin:2px 0 0;color:var(--ink-2);font-size:12px}
+.mini-queue{display:grid;border-top:1px solid var(--line)}
+.queue-link{display:grid;gap:7px;padding:13px 0;border-bottom:1px solid var(--line);text-decoration:none}
+.queue-link[aria-current="true"]{margin:8px 0;padding:12px 10px;border:1px solid var(--accent);border-radius:var(--radius);background:var(--accent-soft)}
+.queue-link strong{font-size:12px;font-weight:600}
+.queue-link span{color:var(--ink-2);font-size:11px}
+.queue-link small{font:500 11px/1.35 var(--mono);color:var(--ink-3)}
+.record-band{display:grid;grid-template-columns:minmax(0,1fr) 180px 180px;gap:0;margin-bottom:26px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.record-cell{min-width:0;padding:18px 20px;border-right:1px solid var(--line)}
+.record-cell:last-child{border-right:0}
+.record-label{color:var(--ink-3);font-size:11px}
+.record-value{margin-top:7px;font:500 22px/1.1 var(--mono)}
+.record-cell:first-child .record-value{font:600 15px/1.25 var(--font)}
+.record-note{margin-top:5px;color:var(--ink-2);font-size:11px}
+.compare-table{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--surface);margin-bottom:24px}
+.compare-row{display:grid;grid-template-columns:150px minmax(0,1fr) minmax(0,1fr) minmax(150px,.8fr)}
+.compare-row>*{min-width:0;padding:12px 14px;border-right:1px solid var(--line);border-top:1px solid var(--line);font-size:12px}
+.compare-row>*:last-child{border-right:0}
+.compare-row:first-child>*{border-top:0;background:var(--surface-2);color:var(--ink-3);font:500 10px/1.25 var(--mono)}
+.compare-row .selected{background:var(--accent-soft);color:var(--ink);font-weight:600}
+.compare-row .conflict{background:var(--red-soft);color:var(--red);font-weight:600}
+.decision{padding-top:18px;margin-bottom:24px}
+.decision-form{display:grid;gap:12px}
+.field{display:grid;gap:6px}
+.field label{color:var(--ink-3);font-size:11px;font-weight:500}
+.field textarea,.field input{width:100%;border:1px solid var(--line-strong);border-radius:var(--control-radius);background:var(--white);padding:10px 11px;color:var(--ink)}
+.field textarea{min-height:92px;resize:vertical}
+.decision-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.requirements{padding-top:18px}
+.requirement-list{display:grid;border-top:1px solid var(--line)}
+.requirement{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}
+.requirement strong,.requirement span{display:block}
+.requirement strong{font-size:12px}
+.requirement span{margin-top:2px;color:var(--ink-2);font-size:11px}
+.rail{display:grid;gap:22px}
+.readiness{padding-top:18px}
+.ready-total{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:16px 0;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.ready-total span,.ready-total strong{display:block}
+.ready-total span{color:var(--ink-3);font-size:11px}
+.ready-total strong{margin-top:4px;font:500 28px/1.1 var(--mono)}
+.checklist{display:grid}
+.check{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)}
+.check strong,.check span{display:block}
+.check strong{font-size:12px}
+.check span{margin-top:2px;color:var(--ink-2);font-size:11px}
+.notice{padding:12px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface-2);color:var(--ink-2);font-size:12px}
+.notice strong{color:var(--ink);font-weight:600}
+.audit{padding-top:18px}
+.audit-list{display:grid;border-top:1px solid var(--line)}
+.audit-item{display:grid;grid-template-columns:72px minmax(0,1fr);gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
+.audit-item time{color:var(--ink-3);font:400 10px/1.35 var(--mono)}
+.audit-item strong{display:block;font-size:12px;font-weight:600}
+.audit-item p{margin:3px 0 0;color:var(--ink-2);font-size:11px}
+.command-menu{width:min(520px,calc(100vw - 32px));border:1px solid var(--line-strong);border-radius:var(--radius);padding:0;background:var(--white);color:var(--ink);box-shadow:0 16px 40px rgb(9 29 54 / .16)}
+.command-menu::backdrop{background:rgb(9 29 54 / .28)}
+.command-head{display:flex;align-items:center;gap:10px;padding:12px;border-bottom:1px solid var(--line)}
+.command-head input{min-width:0;flex:1;border:0;outline:0;padding:8px;background:transparent;font:inherit}
+.command-list{display:grid;padding:8px}
+.command-list a{display:flex;justify-content:space-between;gap:16px;border-radius:var(--control-radius);padding:10px;text-decoration:none}
+.command-list a:hover{background:var(--surface-2)}
+.command-list span{color:var(--ink-3);font-size:11px}
+[hidden]{display:none!important}
+@media(max-width:1180px){
+  .detail-grid{grid-template-columns:250px minmax(0,1fr)}
+  .rail{grid-column:1 / -1;grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:860px){
+  .app{display:block}
+  .sidebar{position:static;width:100%;height:auto;padding:14px 16px;border-right:0;border-bottom:1px solid var(--line)}
+  .brand{padding:0}
+  .search,.nav-label,.sidebar-bottom{display:none}
+  .nav{display:flex;gap:4px;margin-top:12px;overflow-x:auto;padding-bottom:2px}
+  .nav a{flex:0 0 auto}
+  .nav-copy span{display:none}
+  .topbar{height:52px;padding:0 16px}
+  .crumb{display:none}
+  .content{padding:24px 16px 48px}
+  .page-head,.detail-grid,.rail{grid-template-columns:1fr}
+  .page-actions{justify-content:flex-start}
+  .record-band,.compare-row{grid-template-columns:1fr}
+  .record-cell,.compare-row>*{border-right:0}
+  .record-cell{border-bottom:1px solid var(--line)}
+  .record-cell:last-child{border-bottom:0}
+}
+@media(max-width:520px){
+  h1{font-size:28px}
+  .section-head,.requirement,.check{display:grid}
+  .decision-actions .btn{width:100%}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#detail">Skip to commission detail</a>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark"><img src="codex-20260707-volta-icon-navy-turquoise.svg" alt=""></div><div><strong>Volta</strong><span>Hotel de Toiras</span></div></div>
+    <button class="search" type="button" aria-haspopup="dialog" aria-controls="command-menu"><span>Search</span><kbd>Ctrl K</kbd></button>
+    <p class="nav-label">Workspace</p>
+    <nav class="nav" aria-label="Primary navigation">
+      <a href="index.html"><span class="nav-copy"><strong>Home</strong><span>Triage and overview</span></span></a>
+      <a href="#detail" aria-current="page"><span class="nav-copy"><strong>Commissions</strong><span>Detail and resolution</span></span><span class="nav-count">11</span></a>
+      <a href="codex-20260707-agencies-readiness.html"><span class="nav-copy"><strong>Agencies</strong><span>Readiness and invites</span></span><span class="nav-count">1</span></a>
+      <a href="#readiness"><span class="nav-copy"><strong>Workflows</strong><span>Requirements and next steps</span></span></a>
+      <a href="#payment"><span class="nav-copy"><strong>Settings</strong><span>Payment setup blocker</span></span><span class="nav-count">2</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="settle-stat"><span>Selected value</span><strong>EUR 288</strong><small>Rate conflict from import batch</small></div>
+      <div class="profile"><div class="avatar">KJ</div><div><strong>Kenji</strong><span>Operator</span></div></div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar"><div class="crumb">Commissions / RES-10491</div><div class="topbar-actions"><span class="live">Audit evidence retained</span><button class="btn" type="button">Export packet</button></div></header>
+    <main class="content" id="detail" tabindex="-1">
+      <header class="page-head">
+        <div><p class="eyeline">Resolution item RES-10491</p><h1>Resolve rate issue.</h1><p class="lede">This record came from onboarding with a source conflict. The hotel must choose the working commission value, capture the reason, and keep originals in audit history before invoice and payment readiness can proceed.</p></div>
+        <div class="page-actions"><a class="btn" href="index.html">Back to Home</a><button class="btn primary" type="button" data-save-resolution>Save resolution</button></div>
+      </header>
+
+      <div class="detail-grid">
+        <section class="queue" aria-labelledby="queue-title">
+          <header class="section-head"><div><h2 id="queue-title">Resolution queue</h2><p>Contextual, not a primary nav destination.</p></div><span class="status review">2 hotel</span></header>
+          <div class="mini-queue">
+            <a class="queue-link" href="#detail" aria-current="true"><strong>RES-10491 - Rate conflict</strong><span>Host Agency Test A - selected value required</span><small>EUR 288</small></a>
+            <a class="queue-link" href="#detail"><strong>RES-10482 - Fuzzy duplicate</strong><span>Adjacent booking reference from import</span><small>Due today</small></a>
+            <a class="queue-link" href="#requirements"><strong>HOST-A-001 - Agency invoice</strong><span>Waiting on Agency Admin</span><small>14 records</small></a>
+            <a class="queue-link" href="#payment"><strong>PAY-SETUP - Payment setup</strong><span>Finance Admin owns setup</span><small>Blocked</small></a>
+          </div>
+        </section>
+
+        <section class="record" aria-labelledby="record-title">
+          <header class="section-head"><div><h2 id="record-title">Commission record</h2><p>Original values remain immutable; only the working commission value changes.</p></div><span class="status review" data-resolution-status>Needs Review</span></header>
+          <div class="record-band">
+            <div class="record-cell"><div class="record-label">Agency</div><div class="record-value">Host Agency Test A</div><div class="record-note">Agency Admin invited after onboarding</div></div>
+            <div class="record-cell"><div class="record-label">Booking</div><div class="record-value">RES-10491</div><div class="record-note">14-17 Jun 2026</div></div>
+            <div class="record-cell"><div class="record-label">Working value</div><div class="record-value" data-working-value>EUR 288</div><div class="record-note">12% selected from CSV</div></div>
+          </div>
+
+          <section class="compare" aria-labelledby="compare-title">
+            <header class="section-head"><div><h2 id="compare-title">Source comparison</h2><p>The selected column becomes the working value. The rejected value stays attached to the audit packet.</p></div></header>
+            <div class="compare-table">
+              <div class="compare-row"><div>Field</div><div>Oracle / OHIP</div><div>CSV upload</div><div>Selected</div></div>
+              <div class="compare-row"><div>Booking reference</div><div class="mono">RES-10491</div><div class="mono">RES-10491</div><div class="selected mono">RES-10491</div></div>
+              <div class="compare-row"><div>Agency</div><div>Host Agency Test A</div><div>Host Agency Test A</div><div class="selected">Host Agency Test A</div></div>
+              <div class="compare-row"><div>Booking value</div><div class="mono">EUR 2,400</div><div class="mono">EUR 2,400</div><div class="selected mono">EUR 2,400</div></div>
+              <div class="compare-row"><div>Commission rate</div><div class="conflict mono">10%</div><div class="selected mono">12%</div><div class="selected mono">12%</div></div>
+              <div class="compare-row"><div>Commission amount</div><div class="conflict mono">EUR 240</div><div class="selected mono">EUR 288</div><div class="selected mono">EUR 288</div></div>
+            </div>
+          </section>
+
+          <section class="decision" aria-labelledby="decision-title">
+            <header class="section-head"><div><h2 id="decision-title">Hotel decision</h2><p>Reason, user, and timestamp are required because this changes a financial value.</p></div></header>
+            <div class="decision-form">
+              <div class="field"><label for="decision-value">Selected working value</label><input id="decision-value" value="EUR 288"></div>
+              <div class="field"><label for="decision-reason">Reason required</label><textarea id="decision-reason">Preferred-rate agreement confirmed by finance. CSV export includes the correct 12% agency rate for this stay.</textarea></div>
+              <div class="decision-actions"><button class="btn primary" type="button" data-save-resolution>Save resolution</button><button class="btn danger" type="button">Escalate instead</button><button class="btn" type="button">Copy audit packet</button></div>
+            </div>
+          </section>
+
+          <section class="requirements" id="requirements" aria-labelledby="requirements-title">
+            <header class="section-head"><div><h2 id="requirements-title">Invoice and agency requirements</h2><p>Resolution returns the record to the mainline, but agency and invoice requirements still control readiness.</p></div><span class="status warn">Waiting on Agency</span></header>
+            <div class="requirement-list">
+              <div class="requirement"><div><strong>Agency Admin invited</strong><span>alex@host-a.test received first invite from onboarding</span></div><span class="status good">Complete</span></div>
+              <div class="requirement"><div><strong>Agency profile confirmation</strong><span>Host agency must confirm identity and relationship model</span></div><span class="status warn">Waiting</span></div>
+              <div class="requirement"><div><strong>Invoice requirement</strong><span>Invoice can be requested after value is resolved</span></div><span class="status info">Prepared</span></div>
+              <div class="requirement"><div><strong>Payment approver</strong><span>Finance Admin permission is assigned, but payment setup is incomplete</span></div><span class="status review">Blocked</span></div>
+            </div>
+          </section>
+        </section>
+
+        <aside class="rail">
+          <section class="readiness" id="payment" aria-labelledby="readiness-title">
+            <header><h2 id="readiness-title">Payment readiness</h2><p class="lede">Prepared for review, not payable. TSP does not move funds.</p></header>
+            <div class="ready-total"><div><span>Resolved value</span><strong data-rail-value>EUR 288</strong></div><span class="status warn">Blocked</span></div>
+            <div class="checklist">
+              <div class="check"><div><strong>Source conflict resolved</strong><span>Reason and selected value required</span></div><span class="status review" data-check-resolution>Needed</span></div>
+              <div class="check"><div><strong>Agency accepted invoice path</strong><span>Agency Admin has not completed confirmation</span></div><span class="status warn">Waiting</span></div>
+              <div class="check"><div><strong>Payment setup</strong><span>Finance Admin still owns setup</span></div><span class="status review">Blocked</span></div>
+              <div class="check"><div><strong>Fresh explicit approval</strong><span>Required after all blockers clear</span></div><span class="status info">Future</span></div>
+            </div>
+            <button class="btn primary" type="button" disabled>Approve unavailable</button>
+          </section>
+
+          <section class="audit" aria-labelledby="audit-title">
+            <header class="section-head"><div><h2 id="audit-title">Audit trail</h2><p>Decision evidence shown before any future approval.</p></div></header>
+            <div class="audit-list" data-audit-list>
+              <div class="audit-item"><time>10:58</time><div><strong>Agency invitation sent</strong><p>Host Agency Test A invited from onboarding success state.</p></div></div>
+              <div class="audit-item"><time>10:42</time><div><strong>Import confirmed</strong><p>Source rows retained; financial conflict carried forward.</p></div></div>
+              <div class="audit-item"><time>09:31</time><div><strong>Conflict detected</strong><p>Oracle 10% did not match CSV 12% for RES-10491.</p></div></div>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </main>
+  </div>
+</div>
+<dialog class="command-menu" id="command-menu" aria-labelledby="command-title">
+  <div class="command-head"><input id="command-title" type="search" placeholder="Search commissions, agencies, or references" aria-label="Search workspace"><button class="btn" type="button" data-close-command>Close</button></div>
+  <nav class="command-list" aria-label="Quick navigation"><a href="index.html"><strong>Back to Home</strong><span>Home</span></a><a href="#requirements"><strong>Jump to requirements</strong><span>Commission Detail</span></a><a href="codex-20260707-agencies-readiness.html"><strong>Open Host Agency Test A</strong><span>Agencies</span></a></nav>
+</dialog>
+<script>
+const commandMenu=document.getElementById('command-menu');
+const search=document.querySelector('.search');
+const closeCommand=document.querySelector('[data-close-command]');
+const saveButtons=[...document.querySelectorAll('[data-save-resolution]')];
+const decisionValue=document.getElementById('decision-value');
+const resolutionStatus=document.querySelector('[data-resolution-status]');
+const workingValue=document.querySelector('[data-working-value]');
+const railValue=document.querySelector('[data-rail-value]');
+const checkResolution=document.querySelector('[data-check-resolution]');
+const auditList=document.querySelector('[data-audit-list]');
+search.addEventListener('click',()=>commandMenu.showModal());
+closeCommand.addEventListener('click',()=>commandMenu.close());
+document.addEventListener('keydown',event=>{
+  if((event.metaKey||event.ctrlKey)&&event.key.toLowerCase()==='k'){
+    event.preventDefault();
+    if(!commandMenu.open) commandMenu.showModal();
+  }
+});
+saveButtons.forEach(button=>button.addEventListener('click',()=>{
+  const value=decisionValue.value.trim()||'EUR 288';
+  workingValue.textContent=value;
+  railValue.textContent=value;
+  resolutionStatus.className='status good';
+  resolutionStatus.textContent='Resolved';
+  checkResolution.className='status good';
+  checkResolution.textContent='Complete';
+  const entry=document.createElement('div');
+  entry.className='audit-item';
+  entry.innerHTML='<time>Now</time><div><strong>Resolution saved</strong><p>Working value set to '+value+'. Reason, user, timestamp, and original values retained.</p></div>';
+  auditList.prepend(entry);
+}));
+</script>
+</body>
+</html>
