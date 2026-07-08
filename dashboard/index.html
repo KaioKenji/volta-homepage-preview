@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Volta First Home Arrival</title>
+<title>Volta Home</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
@@ -68,10 +68,11 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 .nav-count{min-width:20px;border-radius:999px;background:var(--surface-2);padding:2px 6px;text-align:center;font:500 10px/1.4 var(--mono)}
 .nav a[aria-current="page"] .nav-count{background:var(--accent);color:var(--ink)}
 .sidebar-bottom{display:grid;gap:14px;margin-top:auto}
-.settle-stat{padding:14px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.settle-stat{display:block;padding:14px;border:1px solid var(--line);border-radius:var(--radius);background:var(--canvas-2);text-decoration:none}
+.settle-stat:hover{border-color:var(--line-strong);background:var(--accent-soft)}
 .settle-stat span,.settle-stat strong{display:block}
 .settle-stat span{color:var(--ink-3);font-size:11px}
-.settle-stat strong{margin:4px 0;font:500 28px/1.1 var(--mono)}
+.settle-stat strong{margin:4px 0;font:500 30px/1.05 var(--mono)}
 .settle-stat small{color:var(--ink-2)}
 .profile{display:flex;align-items:center;gap:9px;padding:0 8px}
 .avatar{display:grid;width:30px;height:30px;place-items:center;border-radius:var(--control-radius);background:var(--surface-2);font:500 10px/1 var(--mono)}
@@ -79,7 +80,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 .profile strong{font-size:12px;font-weight:500}
 .profile span{color:var(--ink-3);font-size:10px}
 .main{min-width:0;background:var(--canvas-2)}
-.topbar{height:48px;display:flex;align-items:center;padding:0 clamp(24px,4vw,56px);background:var(--white)}
+.topbar{display:none}
 .crumb{color:var(--ink-3);font-size:12px}
 .topbar-actions{display:none}
 .live{display:inline-flex;align-items:center;gap:7px;color:var(--ink-2);font-size:11px}
@@ -144,24 +145,25 @@ h3{margin-bottom:4px;font-size:13px;font-weight:600}
 .report .section-head{align-items:center;margin-bottom:18px}
 .report .section-head p{color:rgb(255 255 255 / .72)}
 .report .section-head a{color:var(--white)}
-.report-panel{display:grid;grid-template-columns:minmax(0,.95fr) minmax(420px,1.05fr);gap:22px}
-.report-main{display:grid;gap:18px;align-content:start}
-.report-lead{max-width:780px}
-.report-lead span{display:block;margin-bottom:8px;color:var(--accent);font-size:12px;font-weight:500}
-.report-lead strong{display:block;font-size:22px;line-height:1.2;font-weight:500}
-.report-lead p{max-width:64ch;margin:10px 0 0;color:rgb(255 255 255 / .78)}
+.report-panel{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr);gap:24px;align-items:start}
+.report-main{display:grid;gap:14px;align-content:start}
+.report-action-card{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center;padding:16px;border-radius:var(--radius);background:rgb(255 255 255 / .08)}
+.report-action-card strong{display:block;font-size:21px;line-height:1.25;font-weight:500}
+.report-action-card p{margin:6px 0 0;color:rgb(255 255 255 / .76)}
+.issue-count{display:grid;place-items:center;min-width:92px;padding:12px;border-radius:var(--radius);background:var(--accent);color:var(--ink)}
+.issue-count strong{font:500 30px/1 var(--mono)}
+.issue-count span{margin-top:4px;font-size:11px}
+.report-note{max-width:62ch;color:rgb(255 255 255 / .78)}
 .report-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
 .report-actions .btn{border-color:transparent;background:var(--white);color:var(--ink)}
 .report-actions .btn.primary{background:var(--accent);color:var(--ink);border-color:var(--accent)}
-.report-pulse{display:flex;gap:10px;flex-wrap:wrap}
-.pulse{display:grid;gap:5px;min-width:142px;padding:12px;border-radius:var(--radius);background:rgb(255 255 255 / .08)}
-.pulse strong{font:500 20px/1.1 var(--mono);color:var(--white)}
-.pulse span{color:rgb(255 255 255 / .7);font-size:11px}
+.report-pulse{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;overflow:hidden;border-radius:var(--radius);background:rgb(255 255 255 / .16)}
+.pulse{display:grid;gap:4px;padding:12px;background:rgb(255 255 255 / .06)}
+.pulse strong{font:500 17px/1.1 var(--mono);color:var(--white)}
+.pulse span{color:rgb(255 255 255 / .68);font-size:11px}
 .report-stack{display:grid;gap:10px;align-content:start}
-.stack-card{display:grid;gap:7px;padding:15px;border-radius:var(--radius);background:var(--white);color:var(--ink)}
-.stack-card.featured{background:var(--accent-soft);min-height:148px}
+.stack-card{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:14px;border-radius:var(--radius);background:var(--white);color:var(--ink)}
 .stack-card span{width:max-content;border-radius:999px;padding:3px 7px;background:var(--surface-2);color:var(--ink-2);font-size:10px}
-.stack-card.featured span{background:var(--white);color:var(--red)}
 .stack-card strong{font-size:13px;font-weight:600}
 .stack-card p{margin:0;color:var(--ink-2);font-size:12px}
 .stack-card .meta{font:500 12px/1.3 var(--mono);color:var(--ink)}
@@ -250,6 +252,8 @@ h3{margin-bottom:4px;font-size:13px;font-weight:600}
 @media(max-width:520px){
   h1{font-size:28px}
   .report{padding:18px}
+  .report-action-card{grid-template-columns:1fr}
+  .issue-count{justify-self:start}
   .report-pulse{grid-template-columns:1fr}
   .progress-list{grid-template-columns:1fr}
   .pipeline-stats,.timeline{grid-template-columns:1fr}
@@ -283,13 +287,12 @@ h3{margin-bottom:4px;font-size:13px;font-weight:600}
       <a href="#settings"><span class="nav-copy"><strong>Settings</strong><span>Team and setup</span></span><span class="nav-count">2</span></a>
     </nav>
     <div class="sidebar-bottom">
-      <div class="settle-stat"><span>First-cycle value staged</span><strong>EUR 28.6k</strong><small>147 records after import</small></div>
+      <a class="settle-stat" href="codex-20260707-commission-detail-resolution.html"><span>Issues to fix</span><strong>5</strong><small>2 hotel actions due today</small></a>
       <div class="profile"><div class="avatar">KJ</div><div><strong>Kenji</strong><span>Operator</span></div></div>
     </div>
   </aside>
 
   <div class="main">
-    <header class="topbar"><div class="crumb">Hotel operations / First Home Arrival</div></header>
     <main class="content" id="dashboard" tabindex="-1">
       <header class="page-head">
         <div><p class="eyeline">Tuesday, July 7, 2026</p><h1>Your first commission run is live.</h1><p class="lede">Host Agency Test A has been invited. Home shows what changed during setup, what still blocks approval, and the next action for the hotel team.</p></div>
@@ -335,7 +338,8 @@ h3{margin-bottom:4px;font-size:13px;font-weight:600}
         <header class="section-head"><div><h2 id="report-title">Daily report</h2><p>From scattered records to the next clear action.</p></div><a href="codex-20260707-commission-detail-resolution.html">Open commissions</a></header>
         <div class="report-panel">
           <div class="report-main">
-            <div class="report-lead"><span>Hotel control at every handoff</span><strong>Resolve the rate issue before approvals.</strong><p>The first commission run is live. Today is about one hotel decision, while agency and setup work continue in parallel.</p><div class="report-actions"><a class="btn primary" href="codex-20260707-commission-detail-resolution.html">Resolve issue</a><a class="btn" href="codex-20260707-agencies-readiness.html">Check agency request</a></div></div>
+            <div class="report-action-card"><div><strong>Resolve the rate issue before approvals.</strong><p>One hotel decision changes today's commission run. Agency and setup work can continue in parallel.</p><div class="report-actions"><a class="btn primary" href="codex-20260707-commission-detail-resolution.html">Resolve issue</a><a class="btn" href="codex-20260707-agencies-readiness.html">Check agency request</a></div></div><div class="issue-count" aria-label="Five open issues"><strong>5</strong><span>open issues</span></div></div>
+            <p class="report-note">The first run is usable. Keep work moving through the queue, but leave approval locked until setup is complete.</p>
             <div class="report-pulse" aria-label="Daily operating pulse">
               <div class="pulse"><strong>147</strong><span>commissions entered the first run</span></div>
               <div class="pulse"><strong>2</strong><span>hotel-owned review decisions remain</span></div>
@@ -343,9 +347,9 @@ h3{margin-bottom:4px;font-size:13px;font-weight:600}
             </div>
           </div>
           <div class="report-stack" aria-label="Current blockers">
-            <div class="stack-card featured"><span>Next action</span><strong>RES-10491 needs a hotel call</strong><p>Choose the working commission value and retain the reason in audit.</p><div class="meta">EUR 288 candidate value</div></div>
-            <div class="stack-card"><span>Agency</span><strong>Host Agency Test A is invited</strong><p>Fourteen matched commissions can progress after the Agency Admin confirms the invoice path.</p></div>
-            <div class="stack-card"><span>Setup</span><strong>Approval stays locked</strong><p>Finance Admin owns payment setup. Fraz / Oracle owns production OHIP credentials.</p></div>
+            <div class="stack-card"><div><span>Next action</span><strong>RES-10491 needs a hotel call</strong><p>Choose the working commission value and keep the reason with the record.</p></div><div class="meta">EUR 288</div></div>
+            <div class="stack-card"><div><span>Agency</span><strong>Host Agency Test A is invited</strong><p>Fourteen commissions wait for invoice-path confirmation.</p></div><div class="meta">14</div></div>
+            <div class="stack-card"><div><span>Setup</span><strong>Approval stays locked</strong><p>Finance Admin owns payment setup. Fraz / Oracle owns OHIP credentials.</p></div><div class="meta">2</div></div>
           </div>
         </div>
       </section>

@@ -12,6 +12,7 @@
 :root{
   --white:#fff;
   --canvas:#f0f7f9;
+  --canvas-2:#f5f8fa;
   --surface:#fff;
   --surface-2:#e2edf0;
   --surface-3:#d0dfe5;
@@ -66,7 +67,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{
 .nav-count{min-width:20px;border-radius:999px;background:var(--surface-2);padding:2px 6px;text-align:center;font:500 10px/1.4 var(--mono)}
 .nav a[aria-current="page"] .nav-count{background:var(--accent);color:var(--ink)}
 .sidebar-bottom{display:grid;gap:14px;margin-top:auto}
-.settle-stat{padding:14px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.settle-stat{display:block;padding:14px;border:1px solid var(--line);border-radius:var(--radius);background:var(--canvas-2);text-decoration:none}
+.settle-stat:hover{border-color:var(--line-strong);background:var(--accent-soft)}
 .settle-stat span,.settle-stat strong{display:block}
 .settle-stat span{color:var(--ink-3);font-size:11px}
 .settle-stat strong{margin:4px 0;font:500 28px/1.1 var(--mono)}
@@ -77,7 +79,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{
 .profile strong{font-size:12px;font-weight:500}
 .profile span{color:var(--ink-3);font-size:10px}
 .main{min-width:0;background:var(--white)}
-.topbar{height:64px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 clamp(24px,4vw,56px);border-bottom:1px solid var(--line);background:var(--white)}
+.topbar{display:none}
 .crumb{color:var(--ink-3);font-size:12px}
 .topbar-actions{display:flex;align-items:center;gap:12px}
 .live{display:inline-flex;align-items:center;gap:7px;color:var(--ink-2);font-size:11px}
@@ -213,22 +215,21 @@ h3{margin-bottom:4px;font-size:13px;font-weight:600}
       <a href="#payment"><span class="nav-copy"><strong>Settings</strong><span>Payment setup blocker</span></span><span class="nav-count">2</span></a>
     </nav>
     <div class="sidebar-bottom">
-      <div class="settle-stat"><span>Selected value</span><strong>EUR 288</strong><small>Rate conflict from import batch</small></div>
+      <a class="settle-stat" href="#queue-title"><span>Issues to fix</span><strong>4</strong><small>2 hotel actions due today</small></a>
       <div class="profile"><div class="avatar">KJ</div><div><strong>Kenji</strong><span>Operator</span></div></div>
     </div>
   </aside>
 
   <div class="main">
-    <header class="topbar"><div class="crumb">Commissions / RES-10491</div><div class="topbar-actions"><span class="live">Audit evidence retained</span><button class="btn" type="button">Export packet</button></div></header>
     <main class="content" id="detail" tabindex="-1">
       <header class="page-head">
-        <div><p class="eyeline">Resolution item RES-10491</p><h1>Resolve rate issue.</h1><p class="lede">This record came from onboarding with a source conflict. The hotel must choose the working commission value, capture the reason, and keep originals in audit history before invoice and payment readiness can proceed.</p></div>
+        <div><p class="eyeline">RES-10491</p><h1>Resolve rate issue.</h1><p class="lede">Choose the working commission value, add the reason, then return the record to invoice and agency follow-up.</p></div>
         <div class="page-actions"><a class="btn" href="index.html">Back to Home</a><button class="btn primary" type="button" data-save-resolution>Save resolution</button></div>
       </header>
 
       <div class="detail-grid">
         <section class="queue" aria-labelledby="queue-title">
-          <header class="section-head"><div><h2 id="queue-title">Resolution queue</h2><p>Contextual, not a primary nav destination.</p></div><span class="status review">2 hotel</span></header>
+          <header class="section-head"><div><h2 id="queue-title">Issues to fix</h2><p>Start with hotel-owned issues, then clear agency and setup blockers.</p></div><span class="status review">2 hotel</span></header>
           <div class="mini-queue">
             <a class="queue-link" href="#detail" aria-current="true"><strong>RES-10491 - Rate conflict</strong><span>Host Agency Test A - selected value required</span><small>EUR 288</small></a>
             <a class="queue-link" href="#detail"><strong>RES-10482 - Fuzzy duplicate</strong><span>Adjacent booking reference from import</span><small>Due today</small></a>
@@ -238,7 +239,7 @@ h3{margin-bottom:4px;font-size:13px;font-weight:600}
         </section>
 
         <section class="record" aria-labelledby="record-title">
-          <header class="section-head"><div><h2 id="record-title">Commission record</h2><p>Original values remain immutable; only the working commission value changes.</p></div><span class="status review" data-resolution-status>Needs Review</span></header>
+          <header class="section-head"><div><h2 id="record-title">Commission record</h2><p>Only the working commission value changes. Originals stay attached for audit.</p></div><span class="status review" data-resolution-status>Needs Review</span></header>
           <div class="record-band">
             <div class="record-cell"><div class="record-label">Agency</div><div class="record-value">Host Agency Test A</div><div class="record-note">Agency Admin invited after onboarding</div></div>
             <div class="record-cell"><div class="record-label">Booking</div><div class="record-value">RES-10491</div><div class="record-note">14-17 Jun 2026</div></div>
@@ -246,7 +247,7 @@ h3{margin-bottom:4px;font-size:13px;font-weight:600}
           </div>
 
           <section class="compare" aria-labelledby="compare-title">
-            <header class="section-head"><div><h2 id="compare-title">Source comparison</h2><p>The selected column becomes the working value. The rejected value stays attached to the audit packet.</p></div></header>
+            <header class="section-head"><div><h2 id="compare-title">Source comparison</h2><p>Select the working value and keep the other value with the record.</p></div></header>
             <div class="compare-table">
               <div class="compare-row"><div>Field</div><div>Oracle / OHIP</div><div>CSV upload</div><div>Selected</div></div>
               <div class="compare-row"><div>Booking reference</div><div class="mono">RES-10491</div><div class="mono">RES-10491</div><div class="selected mono">RES-10491</div></div>
@@ -258,7 +259,7 @@ h3{margin-bottom:4px;font-size:13px;font-weight:600}
           </section>
 
           <section class="decision" aria-labelledby="decision-title">
-            <header class="section-head"><div><h2 id="decision-title">Hotel decision</h2><p>Reason, user, and timestamp are required because this changes a financial value.</p></div></header>
+            <header class="section-head"><div><h2 id="decision-title">Hotel decision</h2><p>Add a reason so the decision is clear later.</p></div></header>
             <div class="decision-form">
               <div class="field"><label for="decision-value">Selected working value</label><input id="decision-value" value="EUR 288"></div>
               <div class="field"><label for="decision-reason">Reason required</label><textarea id="decision-reason">Preferred-rate agreement confirmed by finance. CSV export includes the correct 12% agency rate for this stay.</textarea></div>
@@ -267,7 +268,7 @@ h3{margin-bottom:4px;font-size:13px;font-weight:600}
           </section>
 
           <section class="requirements" id="requirements" aria-labelledby="requirements-title">
-            <header class="section-head"><div><h2 id="requirements-title">Invoice and agency requirements</h2><p>Resolution returns the record to the mainline, but agency and invoice requirements still control readiness.</p></div><span class="status warn">Waiting on Agency</span></header>
+            <header class="section-head"><div><h2 id="requirements-title">Invoice and agency requirements</h2><p>After the rate is resolved, agency confirmation still controls the next step.</p></div><span class="status warn">Waiting on Agency</span></header>
             <div class="requirement-list">
               <div class="requirement"><div><strong>Agency Admin invited</strong><span>alex@host-a.test received first invite from onboarding</span></div><span class="status good">Complete</span></div>
               <div class="requirement"><div><strong>Agency profile confirmation</strong><span>Host agency must confirm identity and relationship model</span></div><span class="status warn">Waiting</span></div>

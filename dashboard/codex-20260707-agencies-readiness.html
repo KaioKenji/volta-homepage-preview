@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --white:#fff;--canvas:#f0f7f9;--surface:#fff;--surface-2:#e2edf0;--surface-3:#d0dfe5;
+  --white:#fff;--canvas:#f0f7f9;--canvas-2:#f5f8fa;--surface:#fff;--surface-2:#e2edf0;--surface-3:#d0dfe5;
   --ink:#091d36;--ink-2:#3a4f65;--ink-3:#697d8e;--line:#d0dfe5;--line-strong:#a3b4bf;
   --accent:#59cdc6;--accent-strong:#0a7975;--accent-soft:#e3f8f7;
   --green:#18775d;--green-soft:#e9f6f1;--amber:#93621a;--amber-soft:#fff6e5;
@@ -47,7 +47,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{
 .nav-count{min-width:20px;border-radius:999px;background:var(--surface-2);padding:2px 6px;text-align:center;font:500 10px/1.4 var(--mono)}
 .nav a[aria-current="page"] .nav-count{background:var(--accent);color:var(--ink)}
 .sidebar-bottom{display:grid;gap:14px;margin-top:auto}
-.settle-stat{padding:14px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.settle-stat{display:block;padding:14px;border:1px solid var(--line);border-radius:var(--radius);background:var(--canvas-2);text-decoration:none}
+.settle-stat:hover{border-color:var(--line-strong);background:var(--accent-soft)}
 .settle-stat span,.settle-stat strong{display:block}
 .settle-stat span{color:var(--ink-3);font-size:11px}
 .settle-stat strong{margin:4px 0;font:500 28px/1.1 var(--mono)}
@@ -58,7 +59,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{
 .profile strong{font-size:12px;font-weight:500}
 .profile span{color:var(--ink-3);font-size:10px}
 .main{min-width:0;background:var(--white)}
-.topbar{height:64px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 clamp(24px,4vw,56px);border-bottom:1px solid var(--line);background:var(--white)}
+.topbar{display:none}
 .crumb{color:var(--ink-3);font-size:12px}
 .topbar-actions{display:flex;align-items:center;gap:12px}
 .live{display:inline-flex;align-items:center;gap:7px;color:var(--ink-2);font-size:11px}
@@ -191,22 +192,21 @@ textarea{width:100%;min-height:92px;border:1px solid var(--line-strong);border-r
       <a href="#setup"><span class="nav-copy"><strong>Settings</strong><span>Payment setup blocker</span></span><span class="nav-count">2</span></a>
     </nav>
     <div class="sidebar-bottom">
-      <div class="settle-stat"><span>Waiting agencies</span><strong>2</strong><small>Profile or invoice path needed</small></div>
+      <a class="settle-stat" href="#request"><span>Issues to fix</span><strong>3</strong><small>Agency or setup owner needed</small></a>
       <div class="profile"><div class="avatar">KJ</div><div><strong>Kenji</strong><span>Operator</span></div></div>
     </div>
   </aside>
 
   <div class="main">
-    <header class="topbar"><div class="crumb">Agencies / Readiness</div><div class="topbar-actions"><span class="live" data-live>Host agency selected</span><button class="btn" type="button">Export directory</button></div></header>
     <main class="content" id="agencies" tabindex="-1">
       <header class="page-head">
-        <div><p class="eyeline">Agency readiness</p><h1>Track who can move commissions forward.</h1><p class="lede">Agencies are grouped by relationship and readiness, so the hotel can tell whether the next action belongs to an Agency Admin, an individual agent, the hotel, or payment setup.</p></div>
+        <div><p class="eyeline">Agencies</p><h1>Track who can move commissions forward.</h1><p class="lede">See which agencies are ready, which need a request, and which blocker belongs to the hotel.</p></div>
         <div class="page-actions"><a class="btn" href="index.html">Back to Home</a><button class="btn primary" type="button" data-request-missing>Request missing details</button></div>
       </header>
 
       <div class="agency-grid">
         <section class="directory" aria-labelledby="directory-title">
-          <header class="section-head"><div><h2 id="directory-title">Directory</h2><p>Four state families, one selected profile.</p></div><span class="status warn" data-visible-count>4 visible</span></header>
+          <header class="section-head"><div><h2 id="directory-title">Directory</h2><p>Filter by the next action needed.</p></div><span class="status warn" data-visible-count>4 visible</span></header>
           <div class="toolbar">
             <label><span class="eyeline">Search agencies or identifiers</span><input class="input" id="agency-search" type="search" placeholder="Search Host Agency, IATA, admin, or agent"></label>
             <div class="tabs" role="group" aria-label="Agency state filter">
@@ -227,7 +227,7 @@ textarea{width:100%;min-height:92px;border:1px solid var(--line-strong);border-r
         </section>
 
         <section class="profile-panel" aria-labelledby="profile-title">
-          <header class="section-head"><div><h2 id="profile-title">Selected profile</h2><p>Relationship, admin control, and blockers stay visible together.</p></div><span class="status warn" data-profile-state>Waiting on Agency</span></header>
+          <header class="section-head"><div><h2 id="profile-title">Selected agency</h2><p>Admin, invoice path, and open commissions in one place.</p></div><span class="status warn" data-profile-state>Waiting on Agency</span></header>
           <div class="summary-band">
             <div class="summary-cell"><span>Open commissions</span><strong data-open-count>14</strong></div>
             <div class="summary-cell"><span>Matched value</span><strong data-open-value>EUR 4,032</strong></div>
@@ -238,7 +238,7 @@ textarea{width:100%;min-height:92px;border:1px solid var(--line-strong);border-r
           <div class="profile-title"><div><strong data-profile-name>Host Agency Test A</strong><span data-profile-sub>Host agency - Agency Admin invited</span></div><a class="btn" data-commission-link href="codex-20260707-commission-detail-resolution.html">Open commissions</a></div>
 
           <section class="relationship" aria-labelledby="relationship-title">
-            <header class="section-head"><div><h2 id="relationship-title">Relationship model</h2><p>Host agency and independent agent paths are not interchangeable.</p></div></header>
+            <header class="section-head"><div><h2 id="relationship-title">Relationship</h2><p>Confirm who owns the agency profile and invoice path.</p></div></header>
             <div class="relationship-grid">
               <div class="fact"><span>Entity type</span><strong data-entity-type>Host agency</strong><p data-entity-copy>Agency Admin manages profile, invoice preference, and agent attribution.</p></div>
               <div class="fact"><span>Primary admin</span><strong data-admin>Alex Marchand</strong><p data-admin-copy>Invited from onboarding success. Confirmation is still pending.</p></div>
@@ -248,7 +248,7 @@ textarea{width:100%;min-height:92px;border:1px solid var(--line-strong);border-r
           </section>
 
           <section class="commissions" aria-labelledby="commissions-title">
-            <header class="section-head"><div><h2 id="commissions-title">Related commissions</h2><p>Links carry the user back into Commission Detail or the future Commissions view.</p></div></header>
+            <header class="section-head"><div><h2 id="commissions-title">Related commissions</h2><p>Open the record that needs work.</p></div></header>
             <div class="commission-table" data-commission-table>
               <div class="commission-row"><div>Reference</div><div>Requirement</div><div>Amount</div><div>Status</div></div>
               <div class="commission-row"><div class="mono">RES-10491</div><div>Rate conflict resolved; invoice path pending</div><div class="mono">EUR 288</div><div><span class="status warn">Waiting</span></div>
