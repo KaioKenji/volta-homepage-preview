@@ -32,9 +32,14 @@
   --success-soft:#e9f6f1;
   --info:#356d91;
   --info-soft:#edf5fa;
+  --review-line:#edc4c8;
+  --wait-line:#f0d7a8;
+  --ready-line:#b9ddce;
+  --info-line:#c5dbe8;
   --radius:6px;
   --control-radius:4px;
-  --shadow:0 6px 14px rgb(9 29 54 / .08);
+  --shadow:0 1px 2px rgb(9 29 54 / .06),0 6px 14px rgb(9 29 54 / .04);
+  --focus-ring:0 0 0 3px var(--teal-soft),0 0 0 5px var(--teal);
   --sidebar:232px;
   --gutter:24px;
   --baseline:8px;
@@ -47,7 +52,7 @@ html{background:var(--canvas);color:var(--ink);font:14px/1.5 var(--sans)}
 body{margin:0;min-width:320px;background:var(--canvas)}
 button,input{font:inherit}
 button,a{outline-offset:3px}
-button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--teal)}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:0;box-shadow:var(--focus-ring)}
 button{color:inherit}
 .app{min-height:100vh;display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr)}
 .sidebar{position:sticky;top:0;height:100vh;padding:24px 16px 18px;background:#fff;color:var(--ink);border-right:1px solid var(--line);display:flex;flex-direction:column}
@@ -89,21 +94,28 @@ button{color:inherit}
 .screen-switch{grid-column:9 / -1;justify-self:end;display:inline-flex;padding:3px;background:var(--surface-2);border-radius:var(--radius)}
 .screen-switch button{min-height:36px;padding:0 14px;border:0;border-radius:var(--control-radius);background:transparent;color:var(--ink-2);cursor:pointer}
 .screen-switch button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.14)}
-.summary-strip{display:flex;align-items:stretch;margin-bottom:16px;border-radius:var(--radius);background:var(--surface-2);overflow:hidden}
+.summary-strip{display:flex;align-items:stretch;margin-bottom:16px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);overflow:hidden}
 .summary-item{min-width:170px;padding:14px 18px}
 .summary-item:first-child{flex:1}
 .summary-item span{display:block;color:var(--ink-2);font-size:12px}
 .summary-item strong{display:block;margin-top:2px;font-size:19px;font-weight:500}
 .summary-item em{font-style:normal;color:var(--teal);font-weight:500}
+.summary-link{color:inherit;text-decoration:none;transition:background .16s}
+.summary-link:hover{background:var(--teal-soft)}
+.summary-link:after{content:"Open";display:block;margin-top:2px;color:var(--teal);font-size:10px}
 .toolbar{display:flex;align-items:center;gap:12px;margin-bottom:16px}
 .searchbox{position:relative;flex:1;max-width:420px}
-.searchbox input{width:100%;height:42px;padding:0 13px;border:1px solid var(--line-strong);border-radius:var(--radius);background:#fff;color:var(--ink)}
+.searchbox label{display:block}
+.searchbox input{width:100%;height:42px;padding:0 42px 0 13px;border:1px solid var(--line-strong);border-radius:var(--radius);background:#fff;color:var(--ink)}
 .searchbox input::placeholder{color:#64798a}
+.search-clear{position:absolute;top:5px;right:5px;width:32px;height:32px;border:0;border-radius:var(--control-radius);background:transparent;color:var(--ink-3);cursor:pointer}
+.search-clear:hover{background:var(--surface-2);color:var(--ink)}
 .filters{display:flex;gap:4px;padding:3px;background:var(--surface-2);border-radius:var(--radius);overflow-x:auto}
 .filter{height:34px;padding:0 12px;border:0;border-radius:var(--control-radius);background:transparent;color:var(--ink-2);white-space:nowrap;cursor:pointer}
 .filter[aria-pressed="true"]{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
-.btn{display:inline-flex;min-height:36px;align-items:center;justify-content:center;padding:0 14px;border:1px solid var(--line-strong);border-radius:var(--control-radius);background:#fff;color:var(--ink);font-weight:500;text-decoration:none;cursor:pointer}
+.btn{display:inline-flex;min-height:36px;align-items:center;justify-content:center;padding:0 14px;border:1px solid var(--line-strong);border-radius:var(--control-radius);background:#fff;color:var(--ink);font-weight:500;text-decoration:none;cursor:pointer;transition:background .16s,border-color .16s,transform .16s}
 .btn:hover{background:#f7fafb}
+.btn:active{transform:translateY(1px)}
 .btn.primary{border-color:var(--teal);background:var(--teal);color:#fff}
 .btn.primary:hover{background:#0a746f}
 .btn.danger{border-color:#e3aeb4;color:var(--danger)}
@@ -122,25 +134,27 @@ button{color:inherit}
 .owner{color:var(--ink-2)}
 .status{display:inline-flex;align-items:center;gap:6px;min-height:25px;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:500;white-space:nowrap}
 .status::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
-.status.review{background:var(--danger-soft);color:var(--danger)}
-.status.wait{background:var(--warning-soft);color:var(--warning)}
-.status.ready{background:var(--success-soft);color:var(--success)}
-.status.info{background:var(--info-soft);color:var(--info)}
+.status.review{border:1px solid var(--review-line);background:var(--danger-soft);color:var(--danger)}
+.status.wait{border:1px solid var(--wait-line);background:var(--warning-soft);color:var(--warning)}
+.status.ready{border:1px solid var(--ready-line);background:var(--success-soft);color:var(--success)}
+.status.info{border:1px solid var(--info-line);background:var(--info-soft);color:var(--info)}
 .row-action{display:inline-flex;align-items:center;gap:6px;color:var(--teal);font-weight:500}
 .master-grid{display:grid;grid-template-columns:340px minmax(0,1fr);gap:var(--gutter);align-items:start}
-.queue-pane,.work-pane{min-width:0;background:#fff;border-radius:var(--radius);box-shadow:0 2px 7px rgba(0,0,0,.07)}
-.pane-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:18px 20px;background:#f3f6f8}
+.queue-pane,.work-pane{min-width:0;border:1px solid var(--line);background:#fff;border-radius:var(--radius);box-shadow:var(--shadow)}
+.pane-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:18px 20px;background:var(--canvas-2);border-bottom:1px solid var(--line)}
 .pane-head h2{margin:0;font-size:17px;font-weight:500}
 .pane-head p{margin:3px 0 0;color:var(--ink-2);font-size:12px}
 .queue-list{display:grid}
-.queue-row{width:100%;padding:15px 18px;border:0;border-top:1px solid var(--line);background:#fff;text-align:left;cursor:pointer}
+.queue-row{width:100%;min-height:88px;padding:15px 18px;border:0;border-top:1px solid var(--line);background:#fff;text-align:left;cursor:pointer;transition:background .16s}
 .queue-row:hover{background:#f7fbfb}
 .queue-row[aria-pressed="true"]{background:var(--teal-soft)}
 .queue-row strong{display:flex;justify-content:space-between;gap:12px;font-weight:500}
-.queue-row span{display:block;margin-top:5px;color:var(--ink-2);font-size:12px}
+.queue-row strong span{display:block;margin-top:0;color:var(--ink);font-size:12px}
+.queue-row>span{display:block;margin-top:5px;color:var(--ink-2);font-size:12px}
 .queue-row small{display:block;margin-top:7px;color:var(--ink-3);font:400 11px var(--mono)}
-.pane-tools{padding:14px 16px;background:#fff;border-top:1px solid var(--line)}
+.pane-tools{padding:14px 16px;background:#fff;border-bottom:1px solid var(--line)}
 .pane-tools .searchbox{max-width:none}
+.pane-link{margin:12px 16px 0}
 .work-body{padding:24px}
 .record-head{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
 .record-head h2{margin:0 0 4px;font-size:23px;font-weight:500}
@@ -159,8 +173,9 @@ button{color:inherit}
 .fact span{display:block;color:var(--ink-3);font-size:11px}
 .fact strong{display:block;margin-top:4px;font-weight:500}
 .tabs{display:flex;gap:18px;margin:-4px 0 20px;border-bottom:1px solid var(--line)}
-.tab{padding:10px 1px;border:0;border-bottom:2px solid transparent;background:transparent;color:var(--ink-2);cursor:pointer}
-.tab[aria-pressed="true"]{border-color:var(--teal);color:var(--ink)}
+.tab{padding:10px 1px;border:0;border-bottom:2px solid transparent;background:transparent;color:var(--ink-2);cursor:pointer;transition:color .16s,border-color .16s}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{border-color:var(--teal);color:var(--ink)}
 .action-groups{display:grid;gap:24px}
 .action-group{background:#fff;border-radius:var(--radius);box-shadow:0 2px 7px rgba(0,0,0,.07);overflow:hidden}
 .group-head{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:15px 18px;background:#f3f6f8}
@@ -194,7 +209,10 @@ button{color:inherit}
 .prototype-label strong{display:block;font-weight:500}
 .prototype-label span{display:block;color:#a9bdcc;font-size:10px}
 .toast{position:fixed;z-index:40;right:22px;bottom:22px;padding:12px 16px;border-radius:var(--radius);background:var(--navy);color:#fff;box-shadow:var(--shadow)}
-.empty{padding:56px 20px;text-align:center;color:var(--ink-2)}
+.empty{display:grid;justify-items:center;gap:6px;padding:48px 20px;text-align:center;color:var(--ink-2)}
+.empty strong{font-size:14px;font-weight:500;color:var(--ink)}
+.empty p{margin:0;font-size:12px}
+.empty .btn{margin-top:6px}
 [hidden]{display:none!important}
 @media(max-width:1100px){
   .head-copy{grid-column:1 / span 8}
@@ -218,7 +236,7 @@ button{color:inherit}
   .summary-strip{overflow-x:auto}
   .summary-item:first-child{flex:0 0 220px}
   .master-grid{grid-template-columns:1fr}
-  .queue-pane{max-height:360px;overflow:auto}
+  .queue-pane{max-height:none;overflow:visible}
   .inline-detail{grid-template-columns:1fr}
 }
 @media(max-width:700px){
@@ -253,11 +271,11 @@ button{color:inherit}
     <button class="sidebar-search" type="button"><span>Search</span><kbd>Ctrl K</kbd></button>
     <div class="workspace-label">Workspace</div>
     <nav class="nav" aria-label="Primary navigation">
-      <a href="index.html"><span class="nav-copy"><strong>Home</strong><span>Triage and overview</span></span></a>
-      <a href="commissions.html" data-nav="commissions"><span class="nav-copy"><strong>Commissions</strong><span>Records and actions</span></span><small>5</small></a>
-      <a href="agencies.html" data-nav="agencies"><span class="nav-copy"><strong>Agencies</strong><span>Readiness and invites</span></span><small>3</small></a>
-      <a href="#"><span class="nav-copy"><strong>Workflows</strong><span>Requests and reminders</span></span></a>
-      <a href="#"><span class="nav-copy"><strong>Settings</strong><span>Team and setup</span></span></a>
+      <a href="index.html" data-wire="home"><span class="nav-copy"><strong>Home</strong><span>Triage and overview</span></span></a>
+      <a href="commissions.html?view=all" data-nav="commissions"><span class="nav-copy"><strong>Commissions</strong><span>Records and actions</span></span><small>5</small></a>
+      <a href="agencies.html?view=all" data-nav="agencies"><span class="nav-copy"><strong>Agencies</strong><span>Readiness and invites</span></span><small>3</small></a>
+      <a href="#" data-wire="workflows"><span class="nav-copy"><strong>Workflows</strong><span>Requests and reminders</span></span></a>
+      <a href="#" data-wire="settings"><span class="nav-copy"><strong>Settings</strong><span>Team and setup</span></span></a>
     </nav>
     <div class="sidebar-bottom">
       <a class="settle-stat" href="commissions.html?view=issues"><span>Issues to fix</span><strong>5</strong><small>2 hotel actions due today</small></a>
@@ -301,30 +319,32 @@ const overlay=document.getElementById('overlay');
 const toast=document.querySelector('.toast');
 const status=(label,kind)=>`<span class="status ${kind}">${label}</span>`;
 function pageHeader(title,copy){return `<header class="page-head"><div class="head-copy"><h1>${title}</h1><p>${copy}</p></div><div class="screen-switch" role="group" aria-label="Prototype page"><button type="button" data-screen="commissions" aria-pressed="${state.screen==='commissions'}">Commissions</button><button type="button" data-screen="agencies" aria-pressed="${state.screen==='agencies'}">Agencies</button></div></header>`}
-function commissionSummary(){return `<div class="summary-strip"><div class="summary-item"><span>Open commission value</span><strong>EUR 6,189</strong></div><div class="summary-item"><span>Issues to fix</span><strong><em>2</em></strong></div><div class="summary-item"><span>Waiting on agency</span><strong>14</strong></div><div class="summary-item"><span>Ready for approval</span><strong>1</strong></div></div>`}
+function commissionSummary(){const issueLink=isPublished?'commissions.html?view=issues':'?screen=commissions&variant=B';return `<div class="summary-strip"><div class="summary-item"><span>Open commission value</span><strong>EUR 6,189</strong></div><a class="summary-item summary-link" href="${issueLink}" data-wire="summary-issues"><span>Issues to fix</span><strong><em>2</em></strong></a><div class="summary-item"><span>Waiting on agency</span><strong>14</strong></div><div class="summary-item"><span>Ready for approval</span><strong>1</strong></div></div>`}
 function agencySummary(){return `<div class="summary-strip"><div class="summary-item"><span>Agency relationships</span><strong>4</strong></div><div class="summary-item"><span>Onboarded</span><strong><em>1</em></strong></div><div class="summary-item"><span>Waiting</span><strong>1</strong></div><div class="summary-item"><span>Need hotel action</span><strong>2</strong></div></div>`}
+function searchControl(type,compact=false){const placeholder=compact?(type==='commissions'?'Search commissions or references':'Search agencies or owners'):`Search ${type}, references, or owners`;return `<div class="searchbox"><label><span hidden>Search ${type}</span><input type="search" data-search placeholder="${placeholder}" value="${state.query}"></label>${state.query?'<button class="search-clear" type="button" data-clear-search aria-label="Clear search">x</button>':''}</div>`}
 function toolbar(type){
   const filters=type==='commissions'?[['all','All'],['review','Needs review'],['wait','Waiting'],['ready','Ready']]:[['all','All'],['review','Hotel action'],['wait','Waiting'],['ready','Onboarded']];
-  return `<div class="toolbar"><label class="searchbox"><span hidden>Search ${type}</span><input type="search" data-search placeholder="Search ${type}, references, or owners" value="${state.query}"></label><div class="filters" role="group" aria-label="${type} filters">${filters.map(([key,label])=>`<button class="filter" type="button" data-filter="${key}" aria-pressed="${state.filter===key}">${label}</button>`).join('')}</div></div>`;
+  return `<div class="toolbar">${searchControl(type)}<div class="filters" role="group" aria-label="${type} filters">${filters.map(([key,label])=>`<button class="filter" type="button" data-filter="${key}" aria-pressed="${state.filter===key}">${label}</button>`).join('')}</div></div>`;
 }
-function workbenchSearch(type){return `<div class="pane-tools"><label class="searchbox"><span hidden>Search ${type}</span><input type="search" data-search placeholder="Search ${type}, references, or owners" value="${state.query}"></label></div>`}
+function workbenchSearch(type){return `<div class="pane-tools">${searchControl(type,true)}</div>`}
 function filtered(rows){return rows.filter(row=>(state.filter==='all'||row.kind===state.filter)&&(!state.query||JSON.stringify(row).toLowerCase().includes(state.query.toLowerCase())))}
+function emptyState(type){const noun=type==='commission'?'commissions':'agencies';return `<div class="table-shell empty"><strong>No ${noun} match</strong><p>Try a different search or filter.</p>${state.query?'<button class="btn" type="button" data-clear-search>Clear search</button>':''}</div>`}
 function commissionsTable(){
   const rows=filtered(commissionRows);
-  if(!rows.length)return `<div class="table-shell empty">No commissions match this view.</div>`;
+  if(!rows.length)return emptyState('commission');
   return `<div class="table-shell"><table class="data-table"><thead><tr><th style="width:28%">Commission</th><th style="width:17%">Status</th><th style="width:13%">Owner</th><th style="width:13%">Amount</th><th style="width:12%">Source</th><th>Next action</th></tr></thead><tbody>${rows.map(row=>`<tr tabindex="0" data-commission="${row.id}" aria-selected="${state.selectedCommission===row.id}"><td class="name-cell"><strong>${row.agency}</strong><span>${row.id} - ${row.stay}</span></td><td>${status(row.state,row.kind)}</td><td class="owner">${row.owner}</td><td class="amount">${row.amount}</td><td class="mono">${row.source}</td><td><span class="row-action">${row.next} &#8594;</span></td></tr>`).join('')}</tbody></table></div>`;
 }
 function agenciesTable(){
   const rows=filtered(agencyRows);
-  if(!rows.length)return `<div class="table-shell empty">No agencies match this view.</div>`;
+  if(!rows.length)return emptyState('agency');
   return `<div class="table-shell"><table class="data-table"><thead><tr><th style="width:27%">Agency</th><th style="width:17%">Readiness</th><th style="width:18%">Contact</th><th style="width:11%">Open</th><th style="width:13%">Matched</th><th>Next action</th></tr></thead><tbody>${rows.map(row=>`<tr tabindex="0" data-agency="${row.id}" aria-selected="${state.selectedAgency===row.id}"><td class="name-cell"><strong>${row.name}</strong><span>${row.type} - ${row.iata}</span></td><td>${status(row.state,row.kind)}</td><td class="owner">${row.contact}</td><td class="mono">${row.open}</td><td class="amount">${row.value}</td><td><span class="row-action">${row.next} &#8594;</span></td></tr>`).join('')}</tbody></table></div>`;
 }
 function commissionWork(row){const detailControl=isPublished?`<a class="btn" href="codex-20260707-commission-detail-resolution.html" data-wire="commission-detail">Open full record</a>`:`<button class="btn" type="button" data-action="Open full record">Open full record</button>`;return `<div class="work-body"><div class="record-head"><div><h2>${row.agency}</h2><p class="mono">${row.id} - ${row.amount} - ${row.source}</p></div><div class="record-actions">${status(row.state,row.kind)}${detailControl}</div></div><section class="decision"><h3>${row.detail}</h3><p>${row.secondary}</p>${row.kind==='review'?`<div class="choice-row"><button class="choice" type="button" aria-pressed="true"><strong>EUR 288</strong><span>Imported rate</span></button><button class="choice" type="button" aria-pressed="false"><strong>EUR 250</strong><span>Agency value</span></button></div>`:`<button class="btn primary" type="button" data-action="${row.next}" data-wire="commission-action">${row.next}</button>`}</section><div class="facts"><div class="fact"><span>Stay</span><strong>${row.stay}</strong></div><div class="fact"><span>Next owner</span><strong>${row.owner}</strong></div><div class="fact"><span>Source</span><strong>${row.source}</strong></div><div class="fact"><span>Approval</span><strong>${row.kind==='ready'?'Available after review':'Not yet available'}</strong></div></div><div class="drawer-actions">${row.kind==='review'?`<button class="btn primary" type="button" data-action="Save resolution" data-wire="commission-resolution">Save resolution</button><button class="btn danger" type="button" data-action="Escalate issue" data-wire="commission-escalation">Escalate</button>`:''}</div></div>`}
-function agencyWork(row){const agencyControl=isPublished?`<a class="btn" href="commissions.html?view=all&amp;agency=${encodeURIComponent(row.id)}" data-wire="agency-to-commissions">Open commissions</a>`:`<button class="btn" type="button" data-action="Open agency profile">Open full profile</button>`;return `<div class="work-body"><div class="record-head"><div><h2>${row.name}</h2><p>${row.type} - ${row.iata}</p></div><div class="record-actions">${status(row.state,row.kind)}${agencyControl}</div></div><div class="tabs" role="tablist"><button class="tab" type="button" aria-pressed="true">Overview</button><button class="tab" type="button" aria-pressed="false">Commissions</button><button class="tab" type="button" aria-pressed="false">Activity</button></div><section class="decision"><h3>${row.detail}</h3><p>${row.secondary}</p><button class="btn primary" type="button" data-action="${row.next}" data-wire="agency-action">${row.next}</button></section><div class="facts"><div class="fact"><span>Primary contact</span><strong>${row.contact}</strong></div><div class="fact"><span>Open commissions</span><strong>${row.open}</strong></div><div class="fact"><span>Matched value</span><strong>${row.value}</strong></div><div class="fact"><span>Relationship</span><strong>${row.type}</strong></div></div></div>`}
+function agencyWork(row){const agencyControl=isPublished?`<a class="btn" href="commissions.html?view=all&amp;agency=${encodeURIComponent(row.id)}" data-wire="agency-to-commissions">Open commissions</a>`:`<button class="btn" type="button" data-action="Open agency profile">Open full profile</button>`;return `<div class="work-body"><div class="record-head"><div><h2>${row.name}</h2><p>${row.type} - ${row.iata}</p></div><div class="record-actions">${status(row.state,row.kind)}${agencyControl}</div></div><div class="tabs" role="tablist" aria-label="Agency detail views"><button class="tab" type="button" role="tab" aria-selected="true">Overview</button><button class="tab" type="button" role="tab" aria-selected="false">Commissions</button><button class="tab" type="button" role="tab" aria-selected="false">Activity</button></div><section class="decision"><h3>${row.detail}</h3><p>${row.secondary}</p><button class="btn primary" type="button" data-action="${row.next}" data-wire="agency-action">${row.next}</button></section><div class="facts"><div class="fact"><span>Primary contact</span><strong>${row.contact}</strong></div><div class="fact"><span>Open commissions</span><strong>${row.open}</strong></div><div class="fact"><span>Matched value</span><strong>${row.value}</strong></div><div class="fact"><span>Relationship</span><strong>${row.type}</strong></div></div></div>`}
 function queue(items,type){return `<div class="queue-list">${items.length?items.map(row=>`<button class="queue-row" type="button" data-${type}="${row.id}" aria-pressed="${type==='commission'?state.selectedCommission===row.id:state.selectedAgency===row.id}"><strong><span>${type==='commission'?row.agency:row.name}</span><span class="mono">${type==='commission'?row.amount:row.open}</span></strong><span>${row.detail}</span><small>${type==='commission'?row.id:row.type} - ${row.state}</small></button>`).join(''):`<div class="empty">No matching records.</div>`}</div>`}
 function commissionsA(){return `${pageHeader('Commissions','Find the records that need a decision, then move eligible work forward.')}${commissionSummary()}${toolbar('commissions')}${isPublished?'<a class="btn" href="commissions.html?view=issues" data-wire="all-to-issues">Issues to fix</a>':''}${commissionsTable()}`}
 function agenciesA(){return `${pageHeader('Agencies','See which relationships are ready and who needs a clear request next.')}${agencySummary()}${toolbar('agencies')}${agenciesTable()}`}
-function commissionsB(){const row=commissionRows.find(item=>item.id===state.selectedCommission)||commissionRows[0];const rows=filtered(commissionRows);return `${pageHeader('Commissions','Resolve issues without losing the wider queue.')}${commissionSummary()}<div class="master-grid"><section class="queue-pane"><header class="pane-head"><div><h2>Issues to fix</h2><p>Ordered by hotel impact</p></div><span class="group-count">${rows.length}</span></header>${workbenchSearch('commissions')}<a class="btn" href="${isPublished?'commissions.html?view=all':'?screen=commissions&variant=A'}" data-wire="issues-to-all">All commissions</a>${queue(rows,'commission')}</section><section class="work-pane">${commissionWork(row)}</section></div>`}
+function commissionsB(){const row=commissionRows.find(item=>item.id===state.selectedCommission)||commissionRows[0];const rows=filtered(commissionRows);return `${pageHeader('Commissions','Resolve issues without losing the wider queue.')}${commissionSummary()}<div class="master-grid"><section class="queue-pane"><header class="pane-head"><div><h2>Issues to fix</h2><p>Ordered by hotel impact</p></div><span class="group-count" aria-live="polite">${rows.length}</span></header>${workbenchSearch('commissions')}<a class="btn pane-link" href="${isPublished?'commissions.html?view=all':'?screen=commissions&variant=A'}" data-wire="issues-to-all">All commissions</a>${rows.length?queue(rows,'commission'):emptyState('commission')}</section><section class="work-pane">${commissionWork(row)}</section></div>`}
 function agenciesB(){const row=agencyRows.find(item=>item.id===state.selectedAgency)||agencyRows[0];const rows=filtered(agencyRows);return `${pageHeader('Agencies','Move between relationships and act on the selected agency.')}${agencySummary()}<div class="master-grid"><section class="queue-pane"><header class="pane-head"><div><h2>Agencies</h2><p>Ordered by next action</p></div><span class="group-count">${rows.length}</span></header>${workbenchSearch('agencies')}${queue(rows,'agency')}</section><section class="work-pane">${agencyWork(row)}</section></div>`}
 function commissionGroup(title,copy,kind){const rows=commissionRows.filter(row=>row.kind===kind);return `<section class="action-group"><header class="group-head"><div><h2>${title}</h2><p>${copy}</p></div><span class="group-count">${rows.length}</span></header>${rows.map(row=>`<button class="group-row" type="button" data-inline-commission="${row.id}"><strong>${row.agency}<small class="mono" style="display:block;color:var(--ink-3);font-weight:400">${row.id}</small></strong><span>${row.detail}</span><span class="amount">${row.amount}</span><span class="row-action">${row.next} &#8594;</span></button>${state.selectedCommission===row.id?`<div class="inline-detail"><div><h3>${row.detail}</h3><p>${row.secondary}</p></div><div class="inline-action"><strong>${row.next}</strong><p>Owner: ${row.owner}</p><button class="btn primary" type="button" data-action="${row.next}">${row.next}</button></div></div>`:''}`).join('')}</section>`}
 function agencyGroup(title,copy,kinds){const rows=agencyRows.filter(row=>kinds.includes(row.kind));return `<section class="action-group"><header class="group-head"><div><h2>${title}</h2><p>${copy}</p></div><span class="group-count">${rows.length}</span></header>${rows.map(row=>`<button class="group-row" type="button" data-inline-agency="${row.id}"><strong>${row.name}<small style="display:block;color:var(--ink-3);font-weight:400">${row.type}</small></strong><span>${row.detail}</span><span class="amount">${row.value}</span><span class="row-action">${row.next} &#8594;</span></button>${state.selectedAgency===row.id?`<div class="inline-detail"><div><h3>${row.detail}</h3><p>${row.secondary}</p></div><div class="inline-action"><strong>${row.next}</strong><p>${row.contact}</p><button class="btn primary" type="button" data-action="${row.next}">${row.next}</button></div></div>`:''}`).join('')}</section>`}
@@ -342,6 +362,7 @@ function render(){
 function bind(){
   document.querySelectorAll('[data-screen]').forEach(button=>button.addEventListener('click',()=>{state.screen=button.dataset.screen;state.filter='all';state.query='';render()}));
   document.querySelectorAll('[data-filter]').forEach(button=>button.addEventListener('click',()=>{state.filter=button.dataset.filter;render()}));
+  document.querySelectorAll('[data-clear-search]').forEach(button=>button.addEventListener('click',()=>{state.query='';render();document.querySelector('[data-search]')?.focus()}));
   const search=document.querySelector('[data-search]');if(search)search.addEventListener('input',event=>{const caret=event.target.selectionStart??event.target.value.length;state.query=event.target.value;render();const nextInput=document.querySelector('[data-search]');if(nextInput){nextInput.focus();const nextCaret=Math.min(caret,nextInput.value.length);nextInput.setSelectionRange(nextCaret,nextCaret)}});
   document.querySelectorAll('tr[data-commission]').forEach(row=>row.addEventListener('click',()=>{state.selectedCommission=row.dataset.commission;openCommission(row.dataset.commission)}));
   document.querySelectorAll('tr[data-agency]').forEach(row=>row.addEventListener('click',()=>{state.selectedAgency=row.dataset.agency;openAgency(row.dataset.agency)}));
@@ -351,7 +372,7 @@ function bind(){
   document.querySelectorAll('[data-inline-agency]').forEach(row=>row.addEventListener('click',()=>{state.selectedAgency=state.selectedAgency===row.dataset.inlineAgency?'':row.dataset.inlineAgency;render()}));
   document.querySelectorAll('[data-action]').forEach(button=>button.addEventListener('click',()=>showToast(button.dataset.action)));
   document.querySelectorAll('.choice').forEach(choice=>choice.addEventListener('click',()=>{document.querySelectorAll('.choice').forEach(node=>node.setAttribute('aria-pressed',String(node===choice)))}));
-  document.querySelectorAll('.tab').forEach(tab=>tab.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(node=>node.setAttribute('aria-pressed',String(node===tab)))}));
+  document.querySelectorAll('.tab').forEach(tab=>tab.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(node=>node.setAttribute('aria-selected',String(node===tab)))}));
   document.querySelectorAll('tr[data-commission],tr[data-agency]').forEach(row=>row.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();row.click()}}));
 }
 function openCommission(id){const row=commissionRows.find(item=>item.id===id);overlay.innerHTML=`<div class="drawer-backdrop" data-close></div><aside class="drawer" tabindex="-1" aria-labelledby="drawer-title"><div class="drawer-head"><div><h2 id="drawer-title">${row.agency}</h2><p class="mono">${row.id} - ${row.amount}</p></div><button class="icon-btn" type="button" data-close aria-label="Close details">&#215;</button></div>${commissionWork(row)}</aside>`;bindOverlay()}
