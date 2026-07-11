@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Volta interactive frontend preview</title>
+<style>
+/* Source: docs/design/VOLTA_DESIGN_TOKENS.md */
+:root{
+  --white:#fff;
+  --canvas:#f0f7f9;
+  --canvas-2:#f5f8fa;
+  --surface:#fff;
+  --surface-2:#e2edf0;
+  --surface-3:#d0dfe5;
+  --ink:#091d36;
+  --ink-2:#3a4f65;
+  --ink-3:#697d8e;
+  --line:#d0dfe5;
+  --line-strong:#a3b4bf;
+  --accent:#59cdc6;
+  --accent-strong:#0a7975;
+  --accent-soft:#e3f8f7;
+  --success:#007d50;
+  --success-soft:#e8f5ef;
+  --warning:#a36e09;
+  --warning-soft:#fff6e5;
+  --error:#ac312a;
+  --error-soft:#fff0ef;
+  --info:#06658e;
+  --info-soft:#edf5fa;
+  --shadow-panel:0 1px 2px rgb(9 29 54 / .06),0 6px 14px rgb(9 29 54 / .04);
+  --focus-ring:0 0 0 3px var(--accent-soft),0 0 0 5px var(--accent);
+  --radius:6px;
+  --control-radius:4px;
+  --pill:999px;
+  --font:Manrope,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --mono:"DM Mono",ui-monospace,Menlo,Consolas,monospace;
+  --grid-columns:12;
+  --grid-gutter:24px;
+  --grid-margin:32px;
+  --grid-max:1360px;
+  --baseline:8px;
+  --ease:160ms ease-out;
+}
+*{box-sizing:border-box}
+html{background:var(--canvas);color:var(--ink)}
+body{margin:0;background:var(--canvas);font:14px/1.5 var(--font);font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+button,input{font:inherit}
+button{color:inherit}
+a{color:inherit}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:0;box-shadow:var(--focus-ring)}
+.skip-link{position:fixed;left:16px;top:-60px;z-index:30;padding:10px 14px;border-radius:var(--control-radius);background:var(--ink);color:var(--white)}
+.skip-link:focus{top:16px}
+.app-shell{min-height:100vh;display:grid;grid-template-columns:240px minmax(0,1fr)}
+.sidebar{position:sticky;top:0;height:100dvh;display:flex;flex-direction:column;gap:24px;padding:24px 16px 18px;background:var(--white);border-right:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand-mark{display:grid;width:34px;height:34px;place-items:center;border-radius:var(--radius);background:var(--ink)}
+.brand-mark img{width:28px;height:28px}
+.brand-copy strong,.brand-copy span{display:block}
+.brand-copy strong{font-size:15px;font-weight:600}
+.brand-copy span{margin-top:1px;color:var(--ink-3);font-size:11px}
+.sidebar-section{display:grid;gap:8px}
+.sidebar-label{margin:0 10px;color:var(--ink-3);font-size:11px;font-weight:500}
+.nav{display:grid;gap:2px}
+.nav-item{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;width:100%;padding:9px 10px;border:0;border-radius:var(--control-radius);background:transparent;color:var(--ink-2);text-align:left;cursor:pointer}
+.nav-item:hover{background:var(--surface-2);color:var(--ink)}
+.nav-item[aria-current="page"]{background:var(--accent-soft);color:var(--ink)}
+.nav-copy strong,.nav-copy span{display:block}
+.nav-copy strong{font-size:13px;font-weight:500}
+.nav-copy span{margin-top:1px;color:var(--ink-3);font-size:10px}
+.nav-count{min-width:20px;padding:2px 6px;border-radius:var(--pill);background:var(--surface-2);font:500 10px/1.4 var(--mono);text-align:center}
+.nav-item[aria-current="page"] .nav-count{background:var(--accent);color:var(--ink)}
+.sidebar-footer{display:grid;gap:12px;margin-top:auto}
+.setup-link{display:block;padding:14px;border:1px solid var(--line);border-radius:var(--radius);background:var(--canvas-2);text-decoration:none}
+.setup-link:hover{border-color:var(--line-strong);background:var(--accent-soft)}
+.setup-link span,.profile span{display:block;color:var(--ink-3);font-size:11px}
+.setup-link strong{display:block;margin-top:4px;font-size:13px;font-weight:500}
+.profile{display:grid;grid-template-columns:30px minmax(0,1fr);gap:9px;align-items:center}
+.avatar{display:grid;width:30px;height:30px;place-items:center;border-radius:var(--control-radius);background:var(--surface-2);font:500 10px/1 var(--mono)}
+.profile strong{font-size:12px;font-weight:500}
+.main{min-width:0;background:var(--canvas-2)}
+.page{width:min(100%,var(--grid-max));margin:0 auto;padding:32px var(--grid-margin) 56px}
+.page-head{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;margin-bottom:28px}
+.page-head h1{margin:0;font-size:32px;line-height:1.15;font-weight:500;letter-spacing:0;text-wrap:balance}
+.page-head p{max-width:68ch;margin:8px 0 0;color:var(--ink-2)}
+.head-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.property{color:var(--ink-3);font-size:12px}
+.utility-btn,.btn{display:inline-flex;min-height:36px;align-items:center;justify-content:center;border:1px solid var(--line-strong);border-radius:var(--control-radius);background:var(--white);padding:8px 12px;color:var(--ink);font-weight:500;text-decoration:none;white-space:nowrap;cursor:pointer;transition:background var(--ease),border-color var(--ease),color var(--ease)}
+.utility-btn:hover,.btn:hover{border-color:var(--ink-2);background:var(--surface-2)}
+.btn.primary{border-color:var(--accent-strong);background:var(--accent-strong);color:var(--white)}
+.btn.primary:hover{background:var(--ink);border-color:var(--ink)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--ink-2)}
+.btn.ghost:hover{border-color:var(--line);background:var(--white);color:var(--ink)}
+.summary-band{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:28px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-panel)}
+.summary-item{display:block;min-width:0;padding:16px 18px;text-align:left;text-decoration:none}
+.summary-item+.summary-item{border-left:1px solid var(--line)}
+.summary-item:hover{background:var(--accent-soft)}
+.summary-item span,.summary-item small{display:block;color:var(--ink-3);font-size:11px}
+.summary-item strong{display:block;margin:4px 0;font:500 24px/1.1 var(--mono)}
+.summary-item small{color:var(--ink-2)}
+.summary-item[data-tone="warning"] strong{color:var(--warning)}
+.summary-item[data-tone="error"] strong{color:var(--error)}
+.summary-item[data-tone="success"] strong{color:var(--success)}
+.focus-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(320px,5fr);gap:var(--grid-gutter);margin-bottom:32px}
+.report-panel{min-width:0;padding:24px;border-radius:var(--radius);background:var(--ink);color:var(--white)}
+.report-panel .eyeline{color:var(--accent)}
+.eyeline{margin:0 0 6px;color:var(--ink-3);font-size:12px}
+.report-panel h2{max-width:26ch;margin:0;font-size:24px;line-height:1.2;font-weight:500;text-wrap:balance}
+.report-panel p{max-width:62ch;margin:12px 0 20px;color:#dce8ef}
+.report-actions{display:flex;gap:8px;flex-wrap:wrap}
+.report-panel .btn{border-color:rgb(255 255 255 / .34);background:transparent;color:var(--white)}
+.report-panel .btn:hover{border-color:var(--accent);background:rgb(89 205 198 / .16)}
+.report-panel .btn.primary{border-color:var(--accent);background:var(--accent);color:var(--ink)}
+.action-panel{min-width:0;padding:20px;border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-panel)}
+.section-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:14px}
+.section-head h2{margin:0;font-size:17px;line-height:1.3;font-weight:600}
+.section-head p{margin:3px 0 0;color:var(--ink-2);font-size:12px}
+.section-head a{color:var(--accent-strong);font-size:12px;font-weight:500}
+.action-list,.activity-list,.needs-list{display:grid}
+.action-row{display:grid;grid-template-columns:8px minmax(0,1fr) auto;gap:10px;align-items:start;padding:12px 0;border-top:1px solid var(--line)}
+.action-row:first-child{border-top:0;padding-top:0}
+.action-row:last-child{padding-bottom:0}
+.status-dot{width:8px;height:8px;margin-top:6px;border-radius:50%;background:var(--info)}
+.status-dot.error{background:var(--error)}
+.status-dot.warning{background:var(--warning)}
+.status-dot.success{background:var(--success)}
+.action-row strong{display:block;font-size:13px;font-weight:600}
+.action-row span{display:block;margin-top:3px;color:var(--ink-2);font-size:12px}
+.action-row .amount{font:500 12px/1.4 var(--mono);white-space:nowrap}
+.pipeline{margin-bottom:32px;padding:20px;border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-panel)}
+.pipeline-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:24px}
+.pipeline-stat{min-width:0;padding:12px;border-radius:var(--control-radius);background:var(--canvas)}
+.pipeline-stat span{display:block;color:var(--ink-3);font-size:11px}
+.pipeline-stat strong{display:block;margin-top:4px;font:500 20px/1.1 var(--mono)}
+.pipeline-stat small{display:block;margin-top:4px;color:var(--ink-2);font-size:11px}
+.timeline{position:relative;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;padding-top:4px}
+.timeline:before{content:"";position:absolute;left:5%;right:5%;top:9px;height:1px;background:var(--line-strong)}
+.timeline-step{position:relative;z-index:1;display:grid;gap:5px;justify-items:center;text-align:center}
+.timeline-dot{width:11px;height:11px;border:1px solid var(--line-strong);border-radius:50%;background:var(--canvas)}
+.timeline-step:first-child .timeline-dot,.timeline-step:last-child .timeline-dot{border-color:var(--accent);background:var(--accent)}
+.timeline-step span{color:var(--ink-3);font:400 10px/1.25 var(--mono)}
+.timeline-step strong{font:500 12px/1.2 var(--mono)}
+.content-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(300px,5fr);gap:var(--grid-gutter)}
+.section-surface{min-width:0;padding:20px;border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-panel)}
+.needs-row{display:grid;grid-template-columns:8px minmax(0,1fr) auto;gap:12px;align-items:center;padding:14px 0;border-top:1px solid var(--line)}
+.needs-row:first-child{border-top:0;padding-top:0}
+.needs-row:last-child{padding-bottom:0}
+.needs-copy strong{display:block;font-size:13px;font-weight:600}
+.needs-copy span{display:block;margin-top:3px;color:var(--ink-2);font-size:12px}
+.needs-copy small{display:block;margin-top:4px;color:var(--ink-3);font:400 10px/1.3 var(--mono)}
+.row-action{min-height:34px;padding:7px 10px}
+.activity-row{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:10px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.activity-row:first-child{border-top:0;padding-top:0}
+.activity-marker{width:8px;height:8px;border-radius:50%;background:var(--accent-strong)}
+.activity-row strong{font-size:12px;font-weight:500}
+.activity-row span{display:block;margin-top:2px;color:var(--ink-2);font-size:11px}
+.activity-row time{color:var(--ink-3);font:400 10px/1.4 var(--mono);white-space:nowrap}
+.workbench{display:grid;grid-template-columns:minmax(280px,5fr) minmax(0,7fr);gap:var(--grid-gutter);align-items:start}
+.queue-pane,.work-pane{min-width:0;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-panel)}
+.queue-pane{overflow:hidden}
+.queue-head,.work-head{padding:20px}
+.queue-head{background:var(--canvas)}
+.queue-head h2,.work-head h2{margin:0;font-size:17px;font-weight:600}
+.queue-head p,.work-head p{margin:4px 0 0;color:var(--ink-2);font-size:12px}
+.search-control{position:relative;margin-top:16px}
+.search-control input{width:100%;min-height:38px;padding:9px 36px 9px 11px;border:1px solid var(--line-strong);border-radius:var(--control-radius);background:var(--white);color:var(--ink)}
+.search-control input::placeholder{color:var(--ink-3)}
+.search-clear{position:absolute;right:6px;top:5px;min-width:28px;min-height:28px;border:0;border-radius:var(--control-radius);background:transparent;color:var(--ink-3);cursor:pointer}
+.search-clear:hover{background:var(--surface-2);color:var(--ink)}
+.tabs{display:flex;gap:16px;overflow:auto;margin-top:16px;border-bottom:1px solid var(--line)}
+.tab{position:relative;padding:8px 0 10px;border:0;background:transparent;color:var(--ink-2);font-size:12px;white-space:nowrap;cursor:pointer}
+.tab[aria-selected="true"]{color:var(--ink);font-weight:500}
+.tab[aria-selected="true"]:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--accent-strong)}
+.record-list{display:grid}
+.record-row{display:grid;grid-template-columns:8px minmax(0,1fr) auto;gap:10px;align-items:start;padding:14px 16px;border-top:1px solid var(--line);background:var(--surface);text-align:left;cursor:pointer}
+.record-row:hover{background:var(--canvas)}
+.record-row[aria-selected="true"]{background:var(--accent-soft)}
+.record-row strong{display:block;font-size:13px;font-weight:600}
+.record-row span{display:block;margin-top:3px;color:var(--ink-2);font-size:11px}
+.record-row small{display:block;margin-top:4px;color:var(--ink-3);font:400 10px/1.3 var(--mono)}
+.record-row .amount{font:500 12px/1.4 var(--mono);white-space:nowrap}
+.status-chip{display:inline-flex;align-items:center;gap:5px;width:max-content;padding:3px 7px;border:1px solid transparent;border-radius:var(--pill);font-size:10px;line-height:1.2}
+.status-chip:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.status-chip.error{border-color:#edc4c8;background:var(--error-soft);color:var(--error)}
+.status-chip.warning{border-color:#f0d7a8;background:var(--warning-soft);color:var(--warning)}
+.status-chip.success{border-color:#b9ddce;background:var(--success-soft);color:var(--success)}
+.status-chip.info{border-color:#c5dbe8;background:var(--info-soft);color:var(--info)}
+.work-pane{overflow:hidden}
+.work-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;background:var(--canvas)}
+.work-head-copy{min-width:0}
+.work-head .status-chip{margin-top:10px}
+.work-body{padding:20px}
+.fact-band{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-bottom:24px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.fact{min-width:0;padding:14px 12px}
+.fact+.fact{border-left:1px solid var(--line)}
+.fact span{display:block;color:var(--ink-3);font-size:11px}
+.fact strong{display:block;margin-top:5px;font:500 18px/1.15 var(--mono);overflow-wrap:anywhere}
+.fact small{display:block;margin-top:4px;color:var(--ink-2);font-size:11px}
+.decision-row{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:24px;padding:14px;border-radius:var(--control-radius);background:var(--accent-soft)}
+.decision-row strong{font-size:13px;font-weight:600}
+.decision-row span{display:block;margin-top:3px;color:var(--ink-2);font-size:11px}
+.decision-row .btn{flex:0 0 auto}
+.source-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.source-grid div{min-width:0;padding:13px;border-top:1px solid var(--line);background:var(--surface)}
+.source-grid div:nth-child(-n+2){border-top:0;background:var(--surface-2);color:var(--ink-3);font:500 10px/1.25 var(--mono)}
+.source-grid div:nth-child(2n){border-left:1px solid var(--line)}
+.source-grid strong{display:block;font-size:13px;font-weight:500;color:var(--ink)}
+.source-grid span{display:block;margin-top:4px;color:var(--ink-2);font-size:11px}
+.support-list{display:grid;gap:0;margin-top:24px}
+.support-row{display:grid;grid-template-columns:8px minmax(0,1fr) auto;gap:10px;align-items:start;padding:12px 0;border-top:1px solid var(--line)}
+.support-row strong{display:block;font-size:12px;font-weight:500}
+.support-row span{display:block;margin-top:3px;color:var(--ink-2);font-size:11px}
+.support-row .state{font-size:11px;font-weight:500;white-space:nowrap}
+.empty{padding:24px 16px;color:var(--ink-2);text-align:center}
+.empty strong{display:block;color:var(--ink);font-size:13px;font-weight:500}
+.empty p{margin:5px auto 14px;max-width:36ch;font-size:12px}
+.detail-layout{display:grid;grid-template-columns:minmax(260px,4fr) minmax(0,8fr);gap:var(--grid-gutter);align-items:start}
+.identity-panel,.decision-panel{min-width:0;padding:20px;border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-panel)}
+.identity-panel{background:var(--canvas)}
+.identity-panel h2,.decision-panel h2{margin:0;font-size:17px;font-weight:600}
+.identity-panel p,.decision-panel p{margin:5px 0 0;color:var(--ink-2);font-size:12px}
+.identity-list{display:grid;margin:20px 0 0}
+.identity-item{display:grid;gap:4px;padding:12px 0;border-top:1px solid var(--line)}
+.identity-item span{color:var(--ink-3);font-size:11px}
+.identity-item strong{font-size:13px;font-weight:500;overflow-wrap:anywhere}
+.amount-hero{margin:20px 0;padding:18px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.amount-hero span{display:block;color:var(--ink-3);font-size:11px}
+.amount-hero strong{display:block;margin-top:5px;color:var(--ink);font:400 38px/1.1 var(--mono)}
+.readiness{display:grid;margin:20px 0 0;border-top:1px solid var(--line)}
+.readiness-row{display:grid;grid-template-columns:8px minmax(0,1fr) auto;gap:10px;align-items:start;padding:13px 0;border-bottom:1px solid var(--line)}
+.readiness-row strong{display:block;font-size:12px;font-weight:500}
+.readiness-row span{display:block;margin-top:3px;color:var(--ink-2);font-size:11px}
+.readiness-row .state{font-size:11px;font-weight:500;white-space:nowrap}
+.notice{margin-top:20px;padding:12px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface-2);color:var(--ink-2);font-size:12px}
+.notice strong{color:var(--ink);font-weight:600}
+.token-inspector{position:fixed;z-index:20;top:0;right:0;width:min(360px,100vw);height:100dvh;padding:24px;overflow:auto;border-left:1px solid var(--line);background:var(--white);box-shadow:-10px 0 24px rgb(9 29 54 / .10);transform:translateX(100%);transition:transform var(--ease)}
+.token-inspector.is-open{transform:translateX(0)}
+.token-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:24px}
+.token-head h2{margin:0;font-size:19px;font-weight:600}
+.token-head p{margin:5px 0 0;color:var(--ink-2);font-size:12px}
+.token-section{padding:18px 0;border-top:1px solid var(--line)}
+.token-section h3{margin:0 0 12px;font-size:13px;font-weight:600}
+.swatch-list{display:grid;gap:8px}
+.swatch{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:9px;align-items:center}
+.swatch i{width:28px;height:28px;border:1px solid var(--line-strong);border-radius:var(--control-radius)}
+.swatch strong{font-size:12px;font-weight:500}
+.swatch span{color:var(--ink-3);font:400 10px/1.3 var(--mono)}
+.type-list{display:grid;gap:10px}
+.type-row{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.type-row strong{font-weight:500}
+.type-row span{color:var(--ink-3);font:400 10px/1.3 var(--mono)}
+.wire-note{margin-top:24px;padding:12px;border:1px dashed var(--line-strong);border-radius:var(--control-radius);color:var(--ink-2);font-size:11px}
+.toast{position:fixed;z-index:25;right:24px;bottom:24px;max-width:340px;padding:12px 14px;border:1px solid var(--line-strong);border-radius:var(--control-radius);background:var(--ink);color:var(--white);box-shadow:var(--shadow-panel)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:1080px){
+  .app-shell{grid-template-columns:208px minmax(0,1fr)}
+  .page{padding-inline:24px}
+  .focus-grid,.content-grid,.detail-layout{grid-template-columns:1fr}
+}
+@media(max-width:760px){
+  .app-shell{display:block}
+  .sidebar{position:sticky;width:100%;height:auto;z-index:10;gap:12px;padding:14px 16px;border-right:0;border-bottom:1px solid var(--line)}
+  .sidebar-section{gap:6px}
+  .sidebar-label,.search-link,.sidebar-footer{display:none}
+  .nav{display:flex;gap:4px;overflow:auto;padding-bottom:2px}
+  .nav-item{width:auto;flex:0 0 auto;padding:8px 10px}
+  .nav-copy span{display:none}
+  .page{padding:24px 16px 40px}
+  .page-head{display:block;margin-bottom:22px}
+  .head-actions{justify-content:flex-start;margin-top:16px}
+  .summary-band{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .summary-item:nth-child(3){border-left:0;border-top:1px solid var(--line)}
+  .summary-item:nth-child(4){border-top:1px solid var(--line)}
+  .pipeline-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .timeline{min-width:620px}
+  .timeline-wrap{overflow:auto;padding-bottom:4px}
+  .workbench{grid-template-columns:1fr}
+  .fact-band{grid-template-columns:1fr}
+  .fact+.fact{border-top:1px solid var(--line);border-left:0}
+  .decision-row{display:block}
+  .decision-row .btn{margin-top:12px}
+  .source-grid{grid-template-columns:1fr}
+  .source-grid div:nth-child(2n){border-left:0}
+  .source-grid div:nth-child(2){border-top:1px solid var(--line);background:var(--surface-2)}
+  .source-grid div:nth-child(n+3){border-top:1px solid var(--line)}
+  .record-row{padding-inline:12px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{scroll-behavior:auto!important;transition-duration:0s!important;animation-duration:0s!important}
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to content</a>
+<div id="app"></div>
+<script>
+const NAV_WIRES={
+  home:'dashboard/index.html',
+  commissions:'dashboard/commissions.html',
+  agencies:'dashboard/agencies.html',
+  commissionDetail:'dashboard/commission-detail.html',
+  agencyRequest:'dashboard/agencies.html?agency=host-a',
+  commissionQueue:'dashboard/commissions.html?view=issues'
+};
+
+const commissions=[
+  {id:'RES-10491',title:'Resolve carried rate conflict',party:'Host Agency Test A',amount:'EUR 288',status:'Needs review',tone:'error',meta:'Hotel action - Due today',description:'Choose the working value and retain the reason in the record.'},
+  {id:'RES-10482',title:'Confirm duplicate handling',party:'Host Agency Test A',amount:'EUR 214',status:'Needs review',tone:'error',meta:'Hotel action - Due today',description:'Two source rows point to the same booking reference.'},
+  {id:'RES-10409',title:'Agency invoice and profile confirmation',party:'Host Agency Test B',amount:'EUR 195',status:'Waiting on agency',tone:'warning',meta:'Agency action - Invite sent',description:'Fourteen matched commissions wait for the invoice path.'},
+  {id:'RES-10388',title:'Connect production source',party:'Oracle Hospitality',amount:'EUR 175',status:'External dependency',tone:'info',meta:'System action - Owner assigned',description:'Production credentials remain with the integration owner.'},
+  {id:'RES-10361',title:'Commission ready for approval',party:'Luxury Travel Partners',amount:'EUR 150',status:'Ready',tone:'success',meta:'Payment action - Review today',description:'Evidence is complete and this item is ready for a specific approval.'}
+];
+
+const agencies=[
+  {id:'host-a',name:'Host Agency Test A',type:'Host agency',status:'Needs details',tone:'warning',open:'14 commissions',value:'EUR 1,840',meta:'Invoice path missing',description:'Agency Admin needs to confirm the invoice path and organization details.'},
+  {id:'host-b',name:'Host Agency Test B',type:'Host agency',status:'Invited',tone:'info',open:'6 commissions',value:'EUR 740',meta:'Invitation sent today',description:'The relationship is waiting for the invited Agency Admin.'},
+  {id:'luxury',name:'Luxury Travel Partners',type:'Travel agency',status:'Ready',tone:'success',open:'3 commissions',value:'EUR 515',meta:'Invoice path confirmed',description:'Agency profile and invoice path are ready for operating work.'},
+  {id:'elite',name:'Elite Voyages Paris',type:'Travel agency',status:'Ready',tone:'success',open:'2 commissions',value:'EUR 390',meta:'Last confirmed yesterday',description:'The agency relationship is ready and has no open requests.'}
+];
+
+const state={view:'home',commissionId:'RES-10491',agencyId:'host-a',commissionFilter:'Issues',agencyFilter:'Needs details',commissionQuery:'',agencyQuery:'',inspector:false,toast:''};
+
+function esc(value){return String(value).replace(/[&<>"']/g,character=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));}
+function toneChip(label,tone){return `<span class="status-chip ${tone}">${esc(label)}</span>`;}
+function navItem(key,label,detail,count){
+  const active=state.view===key||(key==='commissions'&&state.view==='detail');
+  return `<button class="nav-item" type="button" data-action="view" data-view="${key}" aria-current="${active?'page':'false'}"><span class="nav-copy"><strong>${label}</strong><span>${detail}</span></span>${count?`<span class="nav-count">${count}</span>`:''}</button>`;
+}
+function shell(content){
+  return `<div class="app-shell">
+    <aside class="sidebar" aria-label="Workspace navigation">
+      <button class="brand" type="button" data-action="view" data-view="home" aria-label="Open Home">
+        <span class="brand-mark"><img src="codex-20260707-volta-icon-navy-turquoise.svg" alt=""></span>
+        <span class="brand-copy"><strong>Volta</strong><span>Hotel de Toiras</span></span>
+      </button>
+      <div class="sidebar-section"><p class="sidebar-label">Workspace</p><nav class="nav" aria-label="Primary navigation">
+        ${navItem('home','Home','Today and next action')}
+        ${navItem('commissions','Commissions','Resolve and approve','11')}
+        ${navItem('agencies','Agencies','Readiness and requests','1')}
+        ${navItem('workflows','Workflows','Rules and reminders')}
+        ${navItem('settings','Settings','Team and setup','2')}
+      </nav></div>
+      <div class="sidebar-footer">
+        <button class="setup-link" type="button" data-action="view" data-view="settings"><span>Setup</span><strong>2 items need an owner</strong></button>
+        <div class="profile"><span class="avatar">KJ</span><span><strong>Kenji</strong><span>Hotel Operator</span></span></div>
+      </div>
+    </aside>
+    <main class="main" id="main-content">${content}</main>
+  </div>${state.inspector?tokenInspector():''}${state.toast?`<div class="toast" role="status">${esc(state.toast)}</div>`:''}`;
+}
+function pageHead(title,description,actions=''){
+  return `<header class="page-head"><div><h1>${title}</h1><p>${description}</p></div><div class="head-actions"><span class="property">Hotel de Toiras</span>${actions}<button class="utility-btn" type="button" data-action="toggle-inspector">${state.inspector?'Hide tokens':'Show tokens'}</button></div></header>`;
+}
+function summaryBand(){
+  return `<section class="summary-band" aria-label="Operational summary">
+    <button class="summary-item" type="button" data-action="view" data-view="commissions" data-filter="Issues" data-tone="error"><span>Issues to fix</span><strong>2</strong><small>Hotel action today</small></button>
+    <button class="summary-item" type="button" data-action="view" data-view="agencies" data-filter="Needs details" data-tone="warning"><span>Waiting on agency</span><strong>1</strong><small>Request already sent</small></button>
+    <button class="summary-item" type="button" data-action="view" data-view="commissions" data-filter="Ready" data-tone="success"><span>Ready for approval</span><strong>1</strong><small>Specific item review</small></button>
+    <button class="summary-item" type="button" data-action="view" data-view="commissions" data-filter="All"><span>Open commissions</span><strong>11</strong><small>Across 4 agencies</small></button>
+  </section>`;
+}
+function homeView(){
+  return pageHead('Today at a glance','A clear starting point for the hotel team.', '<button class="btn" type="button" data-action="view" data-view="commissions">Open commissions</button>')+
+  summaryBand()+
+  `<section class="focus-grid" aria-label="Daily work">
+    <div class="report-panel"><p class="eyeline">Daily report</p><h2>Resolve one hotel issue first.</h2><p>Two hotel-owned issues can change today\'s payable work. Agency and setup work can continue in parallel.</p><div class="report-actions"><button class="btn primary" type="button" data-action="view" data-view="detail">Resolve issue</button><button class="btn" type="button" data-action="view" data-view="commissions">Open commissions</button></div></div>
+    <section class="action-panel" aria-labelledby="next-actions"><div class="section-head"><div><h2 id="next-actions">Next actions</h2><p>Ordered by risk and owner.</p></div></div><div class="action-list">
+      <div class="action-row"><i class="status-dot error"></i><div><strong>Resolve carried rate conflict</strong><span>Hotel action - candidate value EUR 288</span></div><span class="amount">Today</span></div>
+      <div class="action-row"><i class="status-dot warning"></i><div><strong>Request agency invoice details</strong><span>Agency Admin - Host Agency Test A</span></div><span class="amount">Waiting</span></div>
+      <div class="action-row"><i class="status-dot info"></i><div><strong>Assign payment setup owner</strong><span>Finance Admin - Stripe setup</span></div><span class="amount">Setup</span></div>
+    </div></section>
+  </section>
+  <section class="pipeline" aria-labelledby="pipeline-title"><div class="section-head"><div><h2 id="pipeline-title">Settlement overview</h2><p>Counts stay close to the work they describe.</p></div><button class="btn ghost" type="button" data-action="view" data-view="commissions">View all commissions</button></div><div class="pipeline-stats">
+    <div class="pipeline-stat"><span>Ready to issue</span><strong>2</strong><small>EUR 460 prepared</small></div><div class="pipeline-stat"><span>Ready to pay</span><strong>1</strong><small>EUR 195 confirmed</small></div><div class="pipeline-stat"><span>Needs review</span><strong>2</strong><small>Hotel action required</small></div><div class="pipeline-stat"><span>Payable this month</span><strong>13</strong><small>Current operating view</small></div>
+  </div><div class="timeline-wrap"><div class="timeline" aria-label="Commission pipeline timeline"><div class="timeline-step"><i class="timeline-dot"></i><span>Earned</span><strong>4,990</strong></div><div class="timeline-step"><i class="timeline-dot"></i><span>Ingested</span><strong>4,530</strong></div><div class="timeline-step"><i class="timeline-dot"></i><span>Invoiced</span><strong>3,200</strong></div><div class="timeline-step"><i class="timeline-dot"></i><span>In batch</span><strong>3,005</strong></div><div class="timeline-step"><i class="timeline-dot"></i><span>Payable</span><strong>2,585</strong></div></div></div></section>
+  <section class="content-grid"><section class="section-surface" aria-labelledby="needs-title"><div class="section-head"><div><h2 id="needs-title">Issues to fix</h2><p>Open work is grouped by who can move it.</p></div><button class="btn ghost" type="button" data-action="view" data-view="commissions" data-filter="Issues">Open queue</button></div><div class="needs-list">
+    <div class="needs-row"><i class="status-dot error"></i><div class="needs-copy"><strong>Resolve carried rate conflict</strong><span>RES-10491 - Host Agency Test A - EUR 288 candidate value</span><small>Hotel action - due today</small></div><button class="btn row-action primary" type="button" data-action="view" data-view="detail">Resolve</button></div>
+    <div class="needs-row"><i class="status-dot error"></i><div class="needs-copy"><strong>Confirm duplicate handling</strong><span>RES-10482 - adjacent booking reference from import</span><small>Hotel action - due today</small></div><button class="btn row-action" type="button" data-action="select-commission" data-id="RES-10482">Open</button></div>
+    <div class="needs-row"><i class="status-dot warning"></i><div class="needs-copy"><strong>Agency invoice and profile confirmation</strong><span>HOST-A-001 - 14 matched commissions</span><small>Agency action - invite sent</small></div><button class="btn row-action" type="button" data-action="view" data-view="agencies">View agency</button></div>
+  </div></section><section class="section-surface" aria-labelledby="activity-title"><div class="section-head"><div><h2 id="activity-title">Recent activity</h2><p>Latest changes in this workspace.</p></div></div><div class="activity-list">
+    <div class="activity-row"><i class="activity-marker"></i><div><strong>Commission marked ready for approval</strong><span>RES-10388 - Luxury Travel Partners</span></div><time>Today</time></div>
+    <div class="activity-row"><i class="activity-marker"></i><div><strong>Agency invitation sent</strong><span>Host Agency Test B - Agency Admin</span></div><time>Yesterday</time></div>
+    <div class="activity-row"><i class="activity-marker"></i><div><strong>147 records imported</strong><span>First operating run - source values retained</span></div><time>2 days ago</time></div>
+  </div></section></section>`;
+}
+function filterTabs(type,active){
+  const filters=type==='commission'?['All','Issues','Ready']:['All','Needs details','Invited','Ready'];
+  return `<div class="tabs" role="tablist" aria-label="${type==='commission'?'Commission':'Agency'} filters">${filters.map(filter=>`<button class="tab" type="button" role="tab" aria-selected="${filter===active}" data-action="filter" data-type="${type}" data-filter="${filter}">${filter}</button>`).join('')}</div>`;
+}
+function searchBox(type,value){
+  const label=type==='commission'?'Search commissions':'Search agencies';
+  return `<div class="search-control"><label class="sr-only" for="${type}-search">${label}</label><input id="${type}-search" data-search="${type}" type="search" value="${esc(value)}" placeholder="${type==='commission'?'Search by reference, agency, or amount':'Search by agency or identifier'}" autocomplete="off">${value?`<button class="search-clear" type="button" data-action="clear-search" data-type="${type}" aria-label="Clear search">x</button>`:''}</div>`;
+}
+function commissionRows(){
+  const query=state.commissionQuery.toLowerCase();
+  const list=commissions.filter(item=>{
+    const matchesQuery=!query||[item.id,item.title,item.party,item.amount].join(' ').toLowerCase().includes(query);
+    const matchesFilter=state.commissionFilter==='All'||(state.commissionFilter==='Issues'&&item.tone==='error')||(state.commissionFilter==='Ready'&&item.tone==='success');
+    return matchesQuery&&matchesFilter;
+  });
+  if(!list.length)return `<div class="empty"><strong>No commissions match</strong><p>Try a different search or filter.</p>${state.commissionQuery?'<button class="btn" type="button" data-action="clear-search" data-type="commission">Clear search</button>':''}</div>`;
+  return `<div class="record-list">${list.map(item=>`<button class="record-row" type="button" data-action="select-commission" data-id="${item.id}" aria-selected="${item.id===state.commissionId}"><i class="status-dot ${item.tone}"></i><span><strong>${esc(item.title)}</strong><span>${esc(item.party)}</span><small>${esc(item.id)} - ${esc(item.meta)}</small></span><span class="amount">${esc(item.amount)}</span></button>`).join('')}</div>`;
+}
+function agencyRows(){
+  const query=state.agencyQuery.toLowerCase();
+  const list=agencies.filter(item=>{
+    const matchesQuery=!query||[item.id,item.name,item.type,item.status].join(' ').toLowerCase().includes(query);
+    const matchesFilter=state.agencyFilter==='All'||item.status===state.agencyFilter;
+    return matchesQuery&&matchesFilter;
+  });
+  if(!list.length)return `<div class="empty"><strong>No agencies match</strong><p>Try a different search or filter.</p>${state.agencyQuery?'<button class="btn" type="button" data-action="clear-search" data-type="agency">Clear search</button>':''}</div>`;
+  return `<div class="record-list">${list.map(item=>`<button class="record-row" type="button" data-action="select-agency" data-id="${item.id}" aria-selected="${item.id===state.agencyId}"><i class="status-dot ${item.tone}"></i><span><strong>${esc(item.name)}</strong><span>${esc(item.type)} - ${esc(item.status)}</span><small>${esc(item.id)} - ${esc(item.meta)}</small></span><span class="amount">${esc(item.value)}</span></button>`).join('')}</div>`;
+}
+function commissionWorkPane(){
+  const item=commissions.find(entry=>entry.id===state.commissionId)||commissions[0];
+  const resolved=item.id==='RES-10491'&&state.toast==='Resolution saved';
+  return `<section class="work-pane" aria-labelledby="commission-work-title"><header class="work-head"><div class="work-head-copy"><p class="eyeline">Commission detail</p><h2 id="commission-work-title">${esc(resolved?'Carried rate conflict resolved':item.title)}</h2><p>${esc(item.party)} - ${esc(item.id)}</p>${toneChip(resolved?'Resolved':item.status,resolved?'success':item.tone)}</div><button class="btn" type="button" data-action="view" data-view="detail">Open detail</button></header><div class="work-body"><div class="fact-band"><div class="fact"><span>Candidate value</span><strong>${esc(item.amount)}</strong><small>Selected working value</small></div><div class="fact"><span>Owner</span><strong>Hotel</strong><small>${esc(item.meta)}</small></div><div class="fact"><span>Next step</span><strong>${resolved?'Monitor':'Resolve'}</strong><small>Original source stays attached</small></div></div><div class="decision-row"><div><strong>${resolved?'Resolution saved':'One decision changes today\'s work'}</strong><span>${resolved?'The audit event is visible and the queue can continue.':'Compare both source values, choose one, and record the reason.'}</span></div><button class="btn primary" type="button" data-action="view" data-view="detail">${resolved?'View record':'Resolve issue'}</button></div><div class="section-head"><div><h2>Source comparison</h2><p>Evidence remains visible beside the working value.</p></div></div><div class="source-grid"><div>Source</div><div>Value</div><div><strong>Oracle / OHIP</strong><span>Original source row</span></div><div><strong>EUR 272</strong><span>Imported 08:42</span></div><div><strong>Agency invoice</strong><span>Reported commission</span></div><div><strong>EUR 288</strong><span>Candidate working value</span></div></div><div class="support-list"><div class="support-row"><i class="status-dot success"></i><div><strong>Source rows retained</strong><span>Nothing is removed when the value is resolved.</span></div><span class="state">Complete</span></div><div class="support-row"><i class="status-dot warning"></i><div><strong>Payment setup</strong><span>Finance Admin still owns Stripe and KYC setup.</span></div><span class="state">Waiting</span></div></div></div></section>`;
+}
+function agencyWorkPane(){
+  const item=agencies.find(entry=>entry.id===state.agencyId)||agencies[0];
+  return `<section class="work-pane" aria-labelledby="agency-work-title"><header class="work-head"><div class="work-head-copy"><p class="eyeline">Agency profile</p><h2 id="agency-work-title">${esc(item.name)}</h2><p>${esc(item.type)} - ${esc(item.id)}</p>${toneChip(item.status,item.tone)}</div><button class="btn" type="button" data-action="view" data-view="commissions">Related commissions</button></header><div class="work-body"><div class="fact-band"><div class="fact"><span>Open commissions</span><strong>${esc(item.open.replace(' commissions',''))}</strong><small>Related records</small></div><div class="fact"><span>Open value</span><strong>${esc(item.value)}</strong><small>Current operating view</small></div><div class="fact"><span>Next step</span><strong>${item.status==='Needs details'?'Request':'Monitor'}</strong><small>${esc(item.meta)}</small></div></div><div class="decision-row"><div><strong>${item.status==='Needs details'?'Request missing details':'Agency relationship is on track'}</strong><span>${esc(item.description)}</span></div><button class="btn primary" type="button" data-action="agency-request" ${item.status==='Needs details'?'':'disabled'}>${item.status==='Needs details'?'Request details':'No action needed'}</button></div><div class="section-head"><div><h2>Relationship readiness</h2><p>Only the missing requirement is prominent.</p></div></div><div class="support-list"><div class="support-row"><i class="status-dot success"></i><div><strong>Agency identity</strong><span>Organization and identifier are present.</span></div><span class="state">Ready</span></div><div class="support-row"><i class="status-dot ${item.status==='Needs details'?'warning':'success'}"></i><div><strong>Invoice path</strong><span>${item.status==='Needs details'?'Agency Admin must confirm the invoice recipient and route.':'Invoice path is confirmed for operating work.'}</span></div><span class="state">${item.status==='Needs details'?'Waiting':'Ready'}</span></div><div class="support-row"><i class="status-dot ${item.status==='Invited'?'info':'success'}"></i><div><strong>Agency Admin</strong><span>${item.status==='Invited'?'Invitation is open and waiting for acceptance.':'Contact is linked to the relationship.'}</span></div><span class="state">${item.status==='Invited'?'Invited':'Ready'}</span></div></div></div></section>`;
+}
+function workbenchView(type){
+  const commission=type==='commission';
+  const title=commission?'Commissions':'Agencies';
+  const description=commission?'Find the next record to resolve, prepare, or approve.':'Track agency readiness and request the detail that is missing.';
+  const active=commission?state.commissionFilter:state.agencyFilter;
+  return pageHead(title,description)+`<section class="workbench" aria-label="${title} workbench"><section class="queue-pane" aria-labelledby="${commission?'commission':'agency'}-queue-title"><header class="queue-head"><h2 id="${commission?'commission':'agency'}-queue-title">${commission?'Work queue':'Agency list'}</h2><p>${commission?'11 open records - ordered by next action.':'4 agency relationships - ordered by readiness.'}</p>${searchBox(commission?'commission':'agency',commission?state.commissionQuery:state.agencyQuery)}${filterTabs(commission?'commission':'agency',active)}</header>${commission?commissionRows():agencyRows()}</section>${commission?commissionWorkPane():agencyWorkPane()}</section>`;
+}
+function detailView(){
+  const item=commissions.find(entry=>entry.id===state.commissionId)||commissions[0];
+  const resolved=state.toast==='Resolution saved';
+  return pageHead(resolved?'Carried rate conflict resolved':'Resolve carried rate conflict','Keep the source evidence visible while one hotel decision is recorded.', '<button class="btn" type="button" data-action="view" data-view="commissions">Back to queue</button>')+`<section class="detail-layout"><aside class="identity-panel"><p class="eyeline">Commission record</p><h2>${esc(item.party)}</h2><p>${esc(item.id)} - Hotel action</p><div class="amount-hero"><span>Working value</span><strong>${esc(item.amount)}</strong></div><div class="identity-list"><div class="identity-item"><span>Reservation</span><strong>RES-10491</strong></div><div class="identity-item"><span>Agency</span><strong>Host Agency Test A</strong></div><div class="identity-item"><span>Due</span><strong>Today</strong></div><div class="identity-item"><span>Audit</span><strong>${resolved?'Resolution saved just now':'No resolution recorded'}</strong></div></div></aside><section class="decision-panel"><p class="eyeline">Decision surface</p><h2>${resolved?'Resolution recorded':'Compare source values'}</h2><p>${resolved?'The decision is now visible in the activity trail.':'Choose the value used for the operating record and retain the reason.'}</p>${toneChip(resolved?'Resolved':'Needs review',resolved?'success':'error')}<div class="fact-band"><div class="fact"><span>Oracle / OHIP</span><strong>EUR 272</strong><small>Original source</small></div><div class="fact"><span>Agency invoice</span><strong>EUR 288</strong><small>Candidate value</small></div><div class="fact"><span>Selected</span><strong>${resolved?'EUR 288':'EUR 288'}</strong><small>${resolved?'Saved value':'Working value'}</small></div></div><div class="decision-row"><div><strong>${resolved?'Next step: continue the queue':'This action changes the work queue'}</strong><span>${resolved?'The original source values remain attached.':'A reason is required before saving the resolution.'}</span></div><button class="btn primary" type="button" data-action="save-resolution" ${resolved?'disabled':''}>${resolved?'Saved':'Save resolution'}</button></div><div class="section-head"><div><h2>Readiness</h2><p>Approval stays unavailable while setup is incomplete.</p></div></div><div class="readiness"><div class="readiness-row"><i class="status-dot success"></i><div><strong>Source comparison complete</strong><span>Both source values are visible.</span></div><span class="state">Ready</span></div><div class="readiness-row"><i class="status-dot warning"></i><div><strong>Agency invoice path</strong><span>Host Agency Test A still needs confirmation.</span></div><span class="state">Waiting</span></div><div class="readiness-row"><i class="status-dot warning"></i><div><strong>Payment setup</strong><span>Finance Admin owns Stripe and KYC setup.</span></div><span class="state">Waiting</span></div></div><div class="notice"><strong>Approval unavailable.</strong> Complete the required setup and agency checks before a Payment Approver reviews this item.</div></section></section>`;
+}
+function stubView(title,description){
+  return pageHead(title,description)+`<section class="section-surface" style="max-width:720px"><div class="section-head"><div><h2>Preview route is mapped</h2><p>This surface is intentionally not pretending to be complete.</p></div></div><div class="notice"><strong>Next implementation slice.</strong> The route wire is present in the navigation and token contracts. Render the page when its action matrix rows are ready.</div></section>`;
+}
+function tokenInspector(){
+  return `<aside class="token-inspector is-open" aria-label="Design token inspector"><div class="token-head"><div><h2>Design tokens</h2><p>Live values used by this preview.</p></div><button class="utility-btn" type="button" data-action="toggle-inspector">Close</button></div><section class="token-section"><h3>Color roles</h3><div class="swatch-list"><div class="swatch"><i style="background:#091d36"></i><strong>Ink</strong><span>#091D36</span></div><div class="swatch"><i style="background:#59cdc6"></i><strong>Accent</strong><span>#59CDC6</span></div><div class="swatch"><i style="background:#e3f8f7"></i><strong>Accent soft</strong><span>#E3F8F7</span></div><div class="swatch"><i style="background:#007d50"></i><strong>Success</strong><span>#007D50</span></div><div class="swatch"><i style="background:#a36e09"></i><strong>Warning</strong><span>#A36E09</span></div><div class="swatch"><i style="background:#ac312a"></i><strong>Error</strong><span>#AC312A</span></div><div class="swatch"><i style="background:#f0f7f9"></i><strong>Canvas</strong><span>#F0F7F9</span></div></div></section><section class="token-section"><h3>Type scale</h3><div class="type-list"><div class="type-row"><strong style="font-size:32px;font-weight:500">Title</strong><span>32 / 500</span></div><div class="type-row"><strong style="font-size:17px;font-weight:600">Section</strong><span>17 / 600</span></div><div class="type-row"><strong style="font-size:13px;font-weight:600">Row title</strong><span>13 / 600</span></div><div class="type-row"><strong style="font-size:14px;font-weight:400">Body</strong><span>14 / 400</span></div><div class="type-row"><strong style="font:500 14px var(--mono)">EUR 288</strong><span>DM Mono</span></div></div></section><section class="token-section"><h3>Shape and rhythm</h3><div class="type-list"><div class="type-row"><strong>Control radius</strong><span>4px</span></div><div class="type-row"><strong>Panel radius</strong><span>6px</span></div><div class="type-row"><strong>Baseline</strong><span>8px</span></div><div class="type-row"><strong>Wide grid</strong><span>12 columns / 24px gap</span></div></div></section><div class="wire-note">Implementation wire: replace the demo state store with the app router and data source without changing component contracts.</div></aside>`;
+}
+function currentView(){
+  if(state.view==='home')return homeView();
+  if(state.view==='commissions')return workbenchView('commission');
+  if(state.view==='agencies')return workbenchView('agency');
+  if(state.view==='detail')return detailView();
+  if(state.view==='workflows')return stubView('Workflows','Bounded reminders and reports for the hotel team.');
+  return stubView('Settings','Team, integrations, and setup ownership.');
+}
+function render(){document.querySelector('#app').innerHTML=shell(`<div class="page">${currentView()}</div>`);}
+function preserveSearch(type,value){
+  render();
+  requestAnimationFrame(()=>{const input=document.querySelector(`[data-search="${type}"]`);if(!input)return;input.focus();const cursor=value.length;input.setSelectionRange(cursor,cursor);});
+}
+document.addEventListener('click',event=>{
+  const target=event.target.closest('[data-action]');
+  if(!target)return;
+  const action=target.dataset.action;
+  if(action==='toggle-inspector'){state.inspector=!state.inspector;render();return;}
+  if(action==='view'){
+    state.view=target.dataset.view||'home';
+    if(target.dataset.filter){if(state.view==='commissions')state.commissionFilter=target.dataset.filter;if(state.view==='agencies')state.agencyFilter=target.dataset.filter;}
+    state.toast='';render();return;
+  }
+  if(action==='filter'){
+    if(target.dataset.type==='commission')state.commissionFilter=target.dataset.filter;else state.agencyFilter=target.dataset.filter;
+    render();return;
+  }
+  if(action==='clear-search'){
+    if(target.dataset.type==='commission')state.commissionQuery='';else state.agencyQuery='';
+    render();return;
+  }
+  if(action==='select-commission'){state.commissionId=target.dataset.id;state.view='commissions';state.toast='';render();return;}
+  if(action==='select-agency'){state.agencyId=target.dataset.id;state.view='agencies';state.toast='';render();return;}
+  if(action==='save-resolution'){state.toast='Resolution saved';render();return;}
+  if(action==='agency-request'){state.toast='Request prepared for Agency Admin';render();return;}
+});
+document.addEventListener('input',event=>{
+  const input=event.target.closest('[data-search]');
+  if(!input)return;
+  const type=input.dataset.search;const value=input.value;
+  if(type==='commission')state.commissionQuery=value;else state.agencyQuery=value;
+  preserveSearch(type,value);
+});
+render();
+</script>
+</body>
+</html>
