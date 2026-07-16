@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Volta — Settlement History wireframe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --white:#fff; --canvas:#f0f7f9; --canvas-2:#f5f8fa; --surface:#fff; --surface-2:#e2edf0;
+      --ink:#091d36; --ink-2:#3a4f65; --ink-3:#697d8e; --line:#d0dfe5; --line-strong:#a3b4bf;
+      --accent:#59cdc6; --accent-strong:#0a7975; --accent-soft:#e3f8f7;
+      --success:#007d50; --success-soft:#e8f5ef; --warning:#a36e09; --warning-soft:#fff6e5;
+      --error:#ac312a; --error-soft:#fff0ef; --info:#06658e; --info-soft:#edf5fa;
+      --radius:6px; --control-radius:4px; --grid-gutter:24px; --grid-margin:32px; --grid-max:1360px;
+      --font:Manrope,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      --mono:"DM Mono",ui-monospace,Menlo,Consolas,monospace;
+      --shadow:0 1px 2px rgb(9 29 54 / .06),0 6px 14px rgb(9 29 54 / .04);
+    }
+    * { box-sizing:border-box; }
+    html { background:var(--canvas); }
+    body { min-width:0; margin:0; overflow-x:hidden; color:var(--ink); background:var(--canvas); font:14px/1.5 var(--font); font-variant-numeric:tabular-nums; }
+    a { color:inherit; }
+    button, input { font:inherit; }
+    button { color:inherit; }
+    :focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+    .skip-link { position:absolute; top:-48px; left:12px; z-index:5; padding:8px 10px; border-radius:var(--control-radius); background:var(--ink); color:var(--white); text-decoration:none; }
+    .skip-link:focus { top:12px; }
+
+    .app-shell { min-height:100vh; display:grid; grid-template-columns:240px minmax(0,1fr); }
+    .sidebar { position:sticky; top:0; display:flex; height:100dvh; flex-direction:column; gap:24px; padding:24px 16px 18px; border-right:1px solid var(--line); background:var(--white); }
+    .brand { display:flex; align-items:center; gap:10px; text-decoration:none; }
+    .brand-mark { display:grid; width:34px; height:34px; place-items:center; border-radius:var(--radius); background:var(--ink); }
+    .brand-mark img { width:28px; height:28px; }
+    .brand-copy strong, .brand-copy span, .nav-copy strong, .nav-copy span { display:block; }
+    .brand-copy strong { font-size:15px; font-weight:600; }
+    .brand-copy span { margin-top:1px; color:var(--ink-3); font-size:11px; }
+    .sidebar-section { display:grid; gap:8px; }
+    .sidebar-label { margin:0 10px; color:var(--ink-3); font-size:11px; font-weight:500; }
+    .nav { display:grid; gap:2px; }
+    .nav-item { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:8px; width:100%; padding:9px 10px; border-radius:var(--control-radius); color:var(--ink-2); text-decoration:none; }
+    .nav-item:hover { background:var(--surface-2); color:var(--ink); }
+    .nav-item[aria-current="page"] { background:var(--accent-soft); color:var(--ink); }
+    .nav-copy strong { font-size:13px; font-weight:500; }
+    .nav-copy span { margin-top:1px; color:var(--ink-3); font-size:10px; }
+    .nav-count { min-width:20px; padding:2px 6px; border-radius:999px; background:var(--surface-2); font:500 10px/1.4 var(--mono); text-align:center; }
+    .context-current { display:block; margin:4px 10px 0; padding:9px 10px; border:1px solid #c5dbe8; border-radius:var(--control-radius); background:var(--info-soft); color:var(--info); font-size:11px; font-weight:500; text-decoration:none; }
+    .context-current span { display:block; margin-top:2px; color:var(--ink-2); font-size:10px; font-weight:400; }
+    .sidebar-footer { display:grid; gap:12px; margin-top:auto; }
+    .setup-link { display:block; padding:14px; border:1px solid var(--line); border-radius:var(--radius); background:var(--canvas-2); color:var(--ink); text-decoration:none; }
+    .setup-link span, .profile span { display:block; color:var(--ink-3); font-size:11px; }
+    .setup-link strong { display:block; margin-top:4px; font-size:13px; font-weight:500; }
+    .profile { display:grid; grid-template-columns:30px minmax(0,1fr); gap:9px; align-items:center; }
+    .avatar { display:grid; width:30px; height:30px; place-items:center; border-radius:var(--control-radius); background:var(--surface-2); font:500 10px/1 var(--mono); }
+    .profile strong { font-size:12px; font-weight:500; }
+
+    .main { min-width:0; }
+    .page { width:min(100%,var(--grid-max)); min-width:0; margin:0 auto; padding:32px var(--grid-margin) 64px; }
+    .page-head { display:flex; justify-content:space-between; gap:24px; align-items:flex-start; margin-bottom:24px; }
+    h1, h2, h3, p { margin-top:0; }
+    .page-head h1 { margin:0; font-size:32px; line-height:1.15; font-weight:500; text-wrap:balance; }
+    .page-head p { max-width:68ch; margin:8px 0 0; color:var(--ink-2); }
+    .eyeline { margin:0 0 6px; color:var(--ink-3); font-size:12px; }
+    .property { color:var(--ink-3) !important; font-size:12px; }
+    .head-actions, .button-row, .mini-action { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+    .head-actions { justify-content:flex-end; }
+    .btn { display:inline-flex; min-height:36px; align-items:center; justify-content:center; border:1px solid var(--line-strong); border-radius:var(--control-radius); background:var(--white); padding:8px 12px; color:var(--ink); font-size:12px; font-weight:500; text-decoration:none; white-space:nowrap; cursor:pointer; }
+    .btn:hover { border-color:var(--ink-2); background:var(--surface-2); }
+    .btn.primary { border-color:var(--accent-strong); background:var(--accent-strong); color:var(--white); }
+    .btn.primary:hover { border-color:var(--ink); background:var(--ink); }
+    .btn[disabled] { cursor:not-allowed; opacity:.45; }
+    .artifact-note { margin:0 0 24px; padding:12px 14px; border-top:2px solid var(--accent); background:var(--accent-soft); color:var(--ink-2); font-size:12px; }
+    .artifact-note strong { color:var(--ink); font-weight:600; }
+    .status-chip { display:inline-flex; align-items:center; gap:5px; width:max-content; padding:3px 7px; border:1px solid transparent; border-radius:999px; font-size:10px; line-height:1.2; }
+    .status-chip::before { width:6px; height:6px; border-radius:50%; background:currentColor; content:""; }
+    .success { border-color:#b9ddce; background:var(--success-soft); color:var(--success); }
+    .warning { border-color:#f0d7a8; background:var(--warning-soft); color:var(--warning); }
+    .error { border-color:#edc4c8; background:var(--error-soft); color:var(--error); }
+    .info { border-color:#c5dbe8; background:var(--info-soft); color:var(--info); }
+    .neutral { border-color:var(--line); background:var(--surface-2); color:var(--ink-2); }
+
+    .boundary { display:flex; justify-content:space-between; gap:20px; align-items:flex-start; margin-bottom:24px; padding:18px; border:1px solid #c5dbe8; border-radius:var(--radius); background:var(--info-soft); }
+    .boundary strong { display:block; font-size:14px; font-weight:600; }
+    .boundary p { max-width:74ch; margin:5px 0 0; color:var(--ink-2); font-size:12px; }
+    .summary-band { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); margin-bottom:24px; border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; background:var(--surface); box-shadow:var(--shadow); }
+    .summary-item { min-width:0; padding:15px 16px; }
+    .summary-item + .summary-item { border-left:1px solid var(--line); }
+    .summary-item span, .summary-item small { display:block; color:var(--ink-3); font-size:10px; }
+    .summary-item strong { display:block; margin:5px 0 2px; font:500 22px/1.1 var(--mono); }
+    .summary-item small { color:var(--ink-2); }
+
+    .workbench { display:grid; grid-template-columns:minmax(300px,5fr) minmax(0,7fr); gap:var(--grid-gutter); align-items:start; }
+    .queue, .detail, .state-card { min-width:0; overflow:hidden; border:1px solid var(--line); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); }
+    .queue-head, .detail-head { padding:20px; background:var(--canvas); }
+    .queue-head h2, .detail-head h2 { margin:0; font-size:17px; font-weight:600; }
+    .queue-head p, .detail-head p { margin:4px 0 0; color:var(--ink-2); font-size:12px; }
+    .search { width:100%; min-height:38px; margin-top:16px; padding:9px 11px; border:1px solid var(--line-strong); border-radius:var(--control-radius); background:var(--white); color:var(--ink); }
+    .tabs { display:flex; gap:16px; overflow-x:auto; margin-top:16px; border-bottom:1px solid var(--line); }
+    .tab { position:relative; flex:0 0 auto; padding:8px 0 10px; border:0; background:transparent; color:var(--ink-2); font-size:12px; white-space:nowrap; cursor:pointer; }
+    .tab[aria-selected="true"] { color:var(--ink); font-weight:600; }
+    .tab[aria-selected="true"]::after { position:absolute; right:0; bottom:-1px; left:0; height:2px; background:var(--accent-strong); content:""; }
+    .record-list { display:grid; }
+    .record { display:grid; grid-template-columns:4px minmax(0,1fr) auto; gap:12px; align-items:center; padding:14px 16px; border-bottom:1px solid var(--line); }
+    .record-bar { align-self:stretch; border-radius:999px; background:var(--warning); }
+    .record-bar.info { background:var(--info); }
+    .record-bar.success { background:var(--success); }
+    .record-bar.error { background:var(--error); }
+    .record strong, .record span, .record small { display:block; }
+    .record strong { margin-top:5px; font-size:12px; font-weight:600; }
+    .record span, .record small { margin-top:3px; color:var(--ink-2); font-size:10px; }
+    .record small { color:var(--ink-3); }
+    .amount { font:500 12px/1.2 var(--mono); white-space:nowrap; text-align:right; }
+    .detail-head { display:flex; justify-content:space-between; gap:16px; align-items:flex-start; }
+    .detail-body { padding:20px; }
+    .fact-band { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); margin-bottom:20px; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+    .fact { min-width:0; padding:14px 12px; }
+    .fact + .fact { border-left:1px solid var(--line); }
+    .fact span, .fact small { display:block; color:var(--ink-3); font-size:11px; }
+    .fact strong { display:block; margin-top:5px; font:500 18px/1.15 var(--mono); overflow-wrap:anywhere; }
+    .fact small { margin-top:4px; color:var(--ink-2); }
+    .section-head { display:flex; justify-content:space-between; gap:16px; align-items:flex-start; margin-bottom:12px; }
+    .section-head h3 { margin:0; font-size:13px; font-weight:600; }
+    .section-head p { margin:3px 0 0; color:var(--ink-2); font-size:11px; }
+    .checklist, .event-list, .outcome-list { display:grid; border-top:1px solid var(--line); }
+    .check-row, .event-row, .outcome-row { display:grid; grid-template-columns:9px minmax(0,1fr) auto; gap:10px; align-items:start; padding:11px 0; border-bottom:1px solid var(--line); }
+    .check-row strong, .event-row strong, .outcome-row strong { display:block; font-size:12px; font-weight:500; }
+    .check-row span, .event-row span, .outcome-row span { display:block; margin-top:3px; color:var(--ink-2); font-size:11px; }
+    .dot { width:8px; height:8px; margin-top:5px; border-radius:50%; background:var(--info); }
+    .dot.success { background:var(--success); } .dot.warning { background:var(--warning); } .dot.error { background:var(--error); }
+    .state { font-size:11px; font-weight:500; white-space:nowrap; }
+    .approval-box { margin-top:20px; padding:14px; border:1px solid #9cdbd6; border-radius:var(--radius); background:var(--accent-soft); }
+    .approval-box h3 { margin:0; font-size:13px; font-weight:600; }
+    .approval-box p { margin:4px 0 12px; color:var(--ink-2); font-size:11px; }
+    .boundary-copy { margin-bottom:0 !important; }
+    .timeline { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; margin-top:16px; padding-top:4px; }
+    .timeline-step { position:relative; display:grid; gap:5px; justify-items:center; text-align:center; }
+    .timeline-step::before { position:absolute; top:5px; left:-50%; width:100%; height:1px; background:var(--line-strong); content:""; }
+    .timeline-step:first-child::before { display:none; }
+    .timeline-dot { position:relative; z-index:1; width:11px; height:11px; border:1px solid var(--line-strong); border-radius:50%; background:var(--canvas); }
+    .timeline-step.done .timeline-dot { border-color:var(--success); background:var(--success); }
+    .timeline-step.current .timeline-dot { border-color:var(--accent-strong); background:var(--accent); }
+    .timeline-step span { color:var(--ink-3); font:400 10px/1.25 var(--mono); }
+    .timeline-step strong { font:500 11px/1.2 var(--mono); }
+
+    .section { margin-top:32px; }
+    .section > h2 { margin:0; font-size:19px; font-weight:600; }
+    .section > p { margin:5px 0 16px; color:var(--ink-2); font-size:12px; }
+    .grouped { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:var(--grid-gutter); }
+    .grouped .queue, .grouped .detail { box-shadow:none; }
+    .state-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--grid-gutter); }
+    .state-card { padding:20px; box-shadow:none; }
+    .state-card h3 { margin:0; font-size:13px; font-weight:600; }
+    .state-card > p { min-height:36px; margin:5px 0 14px; color:var(--ink-2); font-size:11px; }
+    .state-card.loading, .state-card.empty { background:var(--canvas); }
+    .state-card.permission { background:#f7f5ff; }
+    .state-card.blocked { background:var(--warning-soft); }
+    .state-card.failed { background:var(--error-soft); }
+    .state-card.recovery { background:var(--info-soft); }
+    .state-card.success { background:var(--success-soft); }
+    .state-card ul { display:grid; gap:6px; margin:0; padding:0; list-style:none; }
+    .state-card li { color:var(--ink-2); font-size:11px; }
+    .state-card li strong { color:var(--ink); font-weight:600; }
+    .skeleton { height:10px; margin:8px 0; border-radius:2px; background:linear-gradient(90deg,var(--surface-2),#f8fbfc,var(--surface-2)); background-size:200% 100%; animation:shimmer 1.5s linear infinite; }
+    .skeleton.short { width:54%; }
+    .empty-mark { display:grid; width:30px; height:30px; place-items:center; margin-bottom:10px; border:1px solid var(--line-strong); border-radius:50%; color:var(--ink-2); font:500 12px var(--mono); }
+    .state-meta { margin-top:12px; color:var(--ink-3); font:400 10px/1.3 var(--mono); }
+    footer { margin-top:32px; padding-top:16px; border-top:1px solid var(--line); color:var(--ink-3); font-size:11px; }
+    .footer-row { display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+    .mono { font-family:var(--mono); }
+    @keyframes shimmer { to { background-position:-200% 0; } }
+
+    @media (max-width:1080px) {
+      .app-shell { grid-template-columns:208px minmax(0,1fr); }
+      .page { padding-inline:24px; }
+      .workbench, .grouped { grid-template-columns:1fr; }
+      .state-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    }
+    @media (max-width:760px) {
+      .app-shell { display:block; }
+      .sidebar { position:static; display:block; height:auto; padding:14px 16px 12px; border-right:0; border-bottom:1px solid var(--line); }
+      .sidebar-section { display:block; margin-top:12px; }
+      .sidebar-label, .context-current, .sidebar-footer { display:none; }
+      .brand-mark { width:30px; height:30px; } .brand-mark img { width:24px; height:24px; }
+      .nav { display:flex; gap:6px; overflow-x:auto; padding-bottom:2px; scrollbar-width:thin; }
+      .nav-item { display:block; flex:0 0 auto; width:auto; padding:7px 9px; border:1px solid var(--line); background:var(--white); }
+      .nav-copy strong { font-size:11px; } .nav-copy span { display:none; } .nav-count { display:inline-block; margin-top:4px; }
+      .page { width:100%; max-width:100vw; padding:24px 16px 48px; }
+      .page-head, .boundary, .detail-head { display:block; }
+      .head-actions { justify-content:flex-start; margin-top:16px; }
+      .boundary .status-chip, .detail-head .btn { margin-top:12px; }
+      .summary-band { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .summary-item:nth-child(3), .summary-item:nth-child(4) { border-top:1px solid var(--line); }
+      .summary-item:nth-child(3) { border-left:0; }
+      .record { grid-template-columns:4px minmax(0,1fr); }
+      .amount { grid-column:2; text-align:left; }
+      .fact-band { grid-template-columns:1fr; }
+      .fact + .fact { border-top:1px solid var(--line); border-left:0; }
+      .timeline { grid-template-columns:repeat(2,minmax(0,1fr)); row-gap:16px; }
+      .timeline-step:nth-child(3)::before { display:none; }
+      .state-grid { grid-template-columns:1fr; }
+      .page-head p, .artifact-note, .boundary p, .section > p { overflow-wrap:anywhere; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Product navigation">
+      <a class="brand" href="index.html">
+        <span class="brand-mark"><img src="codex-20260707-volta-icon-navy-turquoise.svg" alt=""></span>
+        <span class="brand-copy"><strong>Volta</strong><span>Settlement workspace</span></span>
+      </a>
+      <div class="sidebar-section">
+        <p class="sidebar-label">Workspace</p>
+        <nav class="nav" aria-label="Primary navigation">
+          <a class="nav-item" href="index.html"><span class="nav-copy"><strong>Home</strong><span>Today’s work</span></span></a>
+          <a class="nav-item" href="commissions.html?view=issues"><span class="nav-copy"><strong>Commissions</strong><span>Review records</span></span><span class="nav-count">11</span></a>
+          <a class="nav-item" href="agencies.html?view=all"><span class="nav-copy"><strong>Agencies</strong><span>Readiness</span></span></a>
+          <a class="nav-item" href="workflows.html"><span class="nav-copy"><strong>Workflows</strong><span>Schedules and delivery</span></span></a>
+          <a class="nav-item" href="settings.html"><span class="nav-copy"><strong>Settings</strong><span>Team and setup</span></span></a>
+        </nav>
+        <a class="context-current" aria-current="page" href="#main">Settlement History<span>Contextual monitoring route</span></a>
+      </div>
+      <div class="sidebar-footer">
+        <a class="setup-link" href="settings.html#integrations"><span>Setup status</span><strong>Payment setup needs an owner</strong></a>
+        <div class="profile"><span class="avatar">AC</span><span><strong>Ava Chen</strong><span>Payment Approver</span></span></div>
+      </div>
+    </aside>
+
+    <main class="main" id="main" tabindex="-1">
+      <div class="page">
+        <header class="page-head">
+          <div>
+            <p class="eyeline">Settlement / monitoring</p>
+            <h1>Settlement History</h1>
+            <p>See what happened after an approval, keep each item traceable, and route failures to the right owner.</p>
+            <p class="property">Toiras Hotel · illustrative review artifact · last sync 09:44 CET</p>
+          </div>
+          <div class="head-actions"><a class="btn" href="#state-gallery">Review states</a><button class="btn primary" type="button">Export view</button></div>
+        </header>
+
+        <p class="artifact-note"><strong>Wireframe boundary.</strong> A grouped review only keeps context together. It never approves a batch. Each approval belongs to one item, current amount, evidence version, user, and timestamp.</p>
+
+        <section class="boundary" aria-label="Stripe and Volta payment boundary">
+          <div><p class="eyeline">Payment boundary</p><strong>Approval is the hotel action. Movement and provider status belong to Stripe.</strong><p>Volta records the approver, item, amount, evidence version, and time. A failed item returns to review and needs a fresh approval before any new provider call.</p></div>
+          <span class="status-chip info">Status sync · 09:44 CET</span>
+        </section>
+
+        <section class="summary-band" aria-label="Settlement summary">
+          <div class="summary-item"><span>Ready to Pay</span><strong>4</strong><small>Volta workflow state</small></div>
+          <div class="summary-item"><span>Initiated</span><strong>2</strong><small>Stripe-reported status</small></div>
+          <div class="summary-item"><span>Settled</span><strong>18</strong><small>Stripe-reported status</small></div>
+          <div class="summary-item"><span>Needs follow-up</span><strong>3</strong><small>Failed or returned items</small></div>
+        </section>
+
+        <section class="workbench" aria-label="Settlement records and selected item">
+          <section class="queue" id="records" aria-labelledby="records-title">
+            <header class="queue-head">
+              <h2 id="records-title">Settlement records</h2>
+              <p>24 records · grouped review is optional context, not blanket approval.</p>
+              <input class="search" aria-label="Search settlement records" placeholder="Search agency, reference, or provider ID">
+              <div class="tabs" role="tablist" aria-label="Settlement status filters">
+                <button class="tab" role="tab" aria-selected="true" type="button">All · 24</button>
+                <button class="tab" role="tab" aria-selected="false" type="button">Ready to Pay · 4</button>
+                <button class="tab" role="tab" aria-selected="false" type="button">Initiated · 2</button>
+                <button class="tab" role="tab" aria-selected="false" type="button">Settled · 18</button>
+                <button class="tab" role="tab" aria-selected="false" type="button">Failed · 2</button>
+                <button class="tab" role="tab" aria-selected="false" type="button">Returned · 1</button>
+              </div>
+            </header>
+            <div class="record-list">
+              <article class="record"><i class="record-bar"></i><div><span class="status-chip warning">Ready to Pay</span><strong>Maple Leaf Travel</strong><span>RES-10491 · 14 Jun 2026 · approval evidence v3</span><small>Payment setup ready · item-level action available</small></div><div class="amount">EUR 1,280.00</div></article>
+              <article class="record"><i class="record-bar info"></i><div><span class="status-chip info">Initiated</span><strong>Alpine Routes</strong><span>RES-10472 · 13 Jun 2026 · approved by A. Chen</span><small>Stripe-owned movement status · sync 09:41 CET</small></div><div class="amount">EUR 842.50</div></article>
+              <article class="record"><i class="record-bar success"></i><div><span class="status-chip success">Settled</span><strong>Northstar Business Travel</strong><span>RES-10410 · 04 Jun 2026 · settled 06 Jun</span><small>Provider reference available · view timeline</small></div><div class="amount">EUR 420.00</div></article>
+              <article class="record"><i class="record-bar error"></i><div><span class="status-chip error">Failed</span><strong>Vela Corporate Travel</strong><span>RES-10388 · 01 Jun 2026 · returned to review</span><small>Owner: Finance Ops · no unsafe retry</small></div><div class="amount">EUR 690.00</div></article>
+            </div>
+          </section>
+
+          <section class="detail" aria-labelledby="detail-title">
+            <header class="detail-head"><div><p class="eyeline">Selected record · J-023 / J-024</p><h2 id="detail-title">Maple Leaf Travel</h2><p>RES-10491 · agency commission · 14 Jun 2026</p><span class="status-chip warning">Ready to Pay</span></div><a class="btn" href="commission-detail.html">Open Commission Detail</a></header>
+            <div class="detail-body">
+              <div class="fact-band"><div class="fact"><span>Amount</span><strong>EUR 1,280.00</strong><small>Current payable amount</small></div><div class="fact"><span>Evidence</span><strong>v3</strong><small>Source + invoice matched</small></div><div class="fact"><span>Owner</span><strong>Finance Ops</strong><small>Setup complete</small></div></div>
+              <div class="section-head"><div><h3>Readiness checklist</h3><p>Approval controls stay attached to this record and amount.</p></div><span class="status-chip success">All checks pass</span></div>
+              <div class="checklist">
+                <div class="check-row"><i class="dot success"></i><div><strong>Invoice state</strong><span>Ready to Pay · invoice handling is complete.</span></div><span class="state">Ready</span></div>
+                <div class="check-row"><i class="dot success"></i><div><strong>Agency evidence</strong><span>Maple Leaf Travel · evidence version v3.</span></div><span class="state">Verified</span></div>
+                <div class="check-row"><i class="dot success"></i><div><strong>Payment setup</strong><span>Stripe setup status is ready for this workspace.</span></div><span class="state">Ready</span></div>
+              </div>
+              <div class="approval-box">
+                <h3>Approve this item</h3>
+                <p>Confirming records one approval for RES-10491 at EUR 1,280.00. It does not approve another item or move money through Volta.</p>
+                <div class="button-row"><button class="btn primary" type="button">Approve RES-10491</button><button class="btn" type="button">Send to Review</button></div>
+                <p class="boundary-copy"><strong>Audit event:</strong> approver · time · amount · evidence v3. Stripe executes movement only after the approval instruction is recorded.</p>
+              </div>
+              <div class="section-head" style="margin-top:24px"><div><h3>Status timeline</h3><p>The visible story is monotonic; provider events remain traceable beneath it.</p></div><span class="status-chip info">Provider-owned</span></div>
+              <div class="timeline" aria-label="Illustrative settlement timeline"><div class="timeline-step done"><i class="timeline-dot"></i><span>14 Jun · 09:18</span><strong>Ready to Pay</strong></div><div class="timeline-step done"><i class="timeline-dot"></i><span>14 Jun · 09:21</span><strong>Approved</strong></div><div class="timeline-step current"><i class="timeline-dot"></i><span>Provider status</span><strong>Initiated</strong></div><div class="timeline-step"><i class="timeline-dot"></i><span>Awaiting provider</span><strong>Settled</strong></div></div>
+              <div class="event-list" style="margin-top:16px"><div class="event-row"><i class="dot"></i><div><strong>Provider event · Initiated</strong><span>Correlation reference retained · visible status remains Initiated.</span></div><span class="state">09:41 CET</span></div><div class="event-row"><i class="dot warning"></i><div><strong>Late or duplicate event review</strong><span>Raw event is retained and flagged for support; it does not regress the visible timeline.</span></div><span class="state">Support</span></div></div>
+            </div>
+          </section>
+        </section>
+
+        <section class="section" aria-labelledby="group-title">
+          <h2 id="group-title">Grouped review and partial outcome</h2>
+          <p>Grouped review keeps context together; item-level approval and item-level outcomes remain explicit.</p>
+          <div class="grouped">
+            <section class="queue" aria-label="Grouped review list"><header class="queue-head"><h2>Review group · 3 eligible items</h2><p>“Review selected” is navigation only.</p></header><div class="record-list"><div class="record"><i class="record-bar"></i><div><strong>Maple Leaf Travel</strong><span>RES-10491 · approval required</span></div><button class="btn" type="button">Review item</button></div><div class="record"><i class="record-bar"></i><div><strong>Orion Incentives</strong><span>RES-10466 · approval required</span></div><button class="btn" type="button">Review item</button></div><div class="record"><i class="record-bar error"></i><div><strong>Vela Corporate Travel</strong><span>RES-10388 · failed · fresh approval required</span></div><button class="btn" type="button">Open failure</button></div></div></section>
+            <section class="detail" aria-label="Partial group result"><header class="detail-head"><div><p class="eyeline">J-025 / J-042</p><h2>Independent outcomes</h2><p>No blanket result is shown for the group.</p></div><span class="status-chip info">3 reviewed</span></header><div class="detail-body"><div class="outcome-list"><div class="outcome-row"><i class="dot success"></i><div><strong>Maple Leaf Travel · approved</strong><span>Approval event recorded for this item only.</span></div><span class="state">Recorded</span></div><div class="outcome-row"><i class="dot warning"></i><div><strong>Orion Incentives · still ready</strong><span>Awaiting its own explicit approval confirmation.</span></div><span class="state">No change</span></div><div class="outcome-row"><i class="dot error"></i><div><strong>Vela Corporate Travel · failed</strong><span>Not retried. A fresh approval is required before any new provider call.</span></div><span class="state">Follow up</span></div></div><div class="button-row" style="margin-top:14px"><button class="btn" type="button">Open item results</button><button class="btn" type="button">Assign follow-up owner</button></div></div></section>
+          </div>
+        </section>
+
+        <section class="section" id="state-gallery" aria-labelledby="states-title">
+          <h2 id="states-title">State gallery</h2>
+          <p>Loading, access, failure, and recovery states are part of the approval contract, not an afterthought.</p>
+          <div class="state-grid">
+            <article class="state-card loading"><h3>Loading</h3><p>History is being retrieved; do not show stale status as current.</p><div class="skeleton"></div><div class="skeleton short"></div><div class="skeleton"></div><div class="state-meta">aria-live="polite" · last known sync remains separate</div></article>
+            <article class="state-card empty"><h3>Empty</h3><p>No records match the current filter.</p><div class="empty-mark">0</div><ul><li><strong>Nothing to review here.</strong> Try All statuses or open Commissions.</li></ul><div class="mini-action"><button class="btn" type="button">Clear filters</button><a class="btn" href="commissions.html?view=issues">Open Commissions</a></div></article>
+            <article class="state-card permission"><h3>Permission</h3><p>A Viewer can inspect status but cannot approve a payable item.</p><span class="status-chip neutral">Read only</span><ul style="margin-top:12px"><li><strong>Approval unavailable.</strong> Payment Approver permission is required.</li><li>Route to a Hotel Admin for access.</li></ul><div class="mini-action"><a class="btn" href="settings.html">Contact Admin</a></div></article>
+            <article class="state-card blocked"><h3>Blocked</h3><p>Payment setup is incomplete, so this item cannot be approved.</p><span class="status-chip warning">Setup owner required</span><ul style="margin-top:12px"><li><strong>Next owner:</strong> Finance Admin</li><li>Show the dependency in Settings.</li></ul><div class="mini-action"><a class="btn" href="settings.html">Open Settings</a><button class="btn" type="button" disabled>Approve item</button></div></article>
+            <article class="state-card failed"><h3>Failed</h3><p>A provider status is failed; no automatic retry is offered.</p><span class="status-chip error">Failed · Stripe status</span><ul style="margin-top:12px"><li><strong>Reason:</strong> recipient bank account unavailable.</li><li>Owner: Finance Ops.</li></ul><div class="mini-action"><button class="btn" type="button">Open failure detail</button></div></article>
+            <article class="state-card recovery"><h3>Recovery</h3><p>The item returned to review with a traceable next step.</p><span class="status-chip info">Returned to Review</span><ul style="margin-top:12px"><li><strong>Safe path:</strong> inspect the record and assign an owner.</li><li>Any new provider call requires fresh item approval.</li></ul><div class="mini-action"><a class="btn" href="commission-detail.html">Open Commission Detail</a><button class="btn" type="button">Assign owner</button></div></article>
+            <article class="state-card success"><h3>Success</h3><p>One item’s approval was recorded successfully.</p><span class="status-chip success">Approval recorded</span><ul style="margin-top:12px"><li><strong>RES-10491 · EUR 1,280.00</strong></li><li>Approver, time, amount, and evidence v3 are visible.</li><li>Status remains provider-owned until Stripe reports movement.</li></ul></article>
+            <article class="state-card recovery"><h3>Provider event conflict</h3><p>Duplicate or out-of-order events do not rewrite the visible story.</p><span class="status-chip info">Support review</span><ul style="margin-top:12px"><li><strong>Visible timeline:</strong> Initiated → Settled.</li><li>Raw provider event retained with correlation reference.</li><li>Late or duplicate event is flagged for support.</li></ul><div class="state-meta">J-043 · timeline is monotonic in the user view</div></article>
+          </div>
+        </section>
+
+        <footer><div class="footer-row"><span>Journey coverage: J-023 · J-024 · J-025 · J-026 · J-027 · J-033 · J-041 · J-042 · J-043</span><span class="mono">settlement-history.html · review artifact</span></div></footer>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
+

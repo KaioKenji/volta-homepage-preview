@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Volta — Workflows wireframe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --white:#fff; --canvas:#f0f7f9; --canvas-2:#f5f8fa; --surface:#fff; --surface-2:#e2edf0;
+      --ink:#091d36; --ink-2:#3a4f65; --ink-3:#697d8e; --line:#d0dfe5; --line-strong:#a3b4bf;
+      --accent:#59cdc6; --accent-strong:#0a7975; --accent-soft:#e3f8f7;
+      --success:#007d50; --success-soft:#e8f5ef; --warning:#a36e09; --warning-soft:#fff6e5;
+      --error:#ac312a; --error-soft:#fff0ef; --info:#06658e; --info-soft:#edf5fa;
+      --radius:6px; --control-radius:4px; --grid-gutter:24px; --grid-margin:32px; --grid-max:1360px;
+      --font:Manrope,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      --mono:"DM Mono",ui-monospace,Menlo,Consolas,monospace;
+      --shadow:0 1px 2px rgb(9 29 54 / .06),0 6px 14px rgb(9 29 54 / .04);
+    }
+    * { box-sizing:border-box; }
+    html { background:var(--canvas); }
+    body { min-width:0; margin:0; overflow-x:hidden; color:var(--ink); background:var(--canvas); font:14px/1.5 var(--font); font-variant-numeric:tabular-nums; }
+    a { color:inherit; }
+    button, input, select { font:inherit; }
+    button { color:inherit; }
+    :focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+    .skip-link { position:absolute; top:-48px; left:12px; z-index:5; padding:8px 10px; border-radius:var(--control-radius); background:var(--ink); color:var(--white); text-decoration:none; }
+    .skip-link:focus { top:12px; }
+    .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+
+    .app-shell { min-height:100vh; display:grid; grid-template-columns:240px minmax(0,1fr); }
+    .sidebar { position:sticky; top:0; display:flex; height:100dvh; flex-direction:column; gap:24px; padding:24px 16px 18px; border-right:1px solid var(--line); background:var(--white); }
+    .brand { display:flex; align-items:center; gap:10px; text-decoration:none; }
+    .brand-mark { display:grid; width:34px; height:34px; place-items:center; border-radius:var(--radius); background:var(--ink); }
+    .brand-mark img { width:28px; height:28px; }
+    .brand-copy strong, .brand-copy span, .nav-copy strong, .nav-copy span { display:block; }
+    .brand-copy strong { font-size:15px; font-weight:600; }
+    .brand-copy span { margin-top:1px; color:var(--ink-3); font-size:11px; }
+    .sidebar-section { display:grid; gap:8px; }
+    .sidebar-label { margin:0 10px; color:var(--ink-3); font-size:11px; font-weight:500; }
+    .nav { display:grid; gap:2px; }
+    .nav-item { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:8px; width:100%; padding:9px 10px; border-radius:var(--control-radius); color:var(--ink-2); text-decoration:none; }
+    .nav-item:hover { background:var(--surface-2); color:var(--ink); }
+    .nav-item[aria-current="page"] { background:var(--accent-soft); color:var(--ink); }
+    .nav-copy strong { font-size:13px; font-weight:500; }
+    .nav-copy span { margin-top:1px; color:var(--ink-3); font-size:10px; }
+    .nav-count { min-width:20px; padding:2px 6px; border-radius:999px; background:var(--surface-2); font:500 10px/1.4 var(--mono); text-align:center; }
+    .nav-item[aria-current="page"] .nav-count { background:var(--accent); color:var(--ink); }
+    .context-link { display:flex; align-items:center; gap:7px; margin:4px 10px 0; color:var(--ink-3); font-size:11px; text-decoration:none; }
+    .context-link:hover { color:var(--ink); text-decoration:underline; }
+    .sidebar-footer { display:grid; gap:12px; margin-top:auto; }
+    .setup-link { display:block; padding:14px; border:1px solid var(--line); border-radius:var(--radius); background:var(--canvas-2); color:var(--ink); text-decoration:none; }
+    .setup-link span, .profile span { display:block; color:var(--ink-3); font-size:11px; }
+    .setup-link strong { display:block; margin-top:4px; font-size:13px; font-weight:500; }
+    .profile { display:grid; grid-template-columns:30px minmax(0,1fr); gap:9px; align-items:center; }
+    .avatar { display:grid; width:30px; height:30px; place-items:center; border-radius:var(--control-radius); background:var(--surface-2); font:500 10px/1 var(--mono); }
+    .profile strong { font-size:12px; font-weight:500; }
+
+    .main { min-width:0; }
+    .page { width:min(100%,var(--grid-max)); min-width:0; margin:0 auto; padding:32px var(--grid-margin) 64px; }
+    .page-head { display:flex; justify-content:space-between; gap:24px; align-items:flex-start; margin-bottom:24px; }
+    h1, h2, h3, p { margin-top:0; }
+    .page-head h1 { margin:0; font-size:32px; line-height:1.15; font-weight:500; text-wrap:balance; }
+    .page-head p { max-width:68ch; margin:8px 0 0; color:var(--ink-2); }
+    .eyeline { margin:0 0 6px; color:var(--ink-3); font-size:12px; }
+    .property { color:var(--ink-3) !important; font-size:12px; }
+    .head-actions, .button-row, .mini-action { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+    .head-actions { justify-content:flex-end; }
+    .btn { display:inline-flex; min-height:36px; align-items:center; justify-content:center; border:1px solid var(--line-strong); border-radius:var(--control-radius); background:var(--white); padding:8px 12px; color:var(--ink); font-size:12px; font-weight:500; text-decoration:none; white-space:nowrap; cursor:pointer; }
+    .btn:hover { border-color:var(--ink-2); background:var(--surface-2); }
+    .btn.primary { border-color:var(--accent-strong); background:var(--accent-strong); color:var(--white); }
+    .btn.primary:hover { border-color:var(--ink); background:var(--ink); }
+    .btn[disabled] { cursor:not-allowed; opacity:.45; }
+    .artifact-note { margin:0 0 24px; padding:12px 14px; border-top:2px solid var(--accent); background:var(--accent-soft); color:var(--ink-2); font-size:12px; }
+    .artifact-note strong { color:var(--ink); font-weight:600; }
+    .status-chip { display:inline-flex; align-items:center; gap:5px; width:max-content; padding:3px 7px; border:1px solid transparent; border-radius:999px; font-size:10px; line-height:1.2; }
+    .status-chip::before { width:6px; height:6px; border-radius:50%; background:currentColor; content:""; }
+    .success { border-color:#b9ddce; background:var(--success-soft); color:var(--success); }
+    .warning { border-color:#f0d7a8; background:var(--warning-soft); color:var(--warning); }
+    .error { border-color:#edc4c8; background:var(--error-soft); color:var(--error); }
+    .info { border-color:#c5dbe8; background:var(--info-soft); color:var(--info); }
+    .neutral { border-color:var(--line); background:var(--surface-2); color:var(--ink-2); }
+
+    .onboarding-callout { display:flex; justify-content:space-between; gap:20px; align-items:flex-start; margin-bottom:24px; padding:18px; border:1px solid #9cdbd6; border-radius:var(--radius); background:var(--accent-soft); }
+    .onboarding-callout h2 { margin:0; font-size:17px; font-weight:600; }
+    .onboarding-callout p { max-width:72ch; margin:5px 0 0; color:var(--ink-2); font-size:12px; }
+    .workflow-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--grid-gutter); align-items:start; }
+    .workflow-card, .support-card, .state-card { min-width:0; border:1px solid var(--line); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); }
+    .workflow-card { overflow:hidden; }
+    .workflow-head { display:flex; justify-content:space-between; gap:16px; align-items:flex-start; padding:20px; background:var(--canvas); }
+    .workflow-head h2 { margin:0; font-size:17px; font-weight:600; }
+    .workflow-head p { margin:4px 0 0; color:var(--ink-2); font-size:12px; }
+    .workflow-body { padding:20px; }
+    .scope-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0; margin-bottom:20px; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+    .scope-item { min-width:0; padding:12px 10px; }
+    .scope-item + .scope-item { border-left:1px solid var(--line); }
+    .scope-item span, .scope-item strong { display:block; }
+    .scope-item span { color:var(--ink-3); font-size:10px; }
+    .scope-item strong { margin-top:4px; font-size:11px; font-weight:500; overflow-wrap:anywhere; }
+    .form-section { margin-top:18px; padding-top:16px; border-top:1px solid var(--line); }
+    .form-section h3 { margin:0; font-size:13px; font-weight:600; }
+    .form-section > p { margin:3px 0 12px; color:var(--ink-2); font-size:11px; }
+    .schedule-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .field { display:grid; gap:5px; min-width:0; }
+    .field label, .field > span { color:var(--ink-3); font-size:10px; font-weight:500; }
+    .field input, .field select { min-width:0; min-height:34px; border:1px solid var(--line-strong); border-radius:var(--control-radius); background:var(--white); padding:7px 9px; color:var(--ink); font-size:11px; }
+    .days { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+    .day { display:inline-flex; align-items:center; gap:5px; padding:5px 7px; border:1px solid var(--line); border-radius:999px; background:var(--white); color:var(--ink-2); font-size:10px; }
+    .day input { accent-color:var(--accent-strong); }
+    .mode-list { display:flex; flex-wrap:wrap; gap:6px; }
+    .mode { padding:6px 8px; border:1px solid var(--line); border-radius:var(--control-radius); background:var(--white); color:var(--ink-2); font-size:10px; cursor:pointer; }
+    .mode[aria-pressed="true"] { border-color:var(--accent-strong); background:var(--accent-soft); color:var(--ink); font-weight:600; }
+    .rule { margin-top:14px; padding:11px 12px; border-radius:var(--control-radius); background:var(--canvas); color:var(--ink-2); font-size:11px; }
+    .rule strong { color:var(--ink); font-weight:600; }
+    .run-row { display:flex; justify-content:space-between; gap:12px; margin-top:14px; padding-top:12px; border-top:1px solid var(--line); }
+    .run-row span, .run-row strong { display:block; }
+    .run-row span { color:var(--ink-3); font-size:10px; }
+    .run-row strong { margin-top:3px; font:500 11px/1.35 var(--mono); }
+    .workflow-foot { display:flex; justify-content:space-between; gap:12px; align-items:center; padding:14px 20px; border-top:1px solid var(--line); background:var(--white); }
+    .workflow-foot small { color:var(--ink-3); font-size:10px; }
+    .agency-card { grid-column:1 / -1; }
+    .agency-card .workflow-body { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:20px; align-items:end; }
+    .agency-card p { margin:5px 0 0; color:var(--ink-2); font-size:12px; }
+    .agency-card .rule { margin-bottom:0; }
+    .support-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--grid-gutter); margin-top:24px; }
+    .support-card { padding:18px; }
+    .support-card h2 { margin:0; font-size:15px; font-weight:600; }
+    .support-card p { margin:5px 0 0; color:var(--ink-2); font-size:12px; }
+    .log-list { display:grid; margin-top:14px; border-top:1px solid var(--line); }
+    .log-row { display:grid; grid-template-columns:8px minmax(0,1fr) auto; gap:10px; align-items:start; padding:10px 0; border-bottom:1px solid var(--line); }
+    .log-row strong, .log-row span { display:block; }
+    .log-row strong { font-size:11px; font-weight:500; }
+    .log-row span { margin-top:3px; color:var(--ink-2); font-size:10px; }
+    .log-row time { color:var(--ink-3); font:400 10px/1.3 var(--mono); white-space:nowrap; }
+    .dot { width:8px; height:8px; margin-top:5px; border-radius:50%; background:var(--info); }
+    .dot.success { background:var(--success); } .dot.warning { background:var(--warning); } .dot.error { background:var(--error); }
+    .boundary-list { display:grid; gap:10px; margin:14px 0 0; padding:0; list-style:none; }
+    .boundary-list li { padding-top:10px; border-top:1px solid var(--line); color:var(--ink-2); font-size:11px; }
+    .boundary-list strong { display:block; margin-bottom:3px; color:var(--ink); font-weight:600; }
+
+    .section { margin-top:32px; }
+    .section > h2 { margin:0; font-size:19px; font-weight:600; }
+    .section > p { margin:5px 0 16px; color:var(--ink-2); font-size:12px; }
+    .state-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--grid-gutter); }
+    .state-card { padding:20px; box-shadow:none; }
+    .state-card h3 { margin:0; font-size:13px; font-weight:600; }
+    .state-card > p { min-height:36px; margin:5px 0 14px; color:var(--ink-2); font-size:11px; }
+    .state-card.loading, .state-card.empty { background:var(--canvas); }
+    .state-card.permission { background:#f7f5ff; }
+    .state-card.blocked { background:var(--warning-soft); }
+    .state-card.failed { background:var(--error-soft); }
+    .state-card.recovery { background:var(--info-soft); }
+    .state-card.success { background:var(--success-soft); }
+    .state-card ul { display:grid; gap:6px; margin:0; padding:0; list-style:none; }
+    .state-card li { color:var(--ink-2); font-size:11px; }
+    .state-card li strong { color:var(--ink); font-weight:600; }
+    .skeleton { height:10px; margin:8px 0; border-radius:2px; background:linear-gradient(90deg,var(--surface-2),#f8fbfc,var(--surface-2)); background-size:200% 100%; animation:shimmer 1.5s linear infinite; }
+    .skeleton.short { width:54%; }
+    .empty-mark { display:grid; width:30px; height:30px; place-items:center; margin-bottom:10px; border:1px solid var(--line-strong); border-radius:50%; color:var(--ink-2); font:500 12px var(--mono); }
+    .state-meta { margin-top:12px; color:var(--ink-3); font:400 10px/1.3 var(--mono); }
+    footer { margin-top:32px; padding-top:16px; border-top:1px solid var(--line); color:var(--ink-3); font-size:11px; }
+    .footer-row { display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+    .mono { font-family:var(--mono); }
+    @keyframes shimmer { to { background-position:-200% 0; } }
+
+    @media (max-width:1080px) {
+      .app-shell { grid-template-columns:208px minmax(0,1fr); }
+      .page { padding-inline:24px; }
+      .workflow-grid, .support-grid { grid-template-columns:1fr; }
+      .state-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    }
+    @media (max-width:760px) {
+      .app-shell { display:block; }
+      .sidebar { position:static; display:block; height:auto; padding:14px 16px 12px; border-right:0; border-bottom:1px solid var(--line); }
+      .sidebar-section { display:block; margin-top:12px; }
+      .sidebar-label, .sidebar-footer { display:none; }
+      .brand-mark { width:30px; height:30px; } .brand-mark img { width:24px; height:24px; }
+      .nav { display:flex; gap:6px; overflow-x:auto; padding-bottom:2px; scrollbar-width:thin; }
+      .nav-item { display:block; flex:0 0 auto; width:auto; padding:7px 9px; border:1px solid var(--line); background:var(--white); }
+      .nav-copy strong { font-size:11px; } .nav-copy span { display:none; } .nav-count { display:inline-block; margin-top:4px; }
+      .context-link { display:none; }
+      .page { width:100%; max-width:100vw; padding:24px 16px 48px; }
+      .page-head, .onboarding-callout, .agency-card .workflow-body { display:block; }
+      .head-actions { justify-content:flex-start; margin-top:16px; }
+      .onboarding-callout .button-row, .agency-card .button-row { margin-top:14px; }
+      .scope-grid { grid-template-columns:1fr; }
+      .scope-item + .scope-item { border-top:1px solid var(--line); border-left:0; }
+      .schedule-grid { grid-template-columns:1fr; }
+      .workflow-foot { display:block; }
+      .workflow-foot .button-row { margin-top:12px; }
+      .state-grid { grid-template-columns:1fr; }
+      .page-head p, .artifact-note, .onboarding-callout p, .section > p { overflow-wrap:anywhere; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Product navigation">
+      <a class="brand" href="index.html">
+        <span class="brand-mark"><img src="codex-20260707-volta-icon-navy-turquoise.svg" alt=""></span>
+        <span class="brand-copy"><strong>Volta</strong><span>Settlement workspace</span></span>
+      </a>
+      <div class="sidebar-section">
+        <p class="sidebar-label">Workspace</p>
+        <nav class="nav" aria-label="Primary navigation">
+          <a class="nav-item" href="index.html"><span class="nav-copy"><strong>Home</strong><span>Today’s work</span></span></a>
+          <a class="nav-item" href="commissions.html?view=issues"><span class="nav-copy"><strong>Commissions</strong><span>Review records</span></span><span class="nav-count">11</span></a>
+          <a class="nav-item" href="agencies.html?view=all"><span class="nav-copy"><strong>Agencies</strong><span>Readiness</span></span></a>
+          <a class="nav-item" aria-current="page" href="#main"><span class="nav-copy"><strong>Workflows</strong><span>Schedules and delivery</span></span></a>
+          <a class="nav-item" href="settings.html"><span class="nav-copy"><strong>Settings</strong><span>Team and setup</span></span></a>
+        </nav>
+        <a class="context-link" href="settlement-history.html">Contextual route: Settlement History →</a>
+      </div>
+      <div class="sidebar-footer">
+        <a class="setup-link" href="settings.html#integrations"><span>Setup status</span><strong>Payment setup needs an owner</strong></a>
+        <div class="profile"><span class="avatar">AC</span><span><strong>Ava Chen</strong><span>Hotel Admin</span></span></div>
+      </div>
+    </aside>
+
+    <main class="main" id="main" tabindex="-1">
+      <div class="page">
+        <header class="page-head">
+          <div>
+            <p class="eyeline">Workspace / scheduled communication</p>
+            <h1>Workflows</h1>
+            <p>Configure a small set of fixed operational workflows. This is not a general automation builder.</p>
+            <p class="property">Toiras Hotel · illustrative configuration · hotel-scoped pilot</p>
+          </div>
+          <div class="head-actions"><a class="btn" href="#state-gallery">Review states</a><button class="btn primary" type="button">Preview delivery</button></div>
+        </header>
+
+        <p class="artifact-note"><strong>Wireframe boundary.</strong> These controls describe the UI and audit contract only. Actual delivery requires Fraz to verify recipient resolution, tenant scope, approved URLs, a durable send log, and the existing job/call-site ownership.</p>
+
+        <section class="onboarding-callout" aria-labelledby="onboarding-title">
+          <div><h2 id="onboarding-title">Daily Digest is optional, but recommended during onboarding</h2><p>Show this as a clear optional onboarding step: explain the value of a scheduled summary, offer <strong>Set up now</strong> and <strong>Skip for now</strong>, and do not send anything until the workflow is explicitly enabled.</p></div>
+          <div class="button-row"><button class="btn primary" type="button">Set up now</button><button class="btn" type="button">Skip for now</button></div>
+        </section>
+
+        <section class="workflow-grid" aria-label="Fixed workflow cards">
+          <article class="workflow-card" aria-labelledby="digest-title">
+            <header class="workflow-head"><div><p class="eyeline">H1 · opt-in summary</p><h2 id="digest-title">Daily Hotel Action Digest</h2><p>One scoped summary on selected days, only when qualifying work exists.</p></div><span class="status-chip neutral">Paused</span></header>
+            <div class="workflow-body">
+              <div class="scope-grid"><div class="scope-item"><span>Pilot scope</span><strong>Toiras Hotel</strong></div><div class="scope-item"><span>Recipients</span><strong>Hotel Operators + Payment Approvers</strong></div><div class="scope-item"><span>Locale</span><strong>One FR or EN email per recipient</strong></div></div>
+              <section class="form-section"><h3>Shared schedule</h3><p>Use this same schedule structure for H1 and a standalone F1 summary.</p><div class="field"><span>Selected days</span><div class="days"><label class="day"><input type="checkbox" checked>Tue</label><label class="day"><input type="checkbox">Wed</label><label class="day"><input type="checkbox" checked>Fri</label></div></div><div class="schedule-grid" style="margin-top:12px"><div class="field"><label for="digest-time">Delivery time</label><input id="digest-time" type="time" value="08:30"></div><div class="field"><label for="digest-zone">Timezone</label><select id="digest-zone"><option>Europe/Paris</option></select></div></div></section>
+              <div class="rule"><strong>Digest rule:</strong> Do not send an empty digest. D1 stays queue-first; if this workflow is enabled, include only an aggregate review count and never notify the agency.</div>
+              <div class="run-row"><div><span>Last result</span><strong>Not enabled</strong></div><div><span>Next run preview</span><strong>Appears after enablement</strong></div></div>
+            </div>
+            <footer class="workflow-foot"><small>Enable/pause state and each delivery outcome must be auditable.</small><div class="button-row"><button class="btn" type="button">Preview next digest</button><button class="btn primary" type="button">Enable digest</button></div></footer>
+          </article>
+
+          <article class="workflow-card" aria-labelledby="invoice-title">
+            <header class="workflow-head"><div><p class="eyeline">F1 · invoice operations</p><h2 id="invoice-title">Invoice Required Summary</h2><p>Send once now, schedule a standalone summary, or include it in the Digest.</p></div><span class="status-chip info">Draft</span></header>
+            <div class="workflow-body">
+              <section class="form-section" style="margin-top:0;padding-top:0;border-top:0"><h3>Delivery route</h3><p>Exactly one recurring F1 route may be active for the same hotel-recipient scope.</p><div class="mode-list" role="group" aria-label="Invoice summary delivery route"><button class="mode" type="button" aria-pressed="false">Include in Digest</button><button class="mode" type="button" aria-pressed="true">Schedule standalone</button><button class="mode" type="button" aria-pressed="false">Send once now</button></div></section>
+              <section class="form-section"><h3>Shared schedule</h3><div class="field"><span>Selected days</span><div class="days"><label class="day"><input type="checkbox" checked>Tue</label><label class="day"><input type="checkbox">Thu</label><label class="day"><input type="checkbox" checked>Fri</label></div></div><div class="schedule-grid" style="margin-top:12px"><div class="field"><label for="invoice-time">Delivery time</label><input id="invoice-time" type="time" value="09:00"></div><div class="field"><label for="invoice-age">Minimum invoice age</label><select id="invoice-age"><option>7 days or older</option></select></div></div></section>
+              <div class="rule"><strong>Same-window rule:</strong> suppress a manual, digest, or scheduled duplicate in the same notification window. A later user-configured run remains a legitimate scheduled send even when the data is unchanged.</div>
+              <div class="run-row"><div><span>Last run</span><strong>No prior run</strong></div><div><span>Next run preview</span><strong>Fri · 09:00 CEST</strong></div></div>
+            </div>
+            <footer class="workflow-foot"><small>Preview before manual delivery: records, recipients, locale, total, and oldest age.</small><div class="button-row"><button class="btn" type="button">Preview summary</button><button class="btn primary" type="button">Save schedule</button></div></footer>
+          </article>
+
+          <article class="workflow-card agency-card" aria-labelledby="reminder-title">
+            <header class="workflow-head"><div><p class="eyeline">J-029 · bounded manual action</p><h2 id="reminder-title">Agency request reminder</h2><p>Use only for an existing agency-owned information request. It is not a route for D1 review flags, payment statuses, or internal notes.</p></div><span class="status-chip neutral">No eligible request</span></header>
+            <div class="workflow-body"><div><div class="scope-grid"><div class="scope-item"><span>Eligible source</span><strong>Existing agency request</strong></div><div class="scope-item"><span>Recipient</span><strong>Approved Agency Admin/contact</strong></div><div class="scope-item"><span>Content</span><strong>Privacy-safe fields only</strong></div></div><p class="rule"><strong>Manual send contract:</strong> show recipient, reason, scoped link, locale, and delivery record before a send is allowed. Do not invent an agency email when no qualifying request exists.</p></div><div class="button-row"><a class="btn" href="agencies.html?view=all">Open agency request</a><button class="btn primary" type="button" disabled>Send reminder now</button></div></div>
+          </article>
+        </section>
+
+        <section class="support-grid" aria-label="Workflow rules and delivery record">
+          <article class="support-card"><h2>Delivery record</h2><p>A delivery status is an observed result, not an inferred success state.</p><div class="log-list"><div class="log-row"><i class="dot success"></i><div><strong>F1 preview created</strong><span>Hotel scope · 2 recipients · FR/EN rendered separately</span></div><time>09:05</time></div><div class="log-row"><i class="dot warning"></i><div><strong>H1 not sent</strong><span>Workflow is paused; no delivery attempt is recorded.</span></div><time>—</time></div><div class="log-row"><i class="dot"></i><div><strong>Required audit fields</strong><span>Scope, recipient, event occurrence, template version, locale, window, state/version, provider ID, status, attempts.</span></div><time>Contract</time></div></div></article>
+          <article class="support-card"><h2>Boundaries that prevent duplicate or unsafe messages</h2><ul class="boundary-list"><li><strong>Provider ownership</strong>Stripe owns payment/KYC/rail notices; Supabase is first choice for A1/A2 Auth messages. Do not add a duplicate TSP send until a recipient/action gap is proven.</li><li><strong>Retry ownership</strong>Only bounded transient or uncertain failures may retry with the same idempotency key. A confirmed send, invalid payload, or completed send is not retried.</li><li><strong>Scope ownership</strong>Keep the pilot hotel-scoped. A future group summary needs explicit group authorization; do not render a group rollup as a pilot capability.</li></ul></article>
+        </section>
+
+        <section class="section" id="state-gallery" aria-labelledby="states-title">
+          <h2 id="states-title">State gallery</h2>
+          <p>These are implementation contracts for UI behavior. They do not claim job, provider, or storage behavior exists until Fraz verifies it.</p>
+          <div class="state-grid">
+            <article class="state-card loading"><h3>Loading</h3><p>Workflow configuration and delivery records are being retrieved.</p><div class="skeleton"></div><div class="skeleton short"></div><div class="skeleton"></div><div class="state-meta">Keep last known run separate from a loading current state</div></article>
+            <article class="state-card empty"><h3>Empty</h3><p>No invoice-required records qualify for this run.</p><div class="empty-mark">0</div><ul><li><strong>No email is sent.</strong> Show the empty result and next scheduled run.</li></ul><div class="mini-action"><button class="btn" type="button">Review matching rules</button></div></article>
+            <article class="state-card permission"><h3>Permission</h3><p>An Operator can inspect a workflow but cannot change recipients or schedules.</p><span class="status-chip neutral">Read only</span><ul style="margin-top:12px"><li><strong>Admin access required.</strong> Route schedule changes to the named Admin.</li><li>Do not expose a manual-send action to this role.</li></ul><div class="mini-action"><a class="btn" href="settings.html">Contact Admin</a></div></article>
+            <article class="state-card blocked"><h3>Blocked</h3><p>Two recurring F1 routes would target the same hotel-recipient scope.</p><span class="status-chip warning">Route conflict</span><ul style="margin-top:12px"><li><strong>Choose one:</strong> Digest inclusion or standalone schedule.</li><li>Keep Send once now available only after preview and confirmation.</li></ul><div class="mini-action"><button class="btn" type="button">Resolve route</button></div></article>
+            <article class="state-card failed"><h3>Failed</h3><p>A delivery record reports failure; the UI does not infer that a retry is safe.</p><span class="status-chip error">Delivery failed</span><ul style="margin-top:12px"><li><strong>Show owner and sanitized reason.</strong></li><li>Retry is permitted only after Fraz proves transient conditions and same-key idempotency.</li></ul><div class="mini-action"><button class="btn" type="button">Open delivery detail</button></div></article>
+            <article class="state-card recovery"><h3>Recovery</h3><p>A recipient address needs an owner before a new explicit send can be prepared.</p><span class="status-chip info">Recipient review</span><ul style="margin-top:12px"><li><strong>Confirm recipient and locale.</strong></li><li>Prepare a new preview after the address is resolved; preserve the earlier failure record.</li></ul><div class="mini-action"><button class="btn" type="button">Assign address owner</button></div></article>
+            <article class="state-card success"><h3>Success</h3><p>A configured workflow records one observed delivery outcome.</p><span class="status-chip success">Delivered</span><ul style="margin-top:12px"><li><strong>Scope:</strong> Toiras Hotel · recipient visible.</li><li>Template version, locale, provider message ID, and time are retained.</li></ul></article>
+            <article class="state-card failed"><h3>Connectivity / stale data</h3><p>Current configuration could not be refreshed; do not overwrite it blindly.</p><span class="status-chip error">Refresh unavailable</span><ul style="margin-top:12px"><li><strong>Show last confirmed sync.</strong></li><li>Keep a pending edit visibly unsaved until the current version is known.</li></ul><div class="mini-action"><button class="btn" type="button">Retry refresh</button></div></article>
+            <article class="state-card recovery"><h3>Session recovery</h3><p>The session expired while saving; the save result is unknown.</p><span class="status-chip info">Re-authentication required</span><ul style="margin-top:12px"><li><strong>Sign in again, then inspect the workflow audit.</strong></li><li>Do not resubmit a send or schedule change until its prior result is confirmed.</li></ul><div class="mini-action"><button class="btn" type="button">Sign in again</button><button class="btn" type="button">Check audit</button></div></article>
+          </div>
+        </section>
+
+        <footer><div class="footer-row"><span>Journey coverage: J-029 · J-030 · J-034 · J-044 · J-045</span><span class="mono">workflows.html · review artifact</span></div></footer>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
+
