@@ -297,7 +297,21 @@ button{color:inherit}
 const commissionRows=[
   {id:'RES-10491',agency:'Host Agency Test A',stay:'12-17 Mar 2026',amount:'EUR 288',state:'Needs review',kind:'review',owner:'Hotel',source:'OPERA',next:'Choose rate',detail:'Carried rate conflict',secondary:'Agency and import values differ by EUR 38.'},
   {id:'RES-10482',agency:'Elite Voyages Paris',stay:'8-11 Mar 2026',amount:'EUR 310',state:'Needs review',kind:'review',owner:'Hotel',source:'OPERA',next:'Check duplicate',detail:'Possible duplicate',secondary:'Two adjacent booking references may describe the same stay.'},
-  {id:'HOST-A-001…640 tokens truncated…')==='all'?'A':'B'):(['A','B','C'].includes(params.get('variant'))?params.get('variant'):'A'),selectedCommission:params.get('record')||'RES-10491',selectedAgency:params.get('agency')||'host-a',filter:'all',query:''};
+  {id:'HOST-A-001',agency:'Host Agency Test A',stay:'14 open records',amount:'EUR 4,032',state:'Waiting on agency',kind:'wait',owner:'Agency',source:'CSV',next:'Check request',detail:'Invoice path pending',secondary:'Agency Admin has been invited but has not confirmed the invoice route.'},
+  {id:'COM-1147',agency:'Luxury Voyages SAS',stay:'20-24 Mar 2026',amount:'EUR 534',state:'Ready for approval',kind:'ready',owner:'Approver',source:'OHIP',next:'Review record',detail:'Invoice received',secondary:'Hotel review is complete and the record is ready for explicit approval.'},
+  {id:'IND-2041',agency:'Mira Laurent',stay:'4-6 Apr 2026',amount:'EUR 360',state:'Ready to issue',kind:'info',owner:'Hotel',source:'Manual',next:'Prepare invoice',detail:'Assisted invoice',secondary:'Relationship and rate are confirmed.'}
+];
+const agencyRows=[
+  {id:'host-a',name:'Host Agency Test A',type:'Host agency',value:'EUR 4,032',open:'14',state:'Waiting on agency',kind:'wait',contact:'Alex Marchand',iata:'IATA pending',next:'Check request',detail:'Invoice path pending',secondary:'Agency Admin has been invited. Confirmation is still outstanding.'},
+  {id:'luxury',name:'Luxury Voyages SAS',type:'Host agency',value:'EUR 5,820',open:'8',state:'Onboarded',kind:'ready',contact:'Sophie Marchand',iata:'IATA 23561820',next:'Open commissions',detail:'Ready to work',secondary:'Profile, admin, and external invoice path are confirmed.'},
+  {id:'mira',name:'Mira Laurent',type:'Independent agent',value:'EUR 940',open:'3',state:'Invoice setup needed',kind:'info',contact:'Mira Laurent',iata:'No host agency',next:'Request details',detail:'Assisted invoice needed',secondary:'Direct contact is confirmed; invoice details are still missing.'},
+  {id:'original',name:'Original Travel',type:'Host agency candidate',value:'EUR 420',open:'1',state:'Needs review',kind:'review',contact:'No admin contact',iata:'IATA 90234518',next:'Find contact',detail:'Agency Admin missing',secondary:'An authorized contact is required before an invitation can be sent.'}
+];
+const variants={A:'A - Queue + drawer',B:'B - Two-pane workbench',C:'C - Action groups'};
+const params=new URLSearchParams(location.search);
+const isPublished=document.body.classList.contains('published');
+const pathScreen=location.pathname.toLowerCase().includes('agencies')?'agencies':'commissions';
+let state={screen:isPublished?(params.get('screen')==='agencies'||params.get('screen')==='commissions'?params.get('screen'):pathScreen):(params.get('screen')==='agencies'?'agencies':'commissions'),variant:isPublished?(params.get('view')==='all'?'A':'B'):(['A','B','C'].includes(params.get('variant'))?params.get('variant'):'A'),selectedCommission:params.get('record')||'RES-10491',selectedAgency:params.get('agency')||'host-a',filter:'all',query:''};
 /* DEV WIRING MAP: replace these artifact paths with live routes when the app router is connected. */
 const NAV_WIRES=Object.freeze({home:'dashboard/index.html',commissions:'dashboard/commissions.html',agencies:'dashboard/agencies.html',commissionDetail:'dashboard/commission-detail.html',agencyRequest:'dashboard/agencies.html?agency=host-a',commissionQueue:'dashboard/commissions.html?view=issues'});
 const surface=document.getElementById('surface');
@@ -374,4 +388,3 @@ render();
 </script>
 </body>
 </html>
-
